@@ -9,7 +9,7 @@ const apiUrl = "https://api.rule34.xxx//index.php?" +
 		"user_id": "2373207"
 	}).toString();
 */
+const { token } = require("./config.json");
 
-const { token } = require('./config.json');
-
-console.log(token);
+console.log(token.discord);
+console.log(token.rule34);
