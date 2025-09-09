@@ -10,7 +10,10 @@ module.exports = {
 			.setDescription("ID of post"))
 		.addBooleanOption(option => option
 			.setName("raw")
-			.setDescription("Whether to send as raw file")),
+			.setDescription("Whether to send as raw file"))
+		.addBooleanOption(option => option
+			.setName("general")
+			.setDescription("Whether to include list of general tags")),
 	async execute(interaction) {
 		const id = interaction.options.getString("id")
 			?.replace(/https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)/, "$1")
@@ -78,9 +81,11 @@ module.exports = {
 				{
 					name: "General",
 					value: (()=>{
-						if (data.tags.general)
-							return data.tags.general.map(e => `- -# \`${e.name}\` (${e.count})`).join("\n");
-						else return "-# **null**";
+						if (interaction.options.getBoolean("general"))
+							if (data.tags.general.length)
+								return data.tags.general.map(e => `- -# \`${e.name}\` (${e.count})`).join("\n");
+							else return "-# **null**";
+						else return `-# ${data.tags.general.length} tags`;
 					})(),
 				},
 				{
@@ -102,6 +107,7 @@ module.exports = {
 			)(),
 			inline: true
 		});
+
 		interaction.editReply({embeds: [embed]});
 	}
 };
