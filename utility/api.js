@@ -1,5 +1,6 @@
 async function post(id) {
 	const { rule34 } = require("../config.json");
+	const { DOMParser } = require("xmldom");
 	const apiOrigin = "https://api.rule34.xxx//index.php?";
 	const apiParams = new URLSearchParams({
 		"page": "dapi",
