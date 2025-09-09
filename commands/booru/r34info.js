@@ -30,7 +30,7 @@ module.exports = {
 		if (raw) {
 			let content = JSON.stringify(data, null, 4);
 			let attachment = new AttachmentBuilder(Buffer.from(content)).setName(`${id}-info.json`);
-			interaction.editReply({ files: [attachment] });
+			interaction.editReply({ files: [attachment], embed: [] });
 			return;
 		}
 
@@ -85,7 +85,7 @@ module.exports = {
 							if (data.tags.general.length)
 								return data.tags.general.map(e => `- -# \`${e.name}\` (${e.count})`).join("\n");
 							else return "-# **null**";
-						else return `-# * *${data.tags.general.length} tags*`;
+						else return `-# *\t${data.tags.general.length} tags*`;
 					})(),
 				},
 				{
