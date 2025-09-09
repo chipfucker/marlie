@@ -7,7 +7,8 @@ module.exports = {
 		.setDescription('Get info of post')
 		.addStringOption(option => option
 			.setName("id")
-			.setDescription("ID of post"))
+			.setDescription("ID of post")
+			.setRequired(true))
 		.addBooleanOption(option => option
 			.setName("raw")
 			.setDescription("Whether to send as raw file"))
@@ -16,13 +17,17 @@ module.exports = {
 			.setDescription("Whether to include list of general tags")),
 	async execute(interaction) {
 		const id = interaction.options.getString("id")
-			?.replace(/https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)/, "$1")
-			|| "5823623";
+			?.replace(/https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)/, "$1");
 
 		interaction.reply({embeds: [{
 			"title": id,
 			"description": "Loading..."
 		}]});
+
+		if (!id) {
+			interaction.editReply({ content: "You must specify an ID or URL!", embed: [] });
+			return;
+		}
 
 		const data = await post(id);
 		
