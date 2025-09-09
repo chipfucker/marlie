@@ -1,10 +1,8 @@
 const {
 	ActionRowBuilder,
 	AttachmentBuilder,
-	ButtonBuilder,
 	ButtonStyle,
 	Client,
-	EmbedBuilder,
 	SlashCommandBuilder
 } = require('discord.js');
 const { post } = require ("../../utility/api.js");
@@ -42,7 +40,10 @@ module.exports = {
 		const raw = interaction.options.getBoolean("raw");
 		if (raw) {
 			let content = JSON.stringify(data, null, 4);
-			let attachment = new AttachmentBuilder(Buffer.from(content)).setName(`${id}-info.json`);
+			let attachment = {
+				attachment: Buffer.from(content),
+				name: `${id}-info.json`
+			};
 			interaction.editReply({ files: [attachment], embeds: [] });
 			return;
 		}
