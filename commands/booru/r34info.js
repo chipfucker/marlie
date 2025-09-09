@@ -37,9 +37,55 @@ module.exports = {
 			interaction.editReply({ files: [attachment] });
 			return;
 		}
-
 		interaction.editReply({embeds: [{
-			
+			thumbnail: {
+				url: data.image.original
+			},
+			author: {
+				name: data.info.file.id,
+				url: "https://rule34.xxx/index.php?p=..."+data.info.file.id
+			},
+			description:
+				`**Owner:** \`${data.info.post.creator.name}\`\n`+
+				`**Score:** ${data.info.post.score}\n`+
+				`**Created:** ${data.info.post.created}\n`+
+				`**Updated:** ${data.info.post.updated}\n\n`+
+				`**Source:** \`${data.info.link.source}\`\n`+
+				`**Parent:** \`${data.info.link.parent}\`\n`+
+				`**Children?:** ${data.info.link.children ? "yes" : "no"}\n\n`+
+				`**Hash:** \`${data.info.file.hash}\`\n`+
+				`**Path:** ${data.info.file.directory}/${data.info.file.filename}`,
+			fields: [
+				{
+					name: "Copyright",
+					value: data.tags.copyright.map(e => `\`${e.name}\` (${e.count})`).join("\n"),
+					inline: true
+				},
+				{
+					name: "Character",
+					value: data.tags.character.map(e => `\`${e.name}\` (${e.count})`).join("\n"),
+					inline: true
+				},
+				{
+					name: "Artist",
+					value: data.tags.artist.map(e => `\`${e.name}\` (${e.count})`).join("\n"),
+					inline: true
+				},
+				{
+					name: "General",
+					value: data.tags.general.map(e => `\`${e.name}\` (${e.count})`).join(",  "),
+				},
+				{
+					name: "Meta",
+					value: data.tags.meta.map(e => `\`${e.name}\` (${e.count})`).join(",  "),
+					inline: true
+				},
+				{
+					name: "Other (null)",
+					value: data.tags.other.map(e => `\`${e.name}\` (${e.count})`).join("\n"),
+					inline: true
+				}
+			]
 		}]});
 	}
 };
