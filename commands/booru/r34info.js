@@ -85,7 +85,7 @@ module.exports = {
 							if (data.tags.general.length)
 								return data.tags.general.map(e => `- -# \`${e.name}\` (${e.count})`).join("\n");
 							else return "-# **null**";
-						else return `-# ${data.tags.general.length} tags`;
+						else return `-# * *${data.tags.general.length} tags*`;
 					})(),
 				},
 				{
