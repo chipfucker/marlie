@@ -52,7 +52,7 @@ module.exports = {
 				url: data.image.original
 			},
 			title: data.info.file.id,
-			url: "https://rule34.xxx/index.php?p=..."+data.info.file.id,
+			url: "https://rule34.xxx/index.php?page=post&s=view&id="+data.info.file.id,
 			description:
 				`**Owner:** \`${data.info.post.creator.name}\`\n`+
 				`**Score:** ${data.info.post.score}\n`+
