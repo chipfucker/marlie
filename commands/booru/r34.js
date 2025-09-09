@@ -1,7 +1,5 @@
 const { Client, SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
-const saveChannel = await Client.channels.fetch("1340862369345175562");
-const postChannel = await Client.channels.fetch("1295111950656868454");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -16,6 +14,9 @@ module.exports = {
 			"title": query,
 			"description": "Loading..."
 		}]});
+
+		const saveChannel = await Client.channels.fetch("1340862369345175562");
+		const postChannel = await Client.channels.fetch("1295111950656868454");
 
 		// interaction.reply({"embeds": [{
 		// 	"title": query,

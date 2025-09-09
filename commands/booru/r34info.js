@@ -15,8 +15,8 @@ module.exports = {
 			.setName("raw")
 			.setDescription("Whether to send as raw file")
 			.addChoices(
-				{ name: "True", value: true },
-				{ name: "False", value: false }
+				{ name: "True", value: "true" },
+				{ name: "False", value: "false" }
 			)),
 	async execute(interaction) {
 		const id = interaction.options.getString("id")
@@ -28,8 +28,9 @@ module.exports = {
 			"description": "Loading..."
 		}]});
 		const data = await post(id);
+		console.log(data);
 		
-		const raw = interaction.options.getString("raw");
+		const raw = interaction.options.getString("raw") == "true";
 		if (raw) {
 			let content = JSON.stringify(data, null, 4);
 			let attachment = new AttachmentBuilder(Buffer.from(content)).setName(`${id}-info.json`);
@@ -37,8 +38,8 @@ module.exports = {
 			return;
 		}
 
-		reply.edit({embeds: [{
-
+		interaction.editReply({embeds: [{
+			
 		}]});
 	}
 };
