@@ -33,7 +33,7 @@ module.exports = {
 		}]});
 
 		if (!id) {
-			interaction.editReply({ content: "You must specify an ID or URL!", embed: [] });
+			interaction.editReply({ content: "You must specify an ID or URL!", embeds: [] });
 			return;
 		}
 
