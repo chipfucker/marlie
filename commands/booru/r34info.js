@@ -3,7 +3,7 @@ const { post } = require ("../../utility/api.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('r34.info')
+		.setName('r34info')
 		.setDescription('Get info of post')
 		.addStringOption(option => option
 			.setName("id")
@@ -15,8 +15,8 @@ module.exports = {
 			.setName("raw")
 			.setDescription("Whether to send as raw file")
 			.addChoices(
-				{ name: "True", value: "true" },
-				{ name: "False", value: "false" }
+				{ name: "True", value: true },
+				{ name: "False", value: false }
 			)),
 	async execute(interaction) {
 		const id = interaction.options.getString("id")
@@ -29,7 +29,7 @@ module.exports = {
 		}]});
 		const data = await post(id);
 		
-		const raw = interaction.options.getString("raw") === "true";
+		const raw = interaction.options.getString("raw");
 		if (raw) {
 			let content = JSON.stringify(data, null, 4);
 			let attachment = new AttachmentBuilder(Buffer.from(content)).setName(`${id}-info.json`);
