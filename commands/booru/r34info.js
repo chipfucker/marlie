@@ -105,7 +105,7 @@ module.exports = {
 					name: "Meta",
 					value: (()=>{
 						if (data.tags.meta)
-							return data.tags.artist.map(e => `- \`${e.name}\` (${e.count})`).join("\n");
+							return data.tags.meta.map(e => `- \`${e.name}\` (${e.count})`).join("\n");
 						else return "-# **null**";
 					})(),
 					inline: true
