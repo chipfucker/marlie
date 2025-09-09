@@ -25,13 +25,16 @@ module.exports = {
 		const id = interaction.options.getString("id")
 			?.replace(/https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)/, "$1");
 
-		interaction.reply({embeds: [{
+		await interaction.reply({embeds: [{
 			"title": id,
 			"description": "Loading..."
 		}]});
 
 		if (!id || Number.isNaN(Number(id))) {
-			interaction.editReply({ content: "You must specify an ID or URL!", embeds: [] });
+			interaction.editReply({ embeds: [{
+				title: "You must specify an ID or URL!",
+				color: "#e9263d"
+			}]});
 			return;
 		}
 
