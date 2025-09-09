@@ -1,5 +1,5 @@
-const { Client, SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const { post } = require ("./api.js");
+const { Client, AttachmentBuilder, SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { post } = require ("../../utility/api.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -15,25 +15,25 @@ module.exports = {
 			.setName("raw")
 			.setDescription("Whether to send as raw file")
 			.addChoices(
-				{ name: "True", value: true },
-				{ name: "False", value: false }
+				{ name: "True", value: "true" },
+				{ name: "False", value: "false" }
 			)),
 	async execute(interaction) {
 		const id = interaction.options.getString("id")
 			|| interaction.options.getString("url")
 				.replace(/https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)/, "$1");
 
-		const reply = interaction.reply({embeds: [{
+		interaction.deferReply({embeds: [{
 			"title": id,
 			"description": "Loading..."
 		}]});
-		const data = post(id);
+		const data = await post(id);
 		
-		const raw = interaction.options.getString("raw");
+		const raw = interaction.options.getString("raw") === "true";
 		if (raw) {
 			let content = JSON.stringify(data, null, 4);
-			let attachment = new discord.MessageAttachment(Buffer.from(content), `${id}-info.json`);
-			reply.edit({ files: [attachment] });
+			let attachment = new AttachmentBuilder(Buffer.from(content)).setName(`${id}-info.json`);
+			interaction.editReply({ files: [attachment] });
 			return;
 		}
 
