@@ -1,4 +1,12 @@
-const { Client, AttachmentBuilder, SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
+const {
+	ActionRowBuilder,
+	AttachmentBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	Client,
+	EmbedBuilder,
+	SlashCommandBuilder
+} = require('discord.js');
 const { post } = require ("../../utility/api.js");
 
 module.exports = {
