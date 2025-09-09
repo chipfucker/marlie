@@ -32,7 +32,7 @@ module.exports = {
 			"description": "Loading..."
 		}]});
 
-		if (!id) {
+		if (!id || Number.isNaN(Number(id))) {
 			interaction.editReply({ content: "You must specify an ID or URL!", embeds: [] });
 			return;
 		}
