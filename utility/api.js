@@ -117,7 +117,7 @@ async function post(id) {
 					e.type !== "tag" &&
 					e.type !== "metadata"
 				)
-				.map(e=>{return {name:e.tag,count:e.count};
+				.map(e=>{return {name:e.tag,count:e.count,type:e.type};
 			})
 		}
 	};

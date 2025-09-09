@@ -1,4 +1,4 @@
-const { Client, AttachmentBuilder, SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { Client, AttachmentBuilder, SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 const { post } = require ("../../utility/api.js");
 
 module.exports = {
@@ -8,43 +8,35 @@ module.exports = {
 		.addStringOption(option => option
 			.setName("id")
 			.setDescription("ID of post"))
-		.addStringOption(option => option
-			.setName("url")
-			.setDescription("URL of post"))
-		.addStringOption(option => option
+		.addBooleanOption(option => option
 			.setName("raw")
-			.setDescription("Whether to send as raw file")
-			.addChoices(
-				{ name: "True", value: "true" },
-				{ name: "False", value: "false" }
-			)),
+			.setDescription("Whether to send as raw file")),
 	async execute(interaction) {
 		const id = interaction.options.getString("id")
-			|| interaction.options.getString("url")
-				.replace(/https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)/, "$1");
+			?.replace(/https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)/, "$1")
+			|| "5823623";
 
-		interaction.deferReply({embeds: [{
+		interaction.reply({embeds: [{
 			"title": id,
 			"description": "Loading..."
 		}]});
+
 		const data = await post(id);
-		console.log(data);
 		
-		const raw = interaction.options.getString("raw") == "true";
+		const raw = interaction.options.getBoolean("raw");
 		if (raw) {
 			let content = JSON.stringify(data, null, 4);
 			let attachment = new AttachmentBuilder(Buffer.from(content)).setName(`${id}-info.json`);
 			interaction.editReply({ files: [attachment] });
 			return;
 		}
-		interaction.editReply({embeds: [{
+
+		const embed = {
 			thumbnail: {
 				url: data.image.original
 			},
-			author: {
-				name: data.info.file.id,
-				url: "https://rule34.xxx/index.php?p=..."+data.info.file.id
-			},
+			title: data.info.file.id,
+			url: "https://rule34.xxx/index.php?p=..."+data.info.file.id,
 			description:
 				`**Owner:** \`${data.info.post.creator.name}\`\n`+
 				`**Score:** ${data.info.post.score}\n`+
@@ -58,34 +50,65 @@ module.exports = {
 			fields: [
 				{
 					name: "Copyright",
-					value: data.tags.copyright.map(e => `\`${e.name}\` (${e.count})`).join("\n"),
+					value: (()=>{
+						if (data.tags.copyright)
+							return data.tags.copyright.map(e => `- \`${e.name}\` (${e.count})`).join("\n");
+						else return "-# **null**";
+					})(),
 					inline: true
 				},
 				{
 					name: "Character",
-					value: data.tags.character.map(e => `\`${e.name}\` (${e.count})`).join("\n"),
+					value: (()=>{
+						if (data.tags.character)
+							return data.tags.character.map(e => `- \`${e.name}\` (${e.count})`).join("\n");
+						else return "-# **null**";
+					})(),
 					inline: true
 				},
 				{
 					name: "Artist",
-					value: data.tags.artist.map(e => `\`${e.name}\` (${e.count})`).join("\n"),
+					value: (()=>{
+						if (data.tags.artist)
+							return data.tags.artist.map(e => `- \`${e.name}\` (${e.count})`).join("\n");
+						else return "-# **null**";
+					})(),
 					inline: true
 				},
 				{
 					name: "General",
-					value: data.tags.general.map(e => `\`${e.name}\` (${e.count})`).join(",  "),
+					value: (()=>{
+						if (data.tags.general)
+							return data.tags.general.map(e => `- -# \`${e.name}\` (${e.count})`).join("\n");
+						else return "-# **null**";
+					})(),
 				},
 				{
 					name: "Meta",
-					value: data.tags.meta.map(e => `\`${e.name}\` (${e.count})`).join(",  "),
-					inline: true
-				},
-				{
-					name: "Other (null)",
-					value: data.tags.other.map(e => `\`${e.name}\` (${e.count})`).join("\n"),
+					value: (()=>{
+						if (data.tags.meta)
+							return data.tags.artist.map(e => `- \`${e.name}\` (${e.count})`).join("\n");
+						else return "-# **null**";
+					})(),
 					inline: true
 				}
 			]
-		}]});
+		};
+		if (data.tags.other.length) embed.fields.push({
+			name: "Other (null)",
+			value: (()=> data.tags.other
+				.map(e => `- \`${e.name}\` (${e.count}) TYPE: ${e.type}`)
+				.join("\n")
+			)(),
+			inline: true
+		});
+		try {
+			interaction.editReply({embeds: [embed]});
+		} catch(error) {
+			interaction.editReply({embeds: [{
+				title: "ERROR",
+				description: error
+			}]});
+		}
 	}
 };
