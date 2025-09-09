@@ -1,2 +1,3 @@
 # marlie
-Discord bot for easier booru browsing
+
+you know you love pocket god
