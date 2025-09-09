@@ -23,7 +23,7 @@ module.exports = {
 			|| interaction.options.getString("url")
 				.replace(/https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)/, "$1");
 
-		const reply = interaction.reply({"embeds": [{
+		const reply = interaction.reply({embeds: [{
 			"title": id,
 			"description": "Loading..."
 		}]});
@@ -32,12 +32,13 @@ module.exports = {
 		const raw = interaction.options.getString("raw");
 		if (raw) {
 			let content = JSON.stringify(data, null, 4);
-			let attachment = new discord.MessageAttachment(Buffer.from(content), 'info.json');
-			interaction.channel.send({ files: [attachment] });
+			let attachment = new discord.MessageAttachment(Buffer.from(content), `${id}-info.json`);
+			reply.edit({ files: [attachment] });
+			return;
 		}
 
-		reply.edit({"embeds": [{
+		reply.edit({embeds: [{
 
-		}]})
+		}]});
 	}
 };
