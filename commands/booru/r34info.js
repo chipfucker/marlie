@@ -102,13 +102,6 @@ module.exports = {
 			)(),
 			inline: true
 		});
-		try {
-			interaction.editReply({embeds: [embed]});
-		} catch(error) {
-			interaction.editReply({embeds: [{
-				title: "ERROR",
-				description: error
-			}]});
-		}
+		interaction.editReply({embeds: [embed]});
 	}
 };
