@@ -10,28 +10,100 @@ const { post } = require ("../../utility/rule34api.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("r")
+		.setName("mr")
 		.setDescription("Search from Rule34")
-		.addStringOption(option =>
-			option.setName("q")
-				.setDescription("Search query")),
+		.addStringOption(option => option
+			.setName("q")
+			.setDescription("Search query")
+			.setRequired(true))
+		.addBooleanOption(option => option
+			.setName("raw")
+			.setDescription("Whether to send as raw file"))
+		.addBooleanOption(option => option
+			.setName("general")
+			.setDescription("Whether to show general tags")),
 	async execute(interaction) {
 		console.log(interaction);
-		const query = interaction.options.getString("query");
-		interaction.reply({ content: "Creating channel...", flags: MessageFlags.Ephemeral });
+		const query = interaction.options.getString("q");
+		await interaction.reply({ embeds: {
+			title: query,
+			description: "Loading..."
+		}});
 
-		const searchChannel = await interaction.client.channels.fetch("1415155574026403840");
-		const saveChannel = await interaction.client.channels.fetch("1340862369345175562");
-		const postChannel = await interaction.client.channels.fetch("1295111950656868454");
+		const data = await post(query);
+		if (!data) {
+			await interaction.editReply({ embeds: {
+				title: `No results for \`${query}\`!`,
+				color: 0x39263d
+			}});
+			return;
+		}
+		const messageData = {
+			query: query,
+			id: data.post.file.id
+		};
 
-		const thread = await searchChannel.threads.create({
-			name: "Test channel",
-			message: {
-				content: "it worked!!!"
+		const embed = {
+			author: {
+				name: query,
+				url: `https://rule34.xxx/index.php?page=post&s=view&tags=${query}`
+				// TODO: adjust link
 			},
-			appliedTags: ["1415156598929625108"]
+			title: data.info.file.id,
+			fields: [
+				{
+					name: "Copyright",
+					value: (()=>{
+						if (data.tags.copyright)
+							return data.tags.copyright.map(e => `\`${e.name}\` (${e.count})`).join("\n");
+						else return "-# **null**";
+					})(),
+				},
+				{
+					name: "Character",
+					value: (()=>{
+						if (data.tags.character)
+							return data.tags.character.map(e => `\`${e.name}\` (${e.count})`).join("\n");
+						else return "-# **null**";
+					})(),
+				},
+				{
+					name: "Artist",
+					value: (()=>{
+						if (data.tags.artist)
+							return data.tags.artist.map(e => `\`${e.name}\` (${e.count})`).join("\n");
+						else return "-# **null**";
+					})()
+				},
+				{
+					name: "General",
+					value: (()=>{
+						if (interaction.options.getBoolean("general"))
+							if (data.tags.general.length)
+								return data.tags.general.map(e => `\`${e.name}\` (${e.count})`).join("\n");
+							else return "-# **null**";
+						else return `-# *${data.tags.general.length} tags*`;
+					})(),
+					inline: true
+				},
+				{
+					name: "Meta",
+					value: (()=>{
+						if (data.tags.meta)
+							return data.tags.meta.map(e => `\`${e.name}\` (${e.count})`).join("\n");
+						else return "-# **null**";
+					})(),
+					inline: true
+				}
+			],
+			image: {
+				url: data.image.original
+			}
+		}
+
+		interaction.editReply({
+			content: `||\`\`\`json\n${JSON.stringify(messageData, null, 4)}\n\`\`\`||`,
+			embeds: [embed]
 		});
-		await interaction.client.channels.fetch(interaction.channelId).then(channel => channel.send("Created search thread in <#1415155574026403840>"))
-		await thread.send("poop");
 	}
 };

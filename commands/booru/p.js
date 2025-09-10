@@ -8,11 +8,11 @@ const { post } = require ("../../utility/rule34api.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("i")
+		.setName("mp")
 		.setDescription("Get info of post")
 		.addStringOption(option => option
-			.setName("id")
-			.setDescription("ID of post")
+			.setName("q")
+			.setDescription("Query for post")
 			.setRequired(true))
 		.addBooleanOption(option => option
 			.setName("raw")
@@ -24,30 +24,38 @@ module.exports = {
 			.setName("comments")
 			.setDescription("Whether to display comments")),
 	async execute(interaction) {
-		const id = interaction.options.getString("id")
-			?.replace(/https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)/, "$1");
+		const query = interaction.options.getString("q")
+			?.replace(/(\d+)/, "id:$1")
+			.replace(/https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)/, "$1");
 
 		await interaction.reply({embeds: [{
-			"title": id,
-			"description": "Loading..."
+			title: query,
+			description: "Loading..."
 		}]});
 
-		if (!id || Number.isNaN(Number(id))) {
+		if (!query) {
 			interaction.editReply({ embeds: [{
-				title: "You must specify an ID or URL!",
+				title: "You must specify a query or URL!",
 				color: 0xe9263d
 			}]});
 			return;
 		}
 
-		const data = await post(id);
+		const data = await post(query);
+		if (!data) {
+			interaction.editReply({ embeds: [{
+				title: `No results for \`${query}\`!`,
+				color: 0xe9263d
+			}]});
+			return;
+		}
 		
 		const raw = interaction.options.getBoolean("raw");
 		if (raw) {
 			let content = JSON.stringify(data, null, 4);
 			let attachment = {
 				attachment: Buffer.from(content),
-				name: `${id}-info.json`
+				name: `${data.info.file.id}-info.json`
 			};
 			interaction.editReply({ files: [attachment], embeds: [] });
 			return;
