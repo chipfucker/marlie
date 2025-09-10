@@ -31,7 +31,7 @@ module.exports = {
 			},
 			appliedTags: ["1415156598929625108"]
 		});
-		interaction.client.channels.fetch(interaction.channelId).send("Created search thread in <#1415155574026403840>")
+		await interaction.client.channels.fetch(interaction.channelId).then(channel => channel.send("Created search thread in <#1415155574026403840>"))
 		await thread.send("poop");
 	}
 };
