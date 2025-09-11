@@ -35,8 +35,6 @@ module.exports = {
 			posts: 0,
 			saves: 0
 		};
-		// REGEX: /.*\|\|```json\n(.*)\n```\|\|/s
-		// METHOD: Message(thread.id)
 		const content =
 			`Index: ${threadData.index}\n`+
 			`Likes: ${threadData.likes}\n`+

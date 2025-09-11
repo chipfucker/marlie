@@ -113,11 +113,40 @@ module.exports = {
 			inline: true
 		});
 
-		console.log(embed);
+		const buttons = {
+			type: 1,
+			components: [
+				{
+					type: 2,
+					style: 2,
+					label: "Prev",
+					custom_id: "prev"
+				},
+				{
+					type: 2,
+					style: 2,
+					label: "Next",
+					custom_id: "next"
+				}
+			]
+		}
 
 		interaction.editReply({
-			// content: `||\`\`\`json\n${JSON.stringify(messageData, null, 4)}\n\`\`\`||`,
-			embeds: [embed]
+			content: `||\`\`\`json\n${JSON.stringify(messageData, null, 4)}\n\`\`\`||`,
+			embeds: [embed],
+			components: [buttons],
+			withResponse: true
+		});
+
+		const message = await interaction.fetchReply();
+		const collector = message.createMessageComponentCollector({ componentType: 2 });
+		collector.on('collect', async i => {
+			switch (i.customId) {
+				case "prev":
+					const messageJson = i.message.content.replace(/\|\|```json\n(.*)\n```\|\|/, "$1");
+					const json = JSON.parse(messageJson);
+					const data = await post(`${json.query} id:>${json.id} sort:id:asc`);
+			}
 		});
 
 		//  FORWARD: {query} id:<{id} sort:id:desc
