@@ -6,7 +6,8 @@ const {
 	SlashCommandBuilder,
 	ForumChannel
 } = require("discord.js");
-const { post } = require ("../../utility/rule34api.js");
+const { post } = require("../../utility/rule34api.js");
+const { searchEmbed } = require("../../utility/embed.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -16,9 +17,6 @@ module.exports = {
 			.setName("q")
 			.setDescription("Search query")
 			.setRequired(true))
-		.addBooleanOption(option => option
-			.setName("raw")
-			.setDescription("Whether to send as raw file"))
 		.addBooleanOption(option => option
 			.setName("general")
 			.setDescription("Whether to show general tags")),
@@ -40,113 +38,17 @@ module.exports = {
 
 		const messageData = {
 			query: query,
-			id: data.info.file.id
+			id: data.info.file.id,
+			general: interaction.options.getString("general") ?? false
 		};
 
-		const embed = {
-			author: {
-				name: query,
-				url: `https://rule34.xxx/index.php?page=post&s=view&tags=${encodeURIComponent(query)}`
-				// TODO: adjust link
-			},
-			title: data.info.file.id,
-			fields: [
-				{
-					name: "Copyright",
-					value: (()=>{
-						if (data.tags.copyright.length)
-							return data.tags.copyright.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-						else return "-# **null**";
-					})(),
-				},
-				{
-					name: "Character",
-					value: (()=>{
-						if (data.tags.character.length)
-							return data.tags.character.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-						else return "-# **null**";
-					})(),
-				},
-				{
-					name: "Artist",
-					value: (()=>{
-						if (data.tags.artist.length)
-							return data.tags.artist.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-						else return "-# **null**";
-					})()
-				},
-				{
-					name: "General",
-					value: (()=>{
-						if (interaction.options.getBoolean("general"))
-							if (data.tags.general.length)
-								return data.tags.general.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-							else return "-# **null**";
-						else return `-# *${data.tags.general.length} tags*`;
-					})(),
-					inline: (() => {
-						if (interaction.options.getBoolean("general")) return false;
-						else return true;
-					})()
-				},
-				{
-					name: "Meta",
-					value: (()=>{
-						if (data.tags.meta.length)
-							return data.tags.meta.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-						else return "-# **null**";
-					})(),
-					inline: true
-				}
-			],
-			image: {
-				url: data.image.original
-			}
-		};
-
-		if (data.tags.other.length) embed.fields.push({
-			name: "Other (null)",
-			value: (()=> data.tags.other
-				.map(e => `- \`${e.name}\` (${e.count}) TYPE: ${e.type}`)
-				.join("\n")
-			)(),
-			inline: true
-		});
-
-		const buttons = {
-			type: 1,
-			components: [
-				{
-					type: 2,
-					style: 2,
-					label: "Prev",
-					custom_id: "prev"
-				},
-				{
-					type: 2,
-					style: 2,
-					label: "Next",
-					custom_id: "next"
-				}
-			]
-		}
+		const message = searchEmbed(messageData.query, data, messageData.general);
 
 		interaction.editReply({
-			content: `||\`\`\`json\n${JSON.stringify(messageData, null, 4)}\n\`\`\`||`,
-			embeds: [embed],
-			components: [buttons],
+			content: `||\`\`\`json\n${JSON.stringify(messageData)}\n\`\`\`||`,
+			embeds: [message.embed],
+			components: [message.buttons],
 			withResponse: true
-		});
-
-		const message = await interaction.fetchReply();
-		const collector = message.createMessageComponentCollector({ componentType: 2 });
-		collector.on('collect', async i => {
-			switch (i.customId) {
-				case "prev":
-					const messageJson = i.message.content.replace(/\|\|```json\n(.*)\n```\|\|/, "$1");
-					const json = JSON.parse(messageJson);
-					const data = await post(`${json.query} id:>${json.id} sort:id:asc`);
-			}
 		});
 
 		//  FORWARD: {query} id:<{id} sort:id:desc

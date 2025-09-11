@@ -1,4 +1,6 @@
 const { Events, MessageFlags } = require("discord.js");
+const { post } = require("../utility/rule34api");
+const { searchEmbed } = require("../utility/embed");
 
 module.exports = {
 	name: Events.InteractionCreate,
@@ -22,7 +24,56 @@ module.exports = {
 				}
 			}
 		} else if (interaction.isButton()) {
+			switch (interaction.customId) {
+				case "search_prev": {
+					const messageJson = interaction.message.content.replace(
+						/\|\|```json\n(.*)\n```\|\|/, "$1");
+					const json = JSON.parse(messageJson);
+					const data = await post(`${json.query} id:>${json.id} sort:id:asc`);
+					if (!data) {
+						await interaction.followUp({ content: "No more results this way! "});
+						return;
+					}
+					
+					const messageData = {
+						query: json.query,
+						id: data.info.file.id,
+						general: json.general
+					};
 			
+					const message = searchEmbed(json.query, data, json.general);
+			
+					interaction.update({
+						content: `||\`\`\`json\n${JSON.stringify(messageData)}\n\`\`\`||`,
+						embeds: [message.embed],
+						components: [message.buttons]
+					});
+				} break;
+				case "search_next": {
+					const messageJson = interaction.message.content.replace(
+						/\|\|```json\n(.*)\n```\|\|/, "$1");
+					const json = JSON.parse(messageJson);
+					const data = await post(`${json.query} id:<${json.id} sort:id:desc`);
+					if (!data) {
+						await interaction.followUp({ content: "No more results this way! "});
+						return;
+					}
+					
+					const messageData = {
+						query: json.query,
+						id: data.info.file.id,
+						general: json.general
+					};
+			
+					const message = searchEmbed(json.query, data, json.general);
+			
+					interaction.update({
+						content: `||\`\`\`json\n${JSON.stringify(messageData)}\n\`\`\`||`,
+						embeds: [message.embed],
+						components: [message.buttons]
+					});
+				} break;
+			}
 		}
 	},
 };
