@@ -15,7 +15,7 @@ const object = {
 						value: (()=>{
 							if (data.tags.copyright.length)
 								return data.tags.copyright.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-							else return "-# **null**";
+							else return "-# null";
 						})(),
 					},
 					{
@@ -23,7 +23,7 @@ const object = {
 						value: (()=>{
 							if (data.tags.character.length)
 								return data.tags.character.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-							else return "-# **null**";
+							else return "-# null";
 						})(),
 					},
 					{
@@ -31,7 +31,7 @@ const object = {
 						value: (()=>{
 							if (data.tags.artist.length)
 								return data.tags.artist.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-							else return "-# **null**";
+							else return "-# null";
 						})()
 					},
 					{
@@ -40,7 +40,7 @@ const object = {
 							if (general)
 								if (data.tags.general.length)
 									return data.tags.general.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-								else return "-# **null**";
+								else return "-# null";
 							else return `-# *${data.tags.general.length} tags*`;
 						})(),
 						inline: (() => {
@@ -53,7 +53,7 @@ const object = {
 						value: (()=>{
 							if (data.tags.meta.length)
 								return data.tags.meta.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-							else return "-# **null**";
+							else return "-# null";
 						})(),
 						inline: true
 					}
@@ -86,8 +86,7 @@ const object = {
 		if (data.tags.other.length) message.embed.fields.push({
 			name: "Other (null)",
 			value: (()=> data.tags.other
-				.map(e => `- \`${e.name}\` (${e.count}) TYPE: ${e.type}`)
-				.join("\n")
+				.map(e => `\`${e.name}\` (${e.count}) TYPE: ${e.type}`).join("\n")
 			)(),
 			inline: true
 		});

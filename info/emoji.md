@@ -54,6 +54,7 @@
 * Grey 'other' symbol (Field name)
 	* Question mark
 	* 'No' symbol
+* Down-then-right arrow (Heading 2)
 * Square brackets (Paragraph)
 * Package (Paragraph)
 * Package (Button)
