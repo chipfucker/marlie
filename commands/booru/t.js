@@ -9,7 +9,7 @@ const { post } = require ("../../utility/rule34api.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("mt")
+		.setName("mthread")
 		.setDescription("Create a thread in #search")
 		.addStringOption(option => option
 			.setName("q")
@@ -38,7 +38,7 @@ module.exports = {
 		// REGEX: /.*\|\|```json\n(.*)\n```\|\|/s
 		// METHOD: Message(thread.id)
 		const content =
-			`Posts: ${threadData.index}\n`+
+			`Index: ${threadData.index}\n`+
 			`Likes: ${threadData.likes}\n`+
 			`Posts: ${threadData.posts}\n`+
 			`Saves: ${threadData.saves}\n`+
@@ -58,7 +58,7 @@ module.exports = {
 		await thread.members.add(interaction.user.id);
 		await interaction.editReply({ content: "Sending first message..." });
 		await thread.send({ embeds: [{
-
+			description: "first message"
 		}]});
 
 		await interaction.editReply({ content:

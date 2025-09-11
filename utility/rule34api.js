@@ -14,7 +14,7 @@ const object = {
 					tags: obj.query,
 					api_key: rule34.token,
 					user_id: "2373207"
-				}).toString(); 
+				}).toString();
 			else if (obj.type === "comment")
 				return "https://api.rule34.xxx//index.php?"+new URLSearchParams({
 					page: "dapi",
@@ -97,8 +97,8 @@ const object = {
 					comments: api.json.comment_count
 				},
 				link: {
-					parent: api.json.parent_id ? true : false,
-					children: api.xml.post.getAttribute("has_children")==="true" ? true : false,
+					parent: api.json.parent_id || false,
+					children: api.xml.post.getAttribute("has_children") === "true" ? true : false,
 					source: api.json.source ? api.json.source : false
 				},
 				file: {

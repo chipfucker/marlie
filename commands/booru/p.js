@@ -8,7 +8,7 @@ const { post } = require ("../../utility/rule34api.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("mp")
+		.setName("minfo")
 		.setDescription("Get info of post")
 		.addStringOption(option => option
 			.setName("q")
@@ -24,9 +24,13 @@ module.exports = {
 			.setName("comments")
 			.setDescription("Whether to display comments")),
 	async execute(interaction) {
-		const query = interaction.options.getString("q")
-			?.replace(/(\d+)/, "id:$1")
-			.replace(/https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)/, "$1");
+		var query = interaction.options.getString("q");
+		const urlRegex = /^https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)$/;
+		const numRegex = /^(\d+)$/;
+		if (query.match(urlRegex))
+			query.replace(urlRegex, "id:$1");
+		else if (query.match(numRegex))
+			query.replace(numRegex, "id:$1");
 
 		await interaction.reply({embeds: [{
 			title: query,
@@ -63,10 +67,10 @@ module.exports = {
 
 		const postEmbed = {
 			title: data.info.file.id,
+			url: "https://rule34.xxx/index.php?page=post&s=view&id="+data.info.file.id,
 			thumbnail: {
 				url: data.image.original
 			},
-			url: "https://rule34.xxx/index.php?page=post&s=view&id="+data.info.file.id,
 			description:
 				`**Owner:** \`${data.info.post.creator.name}\`\n`+
 				`**Score:** ${data.info.post.score}\n`+
@@ -81,7 +85,7 @@ module.exports = {
 				{
 					name: "Copyright",
 					value: (()=>{
-						if (data.tags.copyright)
+						if (data.tags.copyright.length)
 							return data.tags.copyright.map(e => `\`${e.name}\` (${e.count})`).join("\n");
 						else return "-# **null**";
 					})(),
@@ -89,7 +93,7 @@ module.exports = {
 				{
 					name: "Character",
 					value: (()=>{
-						if (data.tags.character)
+						if (data.tags.character.length)
 							return data.tags.character.map(e => `\`${e.name}\` (${e.count})`).join("\n");
 						else return "-# **null**";
 					})(),
@@ -97,7 +101,7 @@ module.exports = {
 				{
 					name: "Artist",
 					value: (()=>{
-						if (data.tags.artist)
+						if (data.tags.artist.length)
 							return data.tags.artist.map(e => `\`${e.name}\` (${e.count})`).join("\n");
 						else return "-# **null**";
 					})()
@@ -111,12 +115,15 @@ module.exports = {
 							else return "-# **null**";
 						else return `-# *${data.tags.general.length} tags*`;
 					})(),
-					inline: true
+					inline: (() => {
+						if (interaction.options.getBoolean("general")) return false;
+						else return true;
+					})()
 				},
 				{
 					name: "Meta",
 					value: (()=>{
-						if (data.tags.meta)
+						if (data.tags.meta.length)
 							return data.tags.meta.map(e => `\`${e.name}\` (${e.count})`).join("\n");
 						else return "-# **null**";
 					})(),

@@ -1,0 +1,41 @@
+# Emoji
+
+## Sizes
+
+### Message
+
+| Format | Desktop | Mobile |
+| ------ | ------- | ------ |
+| Heading 1 | 33 | 78 |
+| Heading 2 | 28 | 64 |
+| Heading 3 | 22 | 53 |
+| Paragraph | 22 | 53 |
+| Subtext | 18 | 45 |
+
+### Embed
+
+| Format | Desktop | Mobile |
+| ------ | ------- | ------ |
+| Title | 18 | 53 |
+| Paragraph | 18 | 45 |
+| Subtext | 18 | 45 |
+| Field name | 18 | 45 |
+| Field paragraph | 18 | 45 |
+| Field subtext | 18 | 45 |
+| Button | 19 | 48 |
+| Reaction | 20 | 60 |
+
+### Other
+
+| Format | Desktop | Mobile |
+| ------ | ------- | ------ |
+| Forum preview | 18 | 54 |
+
+## To-Do
+
+* Square brackets (Paragraph)
+* Package (Paragraph)
+* Package (Button)
+* Heart (Paragraph)
+* Heart (Button)
+* Empty/Broken/Unfulfilled heart (Button)

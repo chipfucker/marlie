@@ -1,47 +1,15 @@
-const {
-	ActionRowBuilder,
-	ButtonStyle,
-	ChannelManager,
-	MessageFlags,
-	SlashCommandBuilder,
-	ForumChannel
-} = require("discord.js");
-const { post } = require ("../../utility/rule34api.js");
+const { Client, GatewayIntentBits } = require("discord.js");
+const { config } = require("./config.json");
+const { post } = require("./utility/rule34api.js");
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-module.exports = {
-	data: new SlashCommandBuilder()
-		.setName("msearch")
-		.setDescription("Search from Rule34")
-		.addStringOption(option => option
-			.setName("q")
-			.setDescription("Search query")
-			.setRequired(true))
-		.addBooleanOption(option => option
-			.setName("raw")
-			.setDescription("Whether to send as raw file"))
-		.addBooleanOption(option => option
-			.setName("general")
-			.setDescription("Whether to show general tags")),
-	async execute(interaction) {
-		const query = interaction.options.getString("q");
-		await interaction.reply({ embeds: [{
-			title: query,
-			description: "Loading..."
-		}]});
+client.once("clientReady", async () => {
+	console.log("EXECUTING TEST...");
+	try {
 
+		// TEST AREA [
+		const query = "angstrom id:<14761399 sort:id:desc";
 		const data = await post(query);
-		if (!data) {
-			await interaction.editReply({ embeds: [{
-				title: `No results for \`${query}\`!`,
-				color: 0xe9263d
-			}]});
-			return;
-		}
-
-		const messageData = {
-			query: query,
-			id: data.info.file.id
-		};
 
 		const embed = {
 			author: {
@@ -78,14 +46,14 @@ module.exports = {
 				{
 					name: "General",
 					value: (()=>{
-						if (interaction.options.getBoolean("general"))
+						if (false)
 							if (data.tags.general.length)
 								return data.tags.general.map(e => `\`${e.name}\` (${e.count})`).join("\n");
 							else return "-# **null**";
 						else return `-# *${data.tags.general.length} tags*`;
 					})(),
 					inline: (() => {
-						if (interaction.options.getBoolean("general")) return false;
+						if (false) return false;
 						else return true;
 					})()
 				},
@@ -113,14 +81,19 @@ module.exports = {
 			inline: true
 		});
 
-		console.log(embed);
-
-		interaction.editReply({
-			// content: `||\`\`\`json\n${JSON.stringify(messageData, null, 4)}\n\`\`\`||`,
+		const channel = await client.channels.fetch("1384093405017018399");
+		await channel.send({
 			embeds: [embed]
-		});
-
-		//  FORWARD: {query} id:<{id} sort:id:desc
-		// BACKWARD: {query} id:>{id} sort:id:asc
+		})
+		// ] END TEST AREA
+		
+		console.log("EXECUTED TEST");
+	} catch (error) {
+		console.log("ERROR: \n"+error);
+	} finally {
+		client.destroy();
+		process.exit(0);
 	}
-};
+});
+
+client.login(config.token);

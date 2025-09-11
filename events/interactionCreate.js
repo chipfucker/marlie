@@ -17,9 +17,9 @@ module.exports = {
 		} catch (error) {
 			console.error(error);
 			if (interaction.replied || interaction.deferred) {
-				await interaction.followUp({ content: "ERROR: " + error });
+				await interaction.followUp({ content: "### ERROR:\n```\n"+error+"\n```" });
 			} else {
-				await interaction.reply({ content: "ERROR: "+error });
+				await interaction.reply({ content: "### ERROR:\n```\n"+error+"\n```" });
 			}
 		}
 	},
