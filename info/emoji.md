@@ -33,6 +33,27 @@
 
 ## To-Do
 
+* Left arrow (Button)
+* Right arrow (Button)
+* Purple copyright symbol (Field name)
+	* &copy;
+* Green character symbol (Field name)
+	* Generic person silhouette
+* Red artist symbol (Field name)
+	* Pencil
+	* Pallete
+* Blue general symbol (Field name)
+	* Asterisk
+	* Plus
+	* Circle
+	* Tag
+* Yellow meta symbol (Field name)
+	* Square outline
+	* Paper with fold
+	* Play button with circle
+* Grey 'other' symbol (Field name)
+	* Question mark
+	* 'No' symbol
 * Square brackets (Paragraph)
 * Package (Paragraph)
 * Package (Button)

@@ -16,7 +16,6 @@ module.exports = {
 			.setDescription("Search query")
 			.setRequired(true)),
 	async execute(interaction) {
-
 		const query = interaction.options.getString("q");
 		await interaction.reply({ content: "Creating thread..." });
 		const searchChannel = await interaction.client.channels.fetch("1415155574026403840");
