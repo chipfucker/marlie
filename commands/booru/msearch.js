@@ -50,8 +50,5 @@ module.exports = {
 			components: [message.buttons],
 			withResponse: true
 		});
-
-		//  FORWARD: {query} id:<{id} sort:id:desc
-		// BACKWARD: {query} id:>{id} sort:id:asc
 	}
 };

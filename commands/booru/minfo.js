@@ -28,9 +28,9 @@ module.exports = {
 		const urlRegex = /^https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)$/;
 		const numRegex = /^(\d+)$/;
 		if (query.match(urlRegex))
-			query.replace(urlRegex, "id:$1");
+			query = query.replace(urlRegex, "id:$1");
 		else if (query.match(numRegex))
-			query.replace(numRegex, "id:$1");
+			query = query.replace(numRegex, "id:$1");
 
 		await interaction.reply({embeds: [{
 			title: query,
@@ -66,17 +66,21 @@ module.exports = {
 		}
 
 		const postEmbed = {
-			title: data.info.file.id,
-			url: "https://rule34.xxx/index.php?page=post&s=view&id="+data.info.file.id,
+			author: {
+				name: `First result of ${query}`,
+				url: "https://rule34.xxx/index.php?page=post&s=view&id="+data.info.file.id
+			},
+			title: `\`${data.info.file.id}\``,
 			thumbnail: {
 				url: data.image.original
 			},
 			description:
+				`**Image URL:** \`${data.image.original}\`\n`+
 				`**Owner:** \`${data.info.post.creator.name}\`\n`+
 				`**Score:** ${data.info.post.score}\n`+
 				`**Created:** ${data.info.post.created}\n`+
 				`**Updated:** ${data.info.post.updated}\n\n`+
-				`**Source:** ${data.info.link.source ? "`"+data.info.link.source+"`" : "none"}\n`+
+				`**Source:** ${data.info.link.source || "none"}\n`+
 				`**Parent:** ${data.info.link.parent ? "`"+data.info.link.parent+"`" : "none"}\n`+
 				`**Children:** ${data.info.link.children ? "yes" : "none"}\n\n`+
 				`**Hash:** \`${data.info.file.hash}\`\n`+

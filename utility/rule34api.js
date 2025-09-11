@@ -49,7 +49,8 @@ const object = {
 		const data = {
 			image: {
 				original: api.json.file_url,
-				sample: api.json.sample ? api.json.sample_url : false,
+				sample_bool: api.json.sample,
+				sample: api.json.sample_url,
 				thumbnail: api.json.preview_url,
 				size: {
 					original: {

@@ -31,13 +31,13 @@ module.exports = {
 			id: data.info.file.id,
 			index: 1,
 			likes: 0,
-			posts: 0,
+			sources: 0,
 			saves: 0
 		};
 		const content =
 			`Index: ${threadData.index}\n`+
 			`Likes: ${threadData.likes}\n`+
-			`Posts: ${threadData.posts}\n`+
+			`Sources: ${threadData.sources}\n`+
 			`Saves: ${threadData.saves}\n`+
 			`\n||\`\`\`json\n${JSON.stringify(threadData)}\n\`\`\`||`;
 

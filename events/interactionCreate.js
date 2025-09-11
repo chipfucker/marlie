@@ -73,6 +73,25 @@ module.exports = {
 						components: [message.buttons]
 					});
 				} break;
+
+				case "thread_next": {
+
+				} break;
+
+				case "thread_like:": {
+
+				} break;
+				case "thread_unlike": {
+
+				} break;
+
+				case "thread_source": {
+
+				} break;
+
+				case "thread_save": {
+
+				} break;
 			}
 		}
 	},

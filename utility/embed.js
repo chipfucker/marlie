@@ -8,7 +8,8 @@ const object = {
 					url: `https://rule34.xxx/index.php?page=post&s=view&tags=${encodeURIComponent(query)}`
 					// TODO: adjust link
 				},
-				title: data.info.file.id,
+				title: `\`${data.info.file.id}\``,
+				description: data.image.original,
 				fields: [
 					{
 						name: "Copyright",
