@@ -3,88 +3,32 @@ const { config } = require("./config.json");
 const { post } = require("./utility/rule34api.js");
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
+const fetch = require("node-fetch");
+const FormData = require("form-data");
+const { Readable } = require("stream");
+
 client.once("clientReady", async () => {
 	console.log("EXECUTING TEST...");
 	try {
 
 		// TEST AREA [
-		const query = "angstrom id:<14761399 sort:id:desc";
-		const data = await post(query);
-
-		const embed = {
-			author: {
-				name: query,
-				url: `https://rule34.xxx/index.php?page=post&s=view&tags=${encodeURIComponent(query)}`
-				// TODO: adjust link
-			},
-			title: data.info.file.id,
-			fields: [
-				{
-					name: "Copyright",
-					value: (()=>{
-						if (data.tags.copyright.length)
-							return data.tags.copyright.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-						else return "-# **null**";
-					})(),
-				},
-				{
-					name: "Character",
-					value: (()=>{
-						if (data.tags.character.length)
-							return data.tags.character.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-						else return "-# **null**";
-					})(),
-				},
-				{
-					name: "Artist",
-					value: (()=>{
-						if (data.tags.artist.length)
-							return data.tags.artist.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-						else return "-# **null**";
-					})()
-				},
-				{
-					name: "General",
-					value: (()=>{
-						if (false)
-							if (data.tags.general.length)
-								return data.tags.general.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-							else return "-# **null**";
-						else return `-# *${data.tags.general.length} tags*`;
-					})(),
-					inline: (() => {
-						if (false) return false;
-						else return true;
-					})()
-				},
-				{
-					name: "Meta",
-					value: (()=>{
-						if (data.tags.meta.length)
-							return data.tags.meta.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-						else return "-# **null**";
-					})(),
-					inline: true
-				}
-			],
-			image: {
-				url: data.image.original
-			}
-		};
-
-		if (data.tags.other.length) embed.fields.push({
-			name: "Other (null)",
-			value: (()=> data.tags.other
-				.map(e => `- \`${e.name}\` (${e.count}) TYPE: ${e.type}`)
-				.join("\n")
-			)(),
-			inline: true
+		const input = "https://api-cdn.rule34.xxx/images/6104/4b56415e63a55b8350e408643aad848d.png";
+		const filename = input.split("/").pop();
+		const promise = await fetch(input);
+		const arrayBuffer = await promise.arrayBuffer();
+		const buffer = Buffer.from(arrayBuffer);
+		const stream = Readable.from(buffer);
+		
+		const form = new FormData();
+		form.append("file", stream, { filename, contentType: "image/png" });
+		
+		const response = await fetch("https://temp.sh/upload", {
+			method: "POST",
+			body: form,
+			headers: form.getHeaders()
 		});
-
-		const channel = await client.channels.fetch("1384093405017018399");
-		await channel.send({
-			embeds: [embed]
-		})
+		
+		console.log((await response.text()).trim());
 		// ] END TEST AREA
 		
 		console.log("EXECUTED TEST");
