@@ -19,11 +19,18 @@ module.exports = {
 			.setRequired(true))
 		.addBooleanOption(option => option
 			.setName("general")
-			.setDescription("Whether to show general tags")),
+			.setDescription("Whether to show general tags"))
+		.addStringOption(option => option
+			.setName("sort")
+			.setDescription("What direction to sort in")
+			.setChoices(
+				{ name: "ID Descending", value: "{'val':'id','dir':'desc'}" }
+			)),
 	async execute(interaction) {
 		const query = interaction.options.getString("q");
+		const sort = JSON.parse(interaction.options.getString("sort"));
 		await interaction.reply({ embeds: [{
-			title: query,
+			title: `${query} (sort\:${sort.val}\:${sort.dir})`,
 			description: "Loading..."
 		}]});
 
@@ -36,10 +43,12 @@ module.exports = {
 			return;
 		}
 
+		// use new 'value' object from api
 		const messageData = {
 			query: query,
+			sort: sort,
 			id: data.info.file.id,
-			general: interaction.options.getString("general") ?? false
+			general: interaction.options.getString("general") ?? false,
 		};
 
 		const message = searchEmbed(messageData.query, data, messageData.general);

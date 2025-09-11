@@ -47,6 +47,10 @@ const object = {
 			.then(e=>Array.from(e.getElementsByTagName("comment")));
 
 		const data = {
+			value: {
+				id: api.json.id,
+				score: api.json.score,
+			},
 			image: {
 				original: api.json.file_url,
 				sample_bool: api.json.sample,
@@ -57,10 +61,10 @@ const object = {
 						width: api.json.width,
 						height: api.json.height
 					},
-					sample: api.json.sample ? {
+					sample: {
 						width: api.json.sample_width,
 						height: api.json.sample_height
-					} : false,
+					},
 					thumbnail: {
 						width: Number(api.xml.post.getAttribute("preview_width")),
 						height: Number(api.xml.post.getAttribute("preview_height"))

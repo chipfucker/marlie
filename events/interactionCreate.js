@@ -29,6 +29,9 @@ module.exports = {
 					const messageJson = interaction.message.content.replace(
 						/\|\|```json\n(.*)\n```\|\|/, "$1");
 					const json = JSON.parse(messageJson);
+					// TODO: implement custom sorting
+					const sortDir = (json.sort.dir==="desc") ? "asc" : "desc";
+					const sortCom = (json.sort.dir==="desc") ? ">" : "<";
 					const data = await post(`${json.query} id:>${json.id} sort:id:asc`);
 					if (!data) {
 						await interaction.followUp({ content: "No more results this way! "});
