@@ -1,4 +1,4 @@
-const { Events, MessageFlags } = require("discord.js");
+const { Events, MessageFlags, IntegrationApplication } = require("discord.js");
 const { post } = require("../utility/rule34api");
 const { searchEmbed } = require("../utility/embed");
 
@@ -26,12 +26,22 @@ module.exports = {
 		} else if (interaction.isButton()) {
 			switch (interaction.customId) {
 				case "search_prev": {
+					await interaction.update({ components: [{
+						type: 1,
+						components: [{
+							type: 2,
+							style: 2,
+							disabled: true,
+							custom_id: "loading",
+							label: "Loading...",
+						}]
+					}]});
 					const messageJson = interaction.message.content.replace(
 						/\|\|```json\n(.*)\n```\|\|/, "$1");
 					const json = JSON.parse(messageJson);
 					// TODO: implement custom sorting
-					const sortDir = (json.sort.dir==="desc") ? "asc" : "desc";
-					const sortCom = (json.sort.dir==="desc") ? ">" : "<";
+					// const sortDir = (json.sort.dir==="desc") ? "asc" : "desc";
+					// const sortCom = (json.sort.dir==="desc") ? ">" : "<";
 					const data = await post(`${json.query} id:>${json.id} sort:id:asc`);
 					if (!data) {
 						await interaction.followUp({ content: "No more results this way! "});
@@ -46,13 +56,23 @@ module.exports = {
 			
 					const message = searchEmbed(json.query, data, json.general);
 			
-					interaction.update({
+					interaction.editReply({
 						content: `||\`\`\`json\n${JSON.stringify(messageData)}\n\`\`\`||`,
 						embeds: [message.embed],
 						components: [message.buttons]
 					});
 				} break;
 				case "search_next": {
+					await interaction.update({ components: [{
+						type: 1,
+						components: [{
+							type: 2,
+							style: 2,
+							disabled: true,
+							custom_id: "loading",
+							label: "Loading...",
+						}]
+					}]});
 					const messageJson = interaction.message.content.replace(
 						/\|\|```json\n(.*)\n```\|\|/, "$1");
 					const json = JSON.parse(messageJson);
@@ -70,7 +90,7 @@ module.exports = {
 			
 					const message = searchEmbed(json.query, data, json.general);
 			
-					interaction.update({
+					interaction.editReply({
 						content: `||\`\`\`json\n${JSON.stringify(messageData)}\n\`\`\`||`,
 						embeds: [message.embed],
 						components: [message.buttons]

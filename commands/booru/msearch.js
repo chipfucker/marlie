@@ -24,11 +24,11 @@ module.exports = {
 			.setName("sort")
 			.setDescription("What direction to sort in")
 			.setChoices(
-				{ name: "ID Descending", value: "{'val':'id','dir':'desc'}" }
+				{ name: "ID Descending", value: '{"val":"id","dir":"desc"}' }
 			)),
 	async execute(interaction) {
 		const query = interaction.options.getString("q");
-		const sort = JSON.parse(interaction.options.getString("sort"));
+		const sort = JSON.parse(interaction.options.getString("sort") || '{"val":"id","dir":"desc"}');
 		await interaction.reply({ embeds: [{
 			title: `${query} (sort\:${sort.val}\:${sort.dir})`,
 			description: "Loading..."
