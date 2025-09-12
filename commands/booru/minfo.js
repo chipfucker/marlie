@@ -1,7 +1,4 @@
 const {
-	ActionRowBuilder,
-	AttachmentBuilder,
-	ButtonStyle,
 	SlashCommandBuilder
 } = require("discord.js");
 const { post } = require ("../../utility/rule34api.js");
