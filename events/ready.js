@@ -5,5 +5,6 @@ module.exports = {
 	once: true,
 	async execute(client) {
 		console.log(`READY: Logged into ${client.user.tag}`);
+		client.user.setActivity("big butt", { type: 4 });
 	},
 };

@@ -3,10 +3,6 @@ const { config } = require("./config.json");
 const { post } = require("./utility/rule34api.js");
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-const fetch = require("node-fetch");
-const FormData = require("form-data");
-const { Readable } = require("stream");
-
 client.once("clientReady", async () => {
 	console.log("EXECUTING TEST...");
 	try {

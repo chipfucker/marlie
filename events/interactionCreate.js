@@ -5,7 +5,7 @@ const { searchEmbed } = require("../utility/embed");
 module.exports = {
 	name: Events.InteractionCreate,
 	async execute(interaction) {
-		if (interaction.isChatInputCommand()) {
+		if (interaction.isChatInputCommand() || interaction.isMessageContextMenuCommand()) {
 			const command = interaction.client.commands.get(interaction.commandName);
 
 			if (!command) {

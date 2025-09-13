@@ -7,6 +7,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("minfo")
 		.setDescription("Get info of post")
+		.setIntegrationTypes(1).setContexts(0, 2)
 		.addStringOption(option => option
 			.setName("q")
 			.setDescription("Query for post")
