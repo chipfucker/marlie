@@ -60,7 +60,7 @@ module.exports = {
 			query: query,
 			sort: sort,
 			id: data.info.file.id,
-			general: interaction.options.getString("general") ?? false,
+			general: interaction.options.getBoolean("general") ?? false,
 		};
 
 		const message = searchEmbed(messageData.query, data, messageData.general);

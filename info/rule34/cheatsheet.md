@@ -11,8 +11,8 @@ Returns posts that have the tags `foo` and `bar`.
 Returns posts that have the tags `foo` or `bar`.
 
 This will return posts with at least one tag from each group:
-`( foo ~ bar ) ( bax ~ qux )` returns posts that have `foo` and `bar`, `foo`
-and `bar`, `bar` and `bar`, and `bar` and `bar`.
+`( foo ~ bar ) ( bax ~ qux )` returns posts that have `foo` and `bax`, `bar`
+and `bax`, `foo` and `qux`, and `bar` and `qux`.
 
 More tags can be included in an 'or' group as long as they are separated by
 spaces and a tilde; for example, `( foo ~ bar ~ bax )` will return posts that
@@ -171,7 +171,7 @@ Returns posts ordered by `foo` descending, from 9-1.
 * [`parent`](#parent123)
 * [`score`](#score123)
 * `source`: Returns posts ordered by their source value alphabetically,
-	starting with the Japanese character "～" (nami dasshu).
+starting with the Japanese character "～" (nami dasshu).
 * `updated`: Returns posts ordered by the date they were last updated.
 
 > [!CAUTION]
