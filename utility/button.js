@@ -80,14 +80,14 @@ const object = {
 			case "showoff": {
 				if (action === "prev" || action === "next") {
 					const originalMessage = i.message.content.replace(
-						/(-# \[Data url\]\(https:\/\/data\?.* "Ignore this!"\)\n:mag_right: .*\n).*/
+						/(-# \[Data URL\]\(https:\/\/data\?.* "Ignore this!"\)\n:mag_right: .*\n).*/
 					, "$1");
 					await i.update({ components: [], content:
 						`${originalMessage}### Loading...`
 					});
 	
 					const messageJson = i.message.content.replace(
-						/-# \[Data url\]\(https:\/\/data\?(.*) "Ignore this!"\).*/s
+						/-# \[Data URL\]\(https:\/\/data\?(.*) "Ignore this!"\).*/s
 					, "$1");
 					const json = JSON.parse(messageJson);
 	
@@ -129,7 +129,7 @@ const object = {
 					};
 			
 					i.editReply({
-						content: `-# [Data url](https://data?${JSON.stringify(messageData)} "Ignore this!")\n`
+						content: `-# [Data URL](https://data?${JSON.stringify(messageData)} "Ignore this!")\n`
 							+ `:mag_right: ${json.query}\n[Image](${data.image.original}?${data.info.file.id})`,
 						components: [{
 							type: 1,

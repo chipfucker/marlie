@@ -90,7 +90,7 @@ module.exports = {
 		};
 
 		await interaction.editReply({
-			content: `-# [Data url](https://data?${JSON.stringify(messageData)} "Ignore this!")\n`
+			content: `-# [Data URL](https://data?${JSON.stringify(messageData)} "Ignore this!")\n`
 				+ `:mag_right: ${input}\n[Image](${data.image.original}?${data.info.file.id})`,
 			components: [{
 				type: 1,
