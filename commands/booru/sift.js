@@ -4,7 +4,7 @@ const { searchEmbed } = require("../../utility/embed.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("msearch")
+		.setName("sift")
 		.setDescription("Search from Rule34")
 		.setIntegrationTypes(1).setContexts(0, 2)
 		.addStringOption(option => option

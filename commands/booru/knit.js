@@ -9,7 +9,7 @@ const { post } = require ("../../utility/rule34api.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("mthread")
+		.setName("knit")
 		.setDescription("Create a thread in #search")
 		.addStringOption(option => option
 			.setName("q")

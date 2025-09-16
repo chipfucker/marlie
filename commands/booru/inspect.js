@@ -5,7 +5,7 @@ const { post } = require ("../../utility/rule34api.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("minfo")
+		.setName("inspect")
 		.setDescription("Get info of post")
 		.setIntegrationTypes(1).setContexts(0, 2)
 		.addStringOption(option => option
