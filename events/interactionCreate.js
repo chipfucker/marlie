@@ -4,9 +4,10 @@ const { buttonEvent } = require("../utility/button");
 module.exports = {
 	name: Events.InteractionCreate,
 	async execute(interaction) {
+		console.log(`${interaction.user.username}: ran ${interaction.commandName}`);
+		
 		if (interaction.isChatInputCommand() || interaction.isMessageContextMenuCommand()) {
 			const command = interaction.client.commands.get(interaction.commandName);
-
 			try {
 				await command.execute(interaction);
 			} catch (error) {
