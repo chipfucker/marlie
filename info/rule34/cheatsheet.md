@@ -2,6 +2,8 @@
 
 ## Search by tag
 
+Tags can be used with special syntax to achieve more precise results.
+
 ### `foo bar`
 
 Returns posts that have the tags `foo` and `bar`.
@@ -65,8 +67,8 @@ This will return posts with tags such as `foobazbar`, `fooquxbar`, and even
 
 Returns posts whose MD5 hash is `foo`.
 
-This can be combined with the partial operator, such as `md5:foo*`, to return
-posts whose hash starts with `foo`.
+This can be combined with the partial operator, such as `md5:foo*`, which
+returns posts whose hash starts with `foo`.
 
 ### `user:foo`
 
@@ -77,15 +79,18 @@ have been uploaded by user `foo`.
 
 Returns posts whose rating is `foo`.
 
-This can be combined with the negative operator, such as `-rating:foo`, to
-return posts whose rating isn't `foo`.
+This can be combined with the negative operator, such as `-rating:foo`, which
+returns posts whose rating isn't `foo`.
 
-*'foo'* is an invalid example; there are strict values that are accepted:
+#### Allowed values
 
-* `explicit`: Returns posts whose media contains nudity or sex.
-* `questionable`: Returns posts whose media contains implications or
-suggestions toward sex, revealing clothing, or is generally 'questionable.'
-Also returns posts that can be deemed safe.
+There are only certain values that are accepted in place of `foo`. (Note that
+`foo` is an invalid value and is only used as an example.)
+
+| Value          | Description                       |
+| -------------- | --------------------------------- |
+| `explicit`     | Contains nudity or sex            |
+| `questionable` | Doesn't contain explicit material |
 
 > [!NOTE]
 > The `safe` value is recently obsolete and `rating:safe` no longer returns
@@ -100,31 +105,42 @@ Also returns posts that can be deemed safe.
 >
 > With that being said, as the `safe` rating has been superseded, and as
 > `explicit` and `questionable` are *very commonly* confused and used
-> interchangably, I would recommend not using this for any regard at all, let
-> alone its intended purpose. Only use this for technical reasons.
+> interchangably, I would recommend not using this for its intended purpose.
+> Only use this for technical reasons.
 
 ### `width:123`
 
 Returns posts whose media's width in pixels is `123`.
 
+Any value in place of `123` must be an integer.
+
 ### `height:123`
 
 Returns posts whose media's height in pixels is `123`.
 
+Any value in place of `123` must be an integer.
+
 ### `id:123`
 
 Returns posts whose ID is `123`.
+
+Any value in place of `123` must be an integer.
 
 ### `parent:123`
 
 Returns posts whose ID or parent is `123`; In other words, returns the post
 at ID `123` along with its children.
 
+Any value in place of `123` must be an integer.
+
 ### `score:123`
 
-Returns posts whose score is `123`.
+Returns posts whose score is `123`; in other words, returns posts whose total
+upvotes equals `123`.
 
 This value is updated once daily at 12:00 AM CST.
+
+Any value in place of `123` must be an integer.
 
 ## Search by value comparison
 
@@ -132,26 +148,29 @@ This value is updated once daily at 12:00 AM CST.
 
 Returns posts whose `foo` value is greater than `123`.
 
-*'foo'* is an invalid example; there are strict values that are accepted:
+#### Allowed values
 
-* [`width`](#width123)
-* [`height`](#height123)
-* [`id`](#id123)
-* [`score`](#score123)
+There are only certain values that are accepted in place of `foo`. (Note that
+`foo` is an invalid value and is only used as an example.)
 
-*>* (greater than) is only an example; there are more values that are
-accepted:
+| Value                  | Description              |
+| ---------------------- | ------------------------ |
+| [`width`](#width123)   | Media's width in pixels  |
+| [`height`](#height123) | Media's height in pixels |
+| [`id`](#id123)         | ID                       |
+| [`score`](#score123)   | Total upvotes            |
 
-* `=` (equals) or none given: Returns posts whose specified value is equal to
-the given number.
-* `>` (greater than): Returns posts whose specified value is greater than the
-given number.
-* `>=` (greater than, equals): Returns posts whose specified value is greater
-than or equal to the given number.
-* `<` (less than): Returns posts whose specified value is less than the given
-number.
-* `<=` (less than, equals): Returns posts whose specified value is less than or
-equal to the given number.
+There are only certain values that are accepted in place of `>` (greater than).
+
+| Value                       | Description              |
+| --------------------------- | ------------------------ |
+| `=` (equals) or none        | Equal to                 |
+| `>` (greater than)          | Greater than             |
+| `>=` (greater than, equals) | Greater than or equal to |
+| `<` (less than)             | Less than                |
+| `<=` (less than, equals)    | Less than or equal to    |
+
+Any value in place of `123` must be an integer.
 
 > [!NOTE]
 > The colon (`:`) is mandatory, even if you're searching by value comparison:
@@ -161,19 +180,23 @@ equal to the given number.
 
 ### `sort:foo:desc`
 
-Returns posts ordered by `foo` descending, from 9-1.
+Returns posts ordered by `foo` descending.
 
-*'foo'* is an invalid example; there are strict values that are accepted:
+#### Allowed values
 
-* [`width`](#width123)
-* [`height`](#height123)
-* [`id`](#id123)
-* [`parent`](#parent123)
-* [`score`](#score123)
-* `source`: Returns posts ordered by their source value alphabetically,
-starting with the Japanese character "～" (nami dasshu).
-* `updated`: Returns posts ordered by the date they were last updated.
-* `date`: Returns posts ordered by their date of creation.
+There are only certain values that are accepted in place of `foo`. (Note that
+`foo` is an invalid value and is only used as an example.)
+
+| Value                  | Description              | Type    |
+| ---------------------- | ------------------------ | ------- |
+| [`width`](#width123)   | Media's width in pixels  | Integer |
+| [`height`](#height123) | Media's height in pixels | Integer |
+| [`id`](#id123)         | ID                       | Integer |
+| [`parent`](#parent123) | Parent post ID           | Integer |
+| [`score`](#score123)   | Total upvotes            | Integer |
+| `source`               | Source text              | String  |
+| `updated`              | Date of last update      | Time    |
+| `date`                 | Date of creation         | Time    |
 
 > [!IMPORTANT]
 > [The official Rule34 Cheatsheet](./given/cheatsheet.md) states that you can
@@ -188,8 +211,9 @@ starting with the Japanese character "～" (nami dasshu).
 > * `http://rule34.paheal.net/post/view/513170`
 > * `https://rule34.paheal.net/post/view/513161`
 
-*:sort* is only an example; there are more values that are accepted:
+There are only certain values that are accepted in place of `:desc`.
 
-* `:desc` or none given: Returns posts ordered from high to low; 9-1-A-Z and
-late-early.
-* `:asc`: Returns posts ordered from low to high; Z-A-1-9 and early-late.
+| Value           | Description                                      |
+| --------------- | ------------------------------------------------ |
+| `:desc` or none | Ordered from high to low; 9-1-A-Z and late-early |
+| `:asc`          | Ordered from low to high; Z-A-1-9 and early-late |
