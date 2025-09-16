@@ -1,4 +1,19 @@
 const object = {
+	autocomplete: async (query) => {
+		const arr = query.split(" ");
+		const tag = arr.pop();
+		if (!tag) return false;
+		const rest = arr.join(" ");
+		const results = await fetch(
+			"https://api.rule34.xxx/autocomplete.php?q=" + encodeURIComponent(tag)
+		).then(e=>e.json());
+		const data = results.map(obj => ({
+			tag: obj.value,
+			query: `${rest} ${obj.value}`.trim(),
+			count: obj.label.split("(").pop().split(")").shift()
+		}));
+		return data;
+	},
 	post: async (query) => {
 		const { rule34 } = require("../config.json");
 		const { DOMParser } = require("xmldom");
@@ -47,10 +62,6 @@ const object = {
 			.then(e=>Array.from(e.getElementsByTagName("comment")));
 
 		const data = {
-			value: {
-				id: api.json.id,
-				score: api.json.score,
-			},
 			image: {
 				original: api.json.file_url,
 				sample_bool: api.json.sample,

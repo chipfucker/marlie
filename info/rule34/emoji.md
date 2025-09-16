@@ -35,6 +35,8 @@
 
 * Left arrow (Button)
 * Right arrow (Button)
+* Magnifying glass (Paragraph)
+* Link symbol (Paragraph)
 * Purple copyright symbol (Field name)
 	* &copy;
 * Green character symbol (Field name)

@@ -1,20 +1,16 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { autocomplete, post } = require("../../utility/rule34api.js");
-const { searchEmbed } = require("../../utility/embed.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("msearch")
-		.setDescription("Search from Rule34")
+		.setName("showoff")
+		.setDescription("Show off to a bud")
 		.setIntegrationTypes(1).setContexts(0, 2)
 		.addStringOption(option => option
 			.setName("q")
 			.setDescription("Search query")
 			.setRequired(true)
 			.setAutocomplete(true))
-		.addBooleanOption(option => option
-			.setName("general")
-			.setDescription("Whether to show general tags"))
 		.addStringOption(option => option
 			.setName("sort")
 			.setDescription("What to sort by")
@@ -72,18 +68,12 @@ module.exports = {
 			dir: interaction.options.getString("dir") || "desc"
 		};
 
-		await interaction.reply({ embeds: [{
-			title: `\`${input}\` (${sort.val}:${sort.dir})`,
-			description: "Loading..."
-		}]});
+		await interaction.reply({ content: `# ${input}\nLoading...` });
 		
 		const query = `${input} sort:${sort.val}:${sort.dir}`;
 		const data = await post(query);
 		if (!data) {
-			await interaction.editReply({ embeds: [{
-				title: `No results for \`${query}\`!`,
-				color: 0xe9263d
-			}]});
+			await interaction.editReply({ content: `No results for \`${query}\`!` });
 			return;
 		}
 
@@ -96,16 +86,29 @@ module.exports = {
 				case "id": return data.info.file.id;
 				case "score": return data.info.post.score;
 				default: return 0;
-			}})(),
-			general: interaction.options.getBoolean("general") ?? false,
+			}})()
 		};
 
-		const message = searchEmbed(messageData.query, data, messageData.general);
-
 		await interaction.editReply({
-			content: `||\`\`\`json\n${JSON.stringify(messageData)}\n\`\`\`||`,
-			embeds: [message.embed],
-			components: [message.buttons],
+			content: `-# [Data url](https://data?${JSON.stringify(messageData)} "Ignore this!")\n`
+				+ `:mag_right: ${input}\n[Image](${data.image.original}?${data.info.file.id})`,
+			components: [{
+				type: 1,
+				components: [
+					{
+						type: 2,
+						style: 2,
+						label: "Prev",
+						custom_id: "showoff:prev"
+					},
+					{
+						type: 2,
+						style: 2,
+						label: "Next",
+						custom_id: "showoff:next"
+					}
+				]
+			}],
 			withResponse: true
 		});
 	},

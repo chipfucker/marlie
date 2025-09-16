@@ -173,16 +173,23 @@ Returns posts ordered by `foo` descending, from 9-1.
 * `source`: Returns posts ordered by their source value alphabetically,
 starting with the Japanese character "～" (nami dasshu).
 * `updated`: Returns posts ordered by the date they were last updated.
+* `date`: Returns posts ordered by their date of creation.
+
+> [!IMPORTANT]
+> [The official Rule34 Cheatsheet](./given/cheatsheet.md) states that you can
+> sort by `rating` and `user`, but doing so will not provide you any results.
 
 > [!CAUTION]
-> Sorting by `source` isn't reliable; currently, the following
-> results for such are ordered ascending:
+> Sorting by `source` isn't reliable ascending; currently, the following
+> results for such are ordered:
 > 
 > * `https://rule34.paheal.net/post/view/513160`
 > * `https://rule34.paheal.net/post/view/513159`
 > * `http://rule34.paheal.net/post/view/513170`
 > * `https://rule34.paheal.net/post/view/513161`
 
-> [!IMPORTANT]
-> [The official Rule34 Cheatsheet](./given/cheatsheet.md) states that you can
-> sort by `rating` and `user`, but doing so will not provide you any results.
+*:sort* is only an example; there are more values that are accepted:
+
+* `:desc` or none given: Returns posts ordered from high to low; 9-1-A-Z and
+late-early.
+* `:asc`: Returns posts ordered from low to high; Z-A-1-9 and early-late.

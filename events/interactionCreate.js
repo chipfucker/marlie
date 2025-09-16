@@ -1,17 +1,11 @@
-const { Events, MessageFlags, IntegrationApplication } = require("discord.js");
-const { post } = require("../utility/rule34api");
-const { searchEmbed } = require("../utility/embed");
+const { Events } = require("discord.js");
+const { buttonEvent } = require("../utility/button");
 
 module.exports = {
 	name: Events.InteractionCreate,
 	async execute(interaction) {
 		if (interaction.isChatInputCommand() || interaction.isMessageContextMenuCommand()) {
 			const command = interaction.client.commands.get(interaction.commandName);
-
-			if (!command) {
-				console.error(`No command matching ${interaction.commandName} was found.`);
-				return;
-			}
 
 			try {
 				await command.execute(interaction);
@@ -23,99 +17,15 @@ module.exports = {
 					await interaction.reply({ content: "### ERROR:\n```\n"+error+"\n```" });
 				}
 			}
-		} else if (interaction.isButton()) {
-			switch (interaction.customId) {
-				case "search_prev": {
-					await interaction.update({ components: [{
-						type: 1,
-						components: [{
-							type: 2,
-							style: 2,
-							disabled: true,
-							custom_id: "loading",
-							label: "Loading...",
-						}]
-					}]});
-					const messageJson = interaction.message.content.replace(
-						/\|\|```json\n(.*)\n```\|\|/, "$1");
-					const json = JSON.parse(messageJson);
-					// TODO: implement custom sorting
-					// const sortDir = (json.sort.dir==="desc") ? "asc" : "desc";
-					// const sortCom = (json.sort.dir==="desc") ? ">" : "<";
-					const data = await post(`${json.query} id:>${json.id} sort:id:asc`);
-					if (!data) {
-						await interaction.followUp({ content: "No more results this way! "});
-						return;
-					}
-					
-					const messageData = {
-						query: json.query,
-						id: data.info.file.id,
-						general: json.general
-					};
-			
-					const message = searchEmbed(json.query, data, json.general);
-			
-					interaction.editReply({
-						content: `||\`\`\`json\n${JSON.stringify(messageData)}\n\`\`\`||`,
-						embeds: [message.embed],
-						components: [message.buttons]
-					});
-				} break;
-				case "search_next": {
-					await interaction.update({ components: [{
-						type: 1,
-						components: [{
-							type: 2,
-							style: 2,
-							disabled: true,
-							custom_id: "loading",
-							label: "Loading...",
-						}]
-					}]});
-					const messageJson = interaction.message.content.replace(
-						/\|\|```json\n(.*)\n```\|\|/, "$1");
-					const json = JSON.parse(messageJson);
-					const data = await post(`${json.query} id:<${json.id} sort:id:desc`);
-					if (!data) {
-						await interaction.followUp({ content: "No more results this way! "});
-						return;
-					}
-					
-					const messageData = {
-						query: json.query,
-						id: data.info.file.id,
-						general: json.general
-					};
-			
-					const message = searchEmbed(json.query, data, json.general);
-			
-					interaction.editReply({
-						content: `||\`\`\`json\n${JSON.stringify(messageData)}\n\`\`\`||`,
-						embeds: [message.embed],
-						components: [message.buttons]
-					});
-				} break;
-
-				case "thread_next": {
-
-				} break;
-
-				case "thread_like:": {
-
-				} break;
-				case "thread_unlike": {
-
-				} break;
-
-				case "thread_source": {
-
-				} break;
-
-				case "thread_save": {
-
-				} break;
+		} else if (interaction.isAutocomplete()) {
+			const command = interaction.client.commands.get(interaction.commandName);
+			try {
+				await command.autocomplete(interaction);
+			} catch (error) {
+				console.error(error);
 			}
+		} else if (interaction.isButton()) {
+			await buttonEvent(interaction);
 		}
 	},
 };
