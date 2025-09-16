@@ -1,6 +1,5 @@
 const { Client, GatewayIntentBits } = require("discord.js");
 const { config } = require("../config.json");
-const { post } = require("../utility/rule34api.js");
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 client.once("clientReady", async () => {
@@ -8,6 +7,8 @@ client.once("clientReady", async () => {
 	try {
 
 		// TEST AREA [
+		const channel = await client.channels.fetch("1394467910042255500");
+		await channel.send("im boutta fart everywhere");
 		// ] END TEST AREA
 		
 		console.log("EXECUTED TEST");
