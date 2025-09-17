@@ -7,8 +7,8 @@ client.once("clientReady", async () => {
 	try {
 
 		// TEST AREA [
-		const channel = await client.channels.fetch("1394467910042255500");
-		await channel.send("im boutta fart everywhere");
+		const { ApplicationCommandType } = require("discord.js");
+		console.log(ApplicationCommandType[1]);
 		// ] END TEST AREA
 		
 		console.log("EXECUTED TEST");
