@@ -8,7 +8,7 @@ const { post } = require ("../../utility/rule34api.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("mhost")
+		.setName("host")
 		.setDescription("Host image/video file on temp.sh")
 		.setIntegrationTypes(1).setContexts(0, 2)
 		.addStringOption(option => option

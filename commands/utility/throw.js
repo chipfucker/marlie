@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("mthrow")
+		.setName("throw")
 		.setDescription("Throw a message to the codespace!")
 		.setIntegrationTypes(1).setContexts(0, 2)
 		.addStringOption(option => option

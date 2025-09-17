@@ -4,7 +4,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 const message =
 /*** MESSAGE ***/
-"This is a test. Hello!!"
+`This is a test. Hello!!`
 /*** MESSAGE ***/;
 
 client.once("clientReady", async () => {
