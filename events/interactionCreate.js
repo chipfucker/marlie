@@ -22,11 +22,10 @@ module.exports = {
 				await command.execute(interaction);
 			} catch (error) {
 				console.error(error);
-				if (interaction.replied || interaction.deferred) {
+				if (interaction.replied || interaction.deferred)
 					await interaction.followUp({ content: "### ERROR:\n```\n"+error+"\n```" });
-				} else {
+				else
 					await interaction.reply({ content: "### ERROR:\n```\n"+error+"\n```" });
-				}
 			}
 		} else if (interaction.isAutocomplete()) {
 			const command = interaction.client.commands.get(interaction.commandName);

@@ -1,5 +1,7 @@
-const { ContextMenuCommandBuilder } = require("discord.js");
+const { ContextMenuCommandBuilder, MessageFlags } = require("discord.js");
 const fs = require("node:fs");
+const path = require("node:path");
+const https = require("node:https");
 
 module.exports = {
 	data: new ContextMenuCommandBuilder()
@@ -9,41 +11,74 @@ module.exports = {
 	async execute(interaction) {
 		if (interaction.channel.id === "1384093405017018399") await interaction.deferReply();
 		else await interaction.deferReply({ flags: 64 });
+
+		const prefix = ("\x1b[93m\x1b[1mTHR\x1b[0m");
+		console.log(`${prefix}\x1b[2m catching message as \x1b[0m"${interaction.id}"`);
+
+		// INITIAL VARIABLES
 		const message = interaction.targetMessage;
-		console.dir(message.attachments, { depth: null });
-		console.dir(message.embeds, { depth: null });
-		const msgPath = "catch/" + interaction.id + "/";
-		const msgFolder = fs.mkdir(msgPath, { recursive: true }, (err, path) => {
-			if (err)
-				if (err.code === "EEXIST") {
-					const oldFiles = fs.readdirSync(msgPath);
+		// console.dir(message, { depth: null }); // DEBUG
+		// console.dir(message.attachments, { depth: null }); // DEBUG
+		// console.dir(message.embeds, { depth: null }); // DEBUG
+		const msgPath = path.join("catch", interaction.id);
+		let statement = "Message thrown!";
+
+		// CREATE / REPURPOSE FOLDER
+		fs.mkdirSync(msgPath, { recursive: true }, (err, path) => {
+			if (err?.code === "EEXIST") {
+				statement = "Message rethrown!\n-# There was an existing folder with the same ID/name.";
+				const oldFiles = fs.readdirSync(msgPath);
+				console.log(oldFiles);
+				for (const file of oldFiles) {
+					console.log(file); // DEBUG
+					fs.rename(path.join(msgPath, file), path.join(msgPath, "old", file))
 				}
-				else throw err;
+				return path;
+			} else if (err) throw err;
 			else return path;
 		});
-		console.log(msgFolder);
-		let msgFile = "";
-		let statement = "Message thrown!";
+
+		// SUBINITIAL VARIABLES
 		let quote = "";
-		let dataDisplay = "";
+		const dataDisplay = [];
+
+		// CREATE FILES
 		if (message.content) {
-			msgFile += `== CONTENT ==\n\n`;
+			fs.writeFileSync(path.join(msgPath, "content.txt"), message.content);
 			quote += message.content;
 		}
-		if (message.embeds.length) {
-			msgFile.embeds = message.embeds;
-			dataDisplay += `${message.embeds.length} embed${(message.embeds.length !== 1) ? "s" : ""}\n`;
-		}
 		if (message.attachments.size) {
-			const attachmentFolder = fs.mkdirSync(msgFolder + "attachments/");
-			msgFile.attachments = message.attachments.map(e => e.name);
-			dataDisplay += `${message.attachments.length} attachment${(message.attachments.length !== 1) ? "s" : ""}\n`;
+			const filesPath = path.join(msgPath, "attachments");
+			fs.mkdirSync(filesPath);
+			for (const [key, value] of message.attachments) {
+				const attachment = await fetch(value.url)
+					.then(e => e.arrayBuffer())
+					.then(e => Buffer.from(e));
+				fs.writeFileSync(
+					path.join(filesPath, `${value.id}~${value.name}`),
+					attachment
+				)
+			}
+			dataDisplay.push(`${message.attachments.size} attachment${(message.attachments.size !== 1) ? "s" : ""}\n`);
 		}
-		console.log(
+		console.dir(message.embeds); // DEBUG
+		if (message.embeds.length) {
+			const embedsPath = path.join(msgPath, "embeds");
+			fs.mkdirSync(embedsPath);
+			for (const embed of message.embeds) {
+				fs.writeFileSync(
+					path.join(embedsPath, `${embed.data.id}.json`),
+					JSON.stringify(embed, null, "\t")
+				);
+			}
+			dataDisplay.push(`${message.embeds.length} embed${(message.embeds.length !== 1) ? "s" : ""}`);
+		}
+		/* console.log(
 			`\n######  Someone threw you a message! I wonder who...\n##\n##  ${
-				quote.substring(4, quote.length).replace(/\n/g, "\n##  ")
+				quote.replace(/\n/g, "\n##  ")
 			}\n##\n######  From, ${interaction.user.username}\n##  Saved to catch/`
-		);
+		); */
+		console.log("caught as folder")
 		if (interaction.channel.id === "1384093405017018399") {
 			await interaction.editReply(`Message thrown!: >>> ${quote}`);
 		}

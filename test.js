@@ -7,8 +7,9 @@ client.once("clientReady", async () => {
 	try {
 
 		// TEST AREA [
-		const { ApplicationCommandType } = require("discord.js");
-		console.log(ApplicationCommandType[1]);
+		const fs = require("node:fs");
+		const contents = fs.readdirSync(__dirname);
+		console.log(contents);
 		// ] END TEST AREA
 		
 		console.log("EXECUTED TEST");
