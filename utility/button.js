@@ -82,9 +82,7 @@ const object = {
 					const originalMessage = i.message.content.replace(
 						/(-# \[Data URL\]\(https:\/\/data\?.* "Ignore this!"\)\n:mag_right: .*\n).*/
 					, "$1");
-					await i.update({ components: [], content:
-						`${originalMessage}### Loading...`
-					});
+					await i.update({ components: [], content: `${originalMessage}### Loading...` });
 	
 					const messageJson = i.message.content.replace(
 						/-# \[Data URL\]\(https:\/\/data\?(.*) "Ignore this!"\).*/s

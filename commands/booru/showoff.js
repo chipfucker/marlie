@@ -89,12 +89,10 @@ module.exports = {
 			}})()
 		};
 
-		const file = new AttachmentBuilder(data.image.original);
-
 		await interaction.editReply({
 			content: `-# [Data URL](https://data?${JSON.stringify(messageData)} "Ignore this!")\n`
 				+ `:mag_right: ${input}\n[Image](${data.image.original}?${data.info.file.id})`,
-			files: [file],
+			
 			components: [{
 				type: 1,
 				components: [

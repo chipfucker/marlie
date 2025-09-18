@@ -121,7 +121,8 @@ const object = {
 					id: api.json.id,
 					directory: api.json.directory,
 					filename: api.json.image,
-					hash: api.json.hash
+					hash: api.json.hash,
+					extension: api.json.image.split(".").pop()
 				}
 			},
 			tags: {

@@ -1,23 +1,20 @@
-const { Events, ApplicationCommandType } = require("discord.js");
+const { Events, ApplicationCommandType, InteractionType } = require("discord.js");
 const { buttonEvent } = require("../utility/button");
 
 module.exports = {
 	name: Events.InteractionCreate,
 	async execute(interaction) {
 		const cmdString =
-			`\x1b[96m\x1b[1mCOMMAND:\x1b[0m\x1b[2m \x1b[0m${
+			`\x1b[96m\x1b[1m/COMMAND\x1b[0m\x1b[2m \x1b[0m${
 				interaction.user.username
 			}\x1b[2m ran \x1b[3m${
-				ApplicationCommandType[interaction.commandType]
-			}\x1b[0m\x1b[2m command \x1b[0m"\x1b[1m${
-				interaction.commandName
+				ApplicationCommandType[interaction.commandType || interaction.message.interaction.type]
+			} (${
+				InteractionType[interaction.type]
+			})\x1b[0m\x1b[2m command \x1b[0m"\x1b[1m${
+				interaction.commandName || interaction.message.interaction.commandName
 			}\x1b[0m"`;
-		const separator = "\u2501".repeat(cmdString.replace(/\x1b\[\d+m/g, "").length);
-		console.log(
-			`\n  \u{2571}\u{2571} ${separator}\u2501\u2500\x1b[2m\u2500\x1b[0m` +
-			`\n \u{2571}\u{2571}  ${cmdString}` +
-			`\n\u{2571}\u{2571} \u2501\u2501${separator}\u2501\u2500\x1b[2m\u2500\x1b[0m\n`
-		);
+		console.log(cmdString);
 		
 		if (interaction.isChatInputCommand() || interaction.isMessageContextMenuCommand()) {
 			const command = interaction.client.commands.get(interaction.commandName);
