@@ -5,7 +5,7 @@ module.exports = {
 	name: Events.InteractionCreate,
 	async execute(interaction) {
 		const cmdString =
-			`\x1b[96m\x1b[1m/COMMAND\x1b[0m\x1b[2m \x1b[0m${
+			`\x1b[96m\x1b[1mCMD\x1b[0m\x1b[2m \x1b[0m${
 				interaction.user.username
 			}\x1b[2m ran \x1b[3m${
 				ApplicationCommandType[interaction.commandType || interaction.message.interaction.type]
