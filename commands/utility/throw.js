@@ -3,21 +3,9 @@ const { SlashCommandBuilder } = require("discord.js");
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("throw")
-		.setDescription("Throw a message to the codespace!")
-		.setIntegrationTypes(1).setContexts(0, 2)
-		.addStringOption(option => option
-			.setName("text")
-			.setDescription("Text to throw")
-			.setRequired(true)),
+		.setDescription("DEPRECATED; Use message context menus to throw")
+		.setIntegrationTypes(1).setContexts(0, 2),
 	async execute(interaction) {
-		await interaction.deferReply();
-		const text = interaction.options.getString("text");
-		console.log(
-			"Someone threw you a message! I wonder who...\n\n"
-			+text+
-			"\n\nFrom, "+interaction.user.username
-		);
-		const quote = "> "+(text.trim().replace(/(.*)\n/g, "$1\n> "));
-		await interaction.editReply("Message thrown!:\n"+quote);
+		await interaction.reply("`/throw` is now deprecated. Send and/or right-click or long-press a message to throw its content!");
 	}
 }
