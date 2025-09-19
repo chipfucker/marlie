@@ -1,10 +1,7 @@
-const { Client, GatewayIntentBits, REST, Routes } = require("discord.js");
+const { REST, Routes } = require("discord.js");
 const { config } = require("./config.json");
 const fs = require("node:fs");
 const path = require("node:path");
-const wait = require("node:timers/promises").setTimeout;
-
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 const commands = [];
 const foldersPath = path.join(__dirname, "commands");
@@ -27,29 +24,20 @@ for (const folder of commandFolders) {
 const rest = new REST().setToken(config.token);
 
 (async () => {
-	console.log("\x1b[91m\x1b[1mRFS\x1b[0m deleting commands")
-	await rest.put(Routes.applicationCommands(config.clientId), { body: [] })
-		.then(() => console.log("  deleted application commands"))
-		.catch(console.error);
-	await rest.put(Routes.applicationGuildCommands(config.clientId, config.guildId), { body: [] })
-		.then(() => console.log("  deleted guild commands"))
-		.catch(console.error);
-	console.log(`\x1b[91m\x1b[1mRFS\x1b[0m refreshing ${commands.length} commands`);
-	await wait(500).then(() => console.log("  .5 seconds elapsed")).catch(console.error);
+	console.log(`\x1b[91m\x1b[1mRFS\x1b[0m REFRESHING ${commands.length} COMMANDS`);
+	console.log("  refreshing commands...");
 	await rest.put(Routes.applicationCommands(config.clientId), { body: commands })
-		.then(e => console.log(`  refreshed ${e.length} commands`))
+		.then(e => console.log(`    refreshed ${e.length} commands`))
 		.catch(console.error);
-	await client.login(config.token);
-})();
 	
-client.once("clientReady", async (client) => {
 	console.log(`\x1b[91m\x1b[1mRFS\x1b[0m setting profile...`);
+	await client.user.setActivity(fs.readFileSync("profile/status.txt", "utf8"), { type: 4 })
+	console.log("  set status");
 	try { await client.user.setAvatar("profile/avatar.png"); }
 	catch (error) {
 		if (error.code === "ENOENT") await client.user.setAvatar();
 		else throw error;
 	}
-	client.application.edit()
 	console.log("  set avatar");
 	try { await client.user.setBanner("profile/banner.png"); }
 	catch (error) {
@@ -60,5 +48,4 @@ client.once("clientReady", async (client) => {
 	await client.application.edit({ description: fs.readFileSync("profile/description.md", "utf8") });
 	console.log("  set description");
 	console.log("\x1b[91m\x1b[1mRFS\x1b[0m set profile");
-	client.destroy();
-});
+})();

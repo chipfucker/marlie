@@ -1,7 +1,6 @@
-const { ContextMenuCommandBuilder, MessageFlags } = require("discord.js");
+const { ContextMenuCommandBuilder } = require("discord.js");
 const fs = require("node:fs");
 const path = require("node:path");
-const https = require("node:https");
 
 module.exports = {
 	data: new ContextMenuCommandBuilder()
@@ -15,37 +14,23 @@ module.exports = {
 		const prefix = ("\x1b[93m\x1b[1mTHR\x1b[0m");
 		console.log(`${prefix}\x1b[2m catching message as \x1b[0m"${interaction.id}"`);
 
-		// INITIAL VARIABLES
+		// set ./catch/message path
 		const message = interaction.targetMessage;
-		// console.dir(message, { depth: null }); // DEBUG
-		// console.dir(message.attachments, { depth: null }); // DEBUG
-		// console.dir(message.embeds, { depth: null }); // DEBUG
 		const msgPath = path.join("catch", interaction.id);
-		let statement = "Message thrown!";
 
-		// CREATE / REPURPOSE FOLDER
-		fs.mkdirSync(msgPath, { recursive: true }, (err, path) => {
-			if (err?.code === "EEXIST") {
-				statement = "Message rethrown!\n-# There was an existing folder with the same ID/name.";
-				const oldFiles = fs.readdirSync(msgPath);
-				console.log(oldFiles);
-				for (const file of oldFiles) {
-					console.log(file); // DEBUG
-					fs.rename(path.join(msgPath, file), path.join(msgPath, "old", file))
-				}
-				return path;
-			} else if (err) throw err;
-			else return path;
-		});
+		// create message folder
+		fs.mkdirSync(msgPath, (err) => { throw err; });
 
-		// SUBINITIAL VARIABLES
-		let quote = "";
+		// set quote variables
+		let content;
 		const dataDisplay = [];
 
 		// CREATE FILES
 		if (message.content) {
 			fs.writeFileSync(path.join(msgPath, "content.txt"), message.content);
-			quote += message.content;
+			content = (message.content.length > 128)
+				? message.content.substring(0, 128) + "`\u2022 \u2022 \u2022`"
+				: message.content;
 		}
 		if (message.attachments.size) {
 			const filesPath = path.join(msgPath, "attachments");
@@ -59,9 +44,8 @@ module.exports = {
 					attachment
 				)
 			}
-			dataDisplay.push(`${message.attachments.size} attachment${(message.attachments.size !== 1) ? "s" : ""}\n`);
+			dataDisplay.push(`${message.attachments.size} attachment${(message.attachments.size !== 1) ? "s" : ""}`);
 		}
-		console.dir(message.embeds); // DEBUG
 		if (message.embeds.length) {
 			const embedsPath = path.join(msgPath, "embeds");
 			fs.mkdirSync(embedsPath);
@@ -73,18 +57,26 @@ module.exports = {
 			}
 			dataDisplay.push(`${message.embeds.length} embed${(message.embeds.length !== 1) ? "s" : ""}`);
 		}
-		/* console.log(
+
+		// set quote
+		const data = (() => {
+			if (dataDisplay.length) return "```\n"+dataDisplay.join("\n")+"\n```";
+			else return null;
+		})();
+		const quote = [content, data].join("\n\n").trim();
+
+		console.log(
 			`\n######  Someone threw you a message! I wonder who...\n##\n##  ${
 				quote.replace(/\n/g, "\n##  ")
-			}\n##\n######  From, ${interaction.user.username}\n##  Saved to catch/`
-		); */
-		console.log("caught as folder")
+			}\n##\n######  Saved to file://catch/${interaction.id}/`
+		);
+
 		if (interaction.channel.id === "1384093405017018399") {
-			await interaction.editReply(`Message thrown!: >>> ${quote}`);
+			await interaction.editReply(`Message thrown!\n>>> ${quote}`);
 		}
 		else {
 			const channel = await interaction.client.channels.fetch("1384093405017018399");
-			const response = await channel.send(`Message thrown from <#${interaction.channel.id}>!:\n\n${quote}`);
+			const response = await channel.send(`Message thrown from <#${interaction.channel.id}>!\n>>> ${quote}`);
 			await interaction.editReply(`Message thrown! https://discord.com/channels/1294885290275770430/1384093405017018399/${response}`);
 		}
 	}

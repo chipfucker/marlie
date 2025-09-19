@@ -1,22 +1,19 @@
+async function test(client) {
+}
+
 const { Client, GatewayIntentBits } = require("discord.js");
 const { config } = require("./config.json");
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-client.once("clientReady", async () => {
+client.once("clientReady", async (client) => {
 	console.log("EXECUTING TEST...");
 	try {
-
-		// TEST AREA [
-		const fs = require("node:fs");
-		const contents = fs.readdirSync(__dirname);
-		console.log(contents);
-		// ] END TEST AREA
-		
+		await test(client);
 		console.log("EXECUTED TEST");
 	} catch (error) {
 		console.log("ERROR: \n"+error);
 	} finally {
-		client.destroy();
+		await client.destroy();
 		process.exit(0);
 	}
 });
