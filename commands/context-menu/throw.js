@@ -77,7 +77,7 @@ module.exports = {
 		else {
 			const channel = await interaction.client.channels.fetch("1384093405017018399");
 			const response = await channel.send(`Message thrown from <#${interaction.channel.id}>!\n>>> ${quote}`);
-			await interaction.editReply(`Message thrown! https://discord.com/channels/1294885290275770430/1384093405017018399/${response}`);
+			await interaction.editReply(`Message thrown! https://discord.com/channels/1294885290275770430/1384093405017018399/${response.id}`);
 		}
 	}
 }

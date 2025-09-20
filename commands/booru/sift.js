@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { autocomplete, post } = require("../../utility/rule34api.js");
+const rule34 = require("../../utility/rule34api.js");
+const { autocomplete, post } = rule34;
 const { searchEmbed } = require("../../utility/embed.js");
 
 module.exports = {

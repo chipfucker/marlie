@@ -7,6 +7,6 @@ module.exports = {
 		.setIntegrationTypes(1).setContexts(0, 2),
 	async execute(interaction) {
 		await interaction.deferReply({ flags: 64 });
-		await interaction.editReply("i be poopin");
+		await interaction.editReply("TODO");
 	}
 }

@@ -1,5 +1,5 @@
 const { Events, ApplicationCommandType, InteractionType } = require("discord.js");
-const { buttonEvent } = require("../utility/button");
+const buttonEvent = require("../utility/button.js");
 
 module.exports = {
 	name: Events.InteractionCreate,
