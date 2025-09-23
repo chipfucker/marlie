@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("discord.js");
+const Discord = require("discord.js");
 
 const fetch = require("node-fetch");
 const FormData = require("form-data");
@@ -7,7 +7,7 @@ const { Readable } = require("stream");
 const { post } = require ("../../utility/rule34api.js");
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	data: new Discord.SlashCommandBuilder()
 		.setName("host")
 		.setDescription("Host image/video file on temp.sh")
 		.setIntegrationTypes(1).setContexts(0, 2)
@@ -19,7 +19,8 @@ module.exports = {
 		await interaction.reply({ content: "Fetching..." });
 
 		const input = await interaction.options.getString("url");
-		const filename = input.split("/").pop().split("?")[0];
+
+		const pathname = new URL(input).pathname.split("/").pop();
 		const promise = await fetch(input);
 		if (!promise.ok) {
 			interaction.editReply({
@@ -27,6 +28,8 @@ module.exports = {
 			});
 			return;
 		}
+		
+		const filename = pathname.includes(".") ? pathname : pathname ? `${pathname}.${promise.headers.get("content-type").split("/").pop()}` : "file";
 		
 		await interaction.editReply({ content: "Buffering..." });
 		const arrayBuffer = await promise.arrayBuffer();
@@ -53,8 +56,6 @@ module.exports = {
 	
 		const url = await response.text();
 
-		interaction.editReply({ content:
-			"Uploaded content!\n"+url
-		});
+		interaction.editReply({ content: `Uploaded content!\n${url}` });
 	}
 }

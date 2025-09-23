@@ -1,10 +1,8 @@
-const {
-	SlashCommandBuilder
-} = require("discord.js");
+const Discord = require("discord.js");
 const { post } = require ("../../utility/rule34api.js");
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	data: new Discord.SlashCommandBuilder()
 		.setName("inspect")
 		.setDescription("Get info of post")
 		.setIntegrationTypes(1).setContexts(0, 2)

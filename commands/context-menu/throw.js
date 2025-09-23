@@ -1,9 +1,9 @@
-const { ContextMenuCommandBuilder } = require("discord.js");
+const Discord = require("discord.js");
 const fs = require("node:fs");
 const path = require("node:path");
 
 module.exports = {
-	data: new ContextMenuCommandBuilder()
+	data: new Discord.ContextMenuCommandBuilder()
 		.setName("Throw message")
 		.setType(3)
 		.setIntegrationTypes(1).setContexts(0, 2),

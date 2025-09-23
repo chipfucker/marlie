@@ -1,8 +1,8 @@
-const { SlashCommandBuilder, AttachmentBuilder } = require("discord.js");
+const Discord = require("discord.js");
 const { autocomplete, post } = require("../../utility/rule34api.js");
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	data: new Discord.SlashCommandBuilder()
 		.setName("showoff")
 		.setDescription("Show off to a bud")
 		.setIntegrationTypes(1).setContexts(0, 2)

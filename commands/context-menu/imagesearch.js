@@ -1,7 +1,7 @@
-const { ContextMenuCommandBuilder } = require("discord.js");
+const Discord = require("discord.js");
 
 module.exports = {
-	data: new ContextMenuCommandBuilder()
+	data: new Discord.ContextMenuCommandBuilder()
 		.setName("Send to #image-search")
 		.setType(3)
 		.setIntegrationTypes(1).setContexts(0, 2),

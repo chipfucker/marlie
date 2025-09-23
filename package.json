@@ -2,6 +2,7 @@
   "type": "commonjs",
   "dependencies": {
     "discord.js": "^14.22.1",
+    "discord.js.userbot": "^1.0.3",
     "form-data": "^4.0.4",
     "node-fetch": "^2.7.0",
     "xmldom": "^0.6.0"

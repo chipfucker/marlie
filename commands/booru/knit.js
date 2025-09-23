@@ -1,14 +1,8 @@
-const {
-	ActionRowBuilder,
-	ButtonStyle,
-	ChannelManager,
-	MessageFlags,
-	SlashCommandBuilder
-} = require("discord.js");
+const Discord = require("discord.js");
 const { post } = require ("../../utility/rule34api.js");
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	data: new Discord.SlashCommandBuilder()
 		.setName("knit")
 		.setDescription("Create a thread in #search")
 		.addStringOption(option => option

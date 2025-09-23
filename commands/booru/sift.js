@@ -1,10 +1,9 @@
-const { SlashCommandBuilder } = require("discord.js");
-const rule34 = require("../../utility/rule34api.js");
-const { autocomplete, post } = rule34;
+const Discord = require("discord.js");
+const { autocomplete, post } = require("../../utility/rule34api.js");
 const { searchEmbed } = require("../../utility/embed.js");
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	data: new Discord.SlashCommandBuilder()
 		.setName("sift")
 		.setDescription("Search from Rule34")
 		.setIntegrationTypes(1).setContexts(0, 2)

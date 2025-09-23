@@ -1,6 +1,6 @@
-const { Client, GatewayIntentBits } = require("discord.js");
+const Discord = require("discord.js");
 const { config } = require("./config.json");
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Discord.Client({ intents: [Discord.GatewayIntentBits.Guilds] });
 
 const message =
 /*** MESSAGE ***/
