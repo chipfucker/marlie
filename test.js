@@ -1,6 +1,6 @@
 async function test(client) {
-	const promise = await fetch("https://api-cdn.rule34.xxx/images/7752/61cff135b10c62b78681a577dc964e7e.jpeg");
-	console.dir(promise, {depth: null});
+	const { rule34 } = require("./config.json");
+	console.log(rule34);
 }
 
 const Discord = require("discord.js");
