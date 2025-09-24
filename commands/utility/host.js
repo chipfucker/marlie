@@ -4,8 +4,6 @@ const fetch = require("node-fetch");
 const FormData = require("form-data");
 const { Readable } = require("stream");
 
-const { post } = require ("../../utility/rule34api.js");
-
 module.exports = {
 	data: new Discord.SlashCommandBuilder()
 		.setName("host")
