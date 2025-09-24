@@ -1,6 +1,8 @@
 async function test(client) {
-	const { rule34 } = require("./config.json");
-	console.log(rule34);
+	const terminal = require("./utility/terminal.json");
+	console.log(
+		`${terminal.color.fg.bright.red}this is red`
+	)
 }
 
 const Discord = require("discord.js");
