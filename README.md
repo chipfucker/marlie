@@ -18,7 +18,8 @@ code that makes accessing some data easier.
 #### No, I mean the memory part.
 
 Most Discord bots save data, like user preferences and requested data, to
-memory, so they can access it later without displaying it to the user.
+memory, meaning they hold onto that info themselves, so they can nab it from
+their memory and use it without displaying it to the user.
 
 The reason I prefer to store data in the message is because I tend to refresh
 Marlie a *lot,* which discards any data in memory, and would render things that
