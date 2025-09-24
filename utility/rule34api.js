@@ -60,12 +60,13 @@ const object = {
 	/**
 	 * @typedef {Object} Post
 	 * 
-	 * @prop {Object} image Info about the media of the post's media.
+	 * @prop {Object} image Info about the media of the post.
 	 * 
 	 * @prop {Object} image.main The original media.
 	 * @prop {string} image.main.url The URL of the media file.
 	 * @prop {number} image.main.width The width of the media in pixels.
 	 * @prop {number} image.main.height The height of the media in pixels.
+	 * @prop {Object} image.sample Downsampled image of the post's media, including if necessary.
 	 * @prop {string} image.sample.url The URL of the media file.
 	 * @prop {number} image.sample.width The width of the media in pixels.
 	 * @prop {number} image.sample.height The height of the media in pixels.
@@ -81,8 +82,12 @@ const object = {
 	 * @prop {string} image.extension The file extension.
 	 * 
 	 * @prop {number} id The unique identifier of the post.
-	 * @prop {Date} created The date of the post's creation.
-	 * @prop {Date} updated The date of the post's latest update.
+	 * @prop {Object} created The date of the post's creation.
+	 * @prop {string} created.string The string representation of the date, accurate to the site.
+	 * @prop {Date} created.date The date object representation.
+	 * @prop {Object} updated The date of the post's latest update.
+	 * @prop {string} updated.string The string representation of the date, accurate to the site.
+	 * @prop {Date} updated.date The date object representation.
 	 * @prop {Object} creator Info about the creator of the post.
 	 * @prop {string} creator.name The creator's username.
 	 * @prop {number} creator.id The creator's unique identifier.
@@ -97,12 +102,13 @@ const object = {
 	 * @prop {Object} tags Info about the tags that label the post.
 	 * @prop {string} tags.string A string of all tags organized alphabetically and separated by spaces.
 	 * @prop {Array<ArrayTag>} tags.array An array of all tags organized alphabetically.
-	 * @prop {Array<CategoryTag>} tags.copyright An array of all 'copyright' tags.
-	 * @prop {Array<CategoryTag>} tags.character An array of all 'character' tags.
-	 * @prop {Array<CategoryTag>} tags.artist An array of all 'artist' tags.
-	 * @prop {Array<CategoryTag>} tags.general An array of all 'general' tags.
-	 * @prop {Array<CategoryTag>} tags.metadata An array of all 'metadata' tags.
-	 * @prop {Array<CategoryTag>} tags.null An array of all `null` tags.
+	 * @prop {Object} tags.categories Arrays of all tags, categorized by their type.
+	 * @prop {Array<CategoryTag>} tags.categories.copyright An array of all 'copyright' tags.
+	 * @prop {Array<CategoryTag>} tags.categories.character An array of all 'character' tags.
+	 * @prop {Array<CategoryTag>} tags.categories.artist An array of all 'artist' tags.
+	 * @prop {Array<CategoryTag>} tags.categories.general An array of all 'general' tags.
+	 * @prop {Array<CategoryTag>} tags.categories.metadata An array of all 'metadata' tags.
+	 * @prop {Array<CategoryTag>} tags.categories.null An array of all `null` tags.
 	 * 
 	 * @prop {Array<Comment>} comments An array of all comments under the post.
 	 */
@@ -146,7 +152,7 @@ const object = {
 		const api = {};
 
 		api.json = await fetch(apiUrl({
-			type:"post", json: true, query: query
+			type: "post", json: true, query: query
 		})).then(e=>e.json()).then(e=>e[0]).catch(() => false);
 
 		if (!api.json) return null;
@@ -165,6 +171,144 @@ const object = {
 
 		// TODO: simplify post properties
 		const data = {
+			image: {
+				main: {
+					url: api.json.file_url,
+					width: api.json.width,
+					height: api.json.height
+				},
+				sample: {
+					url: api.json.sample_url,
+					width: api.json.sample_width,
+					height: api.json.sample_height,
+					necessary: api.json.sample
+				},
+				thumbnail: {
+					url: api.json.preview_url,
+					width: Number(api.xml.post.getAttribute("preview_width")),
+					height: Number(api.xml.post.getAttribute("preview_height"))
+				},
+				directory: api.json.directory,
+				name: api.json.image,
+				hash: api.json.hash,
+				extension: api.json.image.split(".").pop()
+			},
+			id: api.json.id,
+			created: (() => {
+				const object = new Date(api.xml.post.getAttribute("created_at"));
+
+				// TODO: check how letter dates are represented
+				const day = [
+					"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+				][object.getDay()];
+				const month = [
+					"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+				][object.getMonth()];
+				const date = String(object.getDate()).padStart(2, "0");
+
+				const hour = String(object.getHours()).padStart(2, "0");
+				const minute = String(object.getMinutes()).padStart(2, "0");
+				const second = String(object.getSeconds()).padStart(2, "0");
+
+				const zone = (() => {
+					const zone = object.getTimezoneOffset();
+					const pos = zone >= 0 ? "+" : "-";
+					const num = String(Math.abs(zone)).pad(4, "0");
+					return pos + num;
+				})();
+				const year = String(object.getFullYear());
+
+				return {
+					string: `${day} ${month} ${date} ${hour}:${minute}:${second} +${zone} ${year}`,
+					date: object
+				};
+			})(),
+			updated: (() => {
+				const object = new Date(api.json.change * 1000);
+
+				// TODO: check how letter dates are represented
+				const day = [
+					"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+				][object.getDay()];
+				const month = [
+					"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+				][object.getMonth()];
+				const date = String(object.getDate()).padStart(2, "0");
+
+				const hour = String(object.getHours()).padStart(2, "0");
+				const minute = String(object.getMinutes()).padStart(2, "0");
+				const second = String(object.getSeconds()).padStart(2, "0");
+
+				const zone = (() => {
+					const zone = object.getTimezoneOffset();
+					const pos = zone >= 0 ? "+" : "-";
+					const num = String(Math.abs(zone)).pad(4, "0");
+					return pos + num;
+				})();
+				const year = String(object.getFullYear());
+
+				return {
+					string: `${day} ${month} ${date} ${hour}:${minute}:${second} +${zone} ${year}`,
+					date: object
+				};
+			})(),
+			creator: {
+				name: api.json.owner,
+				id: Number(api.xml.post.getAttribute("creator_id"))
+			},
+			rating: api.json.rating,
+			score: api.json.score,
+			status: api.json.status,
+			notes: api.json.has_notes, // TODO: find out how to fetch note info
+			parent: api.json.parent_id, // TODO: find out how null parents are handled in the site
+			children: api.xml.post.getAttribute("has_children") === "true", // TODO: convert to array of children
+			source: api.json.source || null,
+			tags: {
+				string: api.json.tags,
+				// TODO: reformat tags to match jsdoc
+				array: api.json.tag_info,
+				categories: {
+					copyright: api.json.tag_info
+						.filter(e => e.type === "copyright")
+						.map(e => ({ name: e.tag, count: e.count })),
+					character: api.json.tag_info
+						.filter(e => e.type === "character")
+						.map(e => ({ name: e.tag, count: e.count })),
+					artist: api.json.tag_info
+						.filter(e => e.type === "artist")
+						.map(e => ({ name: e.tag, count: e.count })),
+					general: api.json.tag_info
+						.filter(e => e.type === "tag")
+						.map(e => ({ name: e.tag, count: e.count })),
+					metadata: api.json.tag_info
+						.filter(e => e.type === "metadata")
+						.map(e => ({ name: e.tag, count: e.count })),
+					null: api.json.tag_info
+						.filter(e => e.type === null)
+						.map(e => ({ name: e.tag, count: e.count })),
+					other: api.json.tag_info
+						.filter(e => [
+							"copyright",
+							"character",
+							"artist",
+							"tag",
+							"metadata",
+							null
+						].includes(e.type))
+						.map(e => ({ name: e.tag, count: e.count, type: e.type }))
+				}
+			},
+			comments: api.comments.map(e => ({
+				creator: {
+					name: e.getAttribute("creator"),
+					id: Number(e.getAttribute("creator_id"))
+				},
+				id: Number(e.getAttribute("id")),
+				body: e.getAttribute("body")
+			}))
+		};
+		// old data
+		/* const data = {
 			image: {
 				original: api.json.file_url,
 				sample_bool: api.json.sample,
@@ -248,7 +392,7 @@ const object = {
 				id: Number(e.getAttribute("id")),
 				content: e.getAttribute("body")
 			}))
-		};
+		}; */
 
 		return data;
 	},

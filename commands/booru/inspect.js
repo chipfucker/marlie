@@ -61,6 +61,11 @@ module.exports = {
 			return;
 		}
 
+		const localeOptions = ["en-US", {
+			month: "numeric",
+
+		}]
+
 		// TODO: add to embed.js
 		const postEmbed = {
 			author: {
@@ -72,75 +77,33 @@ module.exports = {
 				url: data.image.original
 			},
 			description:
-				`**Image URL:** \`${data.image.original}\`\n`+
-				`**Owner:** \`${data.info.post.creator.name}\`\n`+
-				`**Score:** ${data.info.post.score}\n`+
-				`**Created:** ${data.info.post.created}\n`+
-				`**Updated:** ${data.info.post.updated}\n\n`+
-				`**Source:** ${data.info.link.source || "none"}\n`+
-				`**Parent:** ${data.info.link.parent ? "`"+data.info.link.parent+"`" : "none"}\n`+
-				`**Children:** ${data.info.link.children ? "yes" : "none"}\n\n`+
-				`**Hash:** \`${data.info.file.hash}\`\n`+
-				`**Path:** ${data.info.file.directory}/${data.info.file.filename}`,
-			fields: [
-				{
-					name: "Copyright",
-					value: (()=>{
-						if (data.tags.copyright.length)
-							return data.tags.copyright.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-						else return "-# **null**";
-					})(),
-				},
-				{
-					name: "Character",
-					value: (()=>{
-						if (data.tags.character.length)
-							return data.tags.character.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-						else return "-# **null**";
-					})(),
-				},
-				{
-					name: "Artist",
-					value: (()=>{
-						if (data.tags.artist.length)
-							return data.tags.artist.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-						else return "-# **null**";
-					})()
-				},
-				{
-					name: "General",
-					value: (()=>{
-						if (interaction.options.getBoolean("general"))
-							if (data.tags.general.length)
-								return data.tags.general.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-							else return "-# **null**";
-						else return `-# *${data.tags.general.length} tags*`;
-					})(),
-					inline: (() => {
-						if (interaction.options.getBoolean("general")) return false;
-						else return true;
-					})()
-				},
-				{
-					name: "Meta",
-					value: (()=>{
-						if (data.tags.meta.length)
-							return data.tags.meta.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-						else return "-# **null**";
-					})(),
-					inline: true
-				}
-			]
+				`**Image URL:** \`${data.image.main.url}\`\n`+
+				`**Creator:** \`${data.creator.name}\`\n`+
+				`**Score:** ${data.score}\n`+
+				`**Created:** ${data.created.string}\n`+
+				`**Updated:** ${data.updated.string}\n\n`+
+				`**Source:** ${data.source || "none"}\n`+
+				`**Parent:** ${data.parent ? `\`${data.parent}\`` : "none"}\n`+
+				`**Children:** ${data.children ? "yes" : "none"}\n\n`+
+				`**Hash:** \`${data.image.hash}\`\n`,
+			fields: []
 		};
 
-		if (data.tags.other.length) embed.fields.push({
-			name: "Other (null)",
-			value: (()=> data.tags.other
-				.map(e => `- \`${e.name}\` (${e.count}) TYPE: ${e.type}`)
-				.join("\n")
-			)(),
-			inline: true
-		});
+		for (const [key, value] of Object.entries(data.tags.categories)) {
+			if (value.length) postEmbed.fields.push({
+				name: String(key).charAt(0).toUpperCase + String(key).slice(1),
+				value: (() => {
+					if (key === "general")
+						if (interaction.options.getBoolean("general"))
+							return value.map(e => `\`${e.name}\` (${e.count})`).join(", ");
+						else return `*${value.length} tags*`;
+					else if (key === "other")
+						return value.map(e => `${e.type}: \`${e.name}\` (${e.count})`).join("\n");
+					else return value.map(e => `\`${e.name}\` (${e.count})`).join("\n");
+				}),
+				inline: true
+			});
+		}
 
 		const commentEmbeds = [];
 		if (interaction.options.getBoolean("comments")) {
