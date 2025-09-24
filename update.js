@@ -1,4 +1,4 @@
-const { REST, Routes } = require("discord.js");
+const Discord = require("discord.js");
 const { config } = require("./config.json");
 const fs = require("node:fs");
 const path = require("node:path");
@@ -21,12 +21,12 @@ for (const folder of commandFolders) {
 	}
 }
 
-const rest = new REST().setToken(config.token);
+const rest = new Discord.REST().setToken(config.token);
 
 (async () => {
 	console.log(`\x1b[91m\x1b[1mRFS\x1b[0m REFRESHING ${commands.length} COMMANDS`);
 	console.log("  refreshing commands...");
-	await rest.put(Routes.applicationCommands(config.clientId), { body: commands })
+	await rest.put(Discord.Routes.applicationCommands(config.clientId), { body: commands })
 		.then(e => console.log(`    refreshed ${e.length} commands`))
 		.catch(console.error);
 	

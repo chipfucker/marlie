@@ -1,10 +1,10 @@
-const { Client, GatewayIntentBits, REST, Routes } = require("discord.js");
+const Discord = require("discord.js");
 const { config } = require("./config.json");
 const fs = require("node:fs");
 const path = require("node:path");
 const wait = require("node:timers/promises").setTimeout;
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Discord.Client({ intents: [Discord.GatewayIntentBits.Guilds] });
 
 const commands = [];
 const foldersPath = path.join(__dirname, "commands");
@@ -24,19 +24,19 @@ for (const folder of commandFolders) {
 	}
 }
 
-const rest = new REST().setToken(config.token);
+const rest = new Discord.REST().setToken(config.token);
 
 (async () => {
 	console.log("\x1b[91m\x1b[1mRFS\x1b[0m deleting commands")
-	await rest.put(Routes.applicationCommands(config.clientId), { body: [] })
+	await rest.put(Discord.Routes.applicationCommands(config.clientId), { body: [] })
 		.then(() => console.log("  deleted application commands"))
 		.catch(console.error);
-	await rest.put(Routes.applicationGuildCommands(config.clientId, config.guildId), { body: [] })
+	await rest.put(Discord.Routes.applicationGuildCommands(config.clientId, config.guildId), { body: [] })
 		.then(() => console.log("  deleted guild commands"))
 		.catch(console.error);
 	console.log(`\x1b[91m\x1b[1mRFS\x1b[0m refreshing ${commands.length} commands`);
 	await wait(500).then(() => console.log("  .5 seconds elapsed")).catch(console.error);
-	await rest.put(Routes.applicationCommands(config.clientId), { body: commands })
+	await rest.put(Discord.Routes.applicationCommands(config.clientId), { body: commands })
 		.then(e => console.log(`  refreshed ${e.length} commands`))
 		.catch(console.error);
 	await client.login(config.token);

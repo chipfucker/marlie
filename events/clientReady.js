@@ -1,8 +1,8 @@
-const { Events } = require("discord.js");
+const Discord = require("discord.js");
 const fs = require("node:fs");
 
 module.exports = {
-	name: Events.ClientReady,
+	name: Discord.Events.ClientReady,
 	once: true,
 	async execute(client) {
 		console.log(`\x1b[91m\x1b[1mRDY\x1b[0m logged into ${client.user.tag}`);
