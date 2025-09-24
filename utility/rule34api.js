@@ -1,4 +1,3 @@
-// TODO: replace key requirements with global object
 const object = {
 	/**
 	 * @typedef {Object} AutocompleteSuggestion
