@@ -1,4 +1,4 @@
-const { searchEmbed } = require("./embed");
+const embed = require("./embed");
 const { post } = require("./rule34api");
 
 const object = async i => {
@@ -38,7 +38,7 @@ const object = async i => {
 				if (!data) {
 					await i.followUp({ content: "No more results this way!", flags: 64 });
 
-					const message = searchEmbed(null, false);
+					const message = embed.searchEmbed(null, false);
 					i.editReply({
 						components: [message]
 					});
@@ -60,7 +60,7 @@ const object = async i => {
 					general: json.general
 				};
 		
-				const message = searchEmbed(json.query, data, json.general);
+				const message = embed.searchEmbed(json.query, data, json.general);
 		
 				i.editReply({
 					content: `||\`\`\`json\n${JSON.stringify(messageData)}\n\`\`\`||`,
@@ -104,7 +104,7 @@ const object = async i => {
 				if (!data) {
 					await i.followUp({ content: "No more results this way!", flags: 64 });
 
-					const message = searchEmbed(null, false);
+					const message = embed.searchEmbed(null, false);
 					i.editReply({
 						components: [message]
 					});

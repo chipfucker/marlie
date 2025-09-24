@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 const { autocomplete, post } = require("../../utility/rule34api.js");
-const { searchEmbed } = require("../../utility/embed.js");
+const embed = require("../../utility/embed.js");
 
 module.exports = {
 	data: new Discord.SlashCommandBuilder()
@@ -100,7 +100,7 @@ module.exports = {
 			general: interaction.options.getBoolean("general") ?? false,
 		};
 
-		const message = searchEmbed(messageData.query, data, messageData.general);
+		const message = embed.searchEmbed(messageData.query, data, messageData.general);
 
 		await interaction.editReply({
 			content: `||\`\`\`json\n${JSON.stringify(messageData)}\n\`\`\`||`,

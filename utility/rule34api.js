@@ -1,3 +1,4 @@
+// TODO: nest objects in r34 object
 const object = {
 	/**
 	 * @typedef {Object} AutocompleteSuggestion

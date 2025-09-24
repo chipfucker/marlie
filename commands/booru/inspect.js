@@ -61,6 +61,7 @@ module.exports = {
 			return;
 		}
 
+		// TODO: add to embed.js
 		const postEmbed = {
 			author: {
 				name: `First result of ${query}`,
