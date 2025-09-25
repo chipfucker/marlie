@@ -50,8 +50,7 @@ module.exports = {
 			return;
 		}
 		
-		const raw = interaction.options.getBoolean("raw");
-		if (raw) {
+		if (interaction.options.getBoolean("raw")) {
 			let content = JSON.stringify(data, null, 4);
 			let attachment = {
 				attachment: Buffer.from(content),
@@ -61,20 +60,15 @@ module.exports = {
 			return;
 		}
 
-		const localeOptions = ["en-US", {
-			month: "numeric",
-
-		}]
-
 		// TODO: add to embed.js
 		const postEmbed = {
 			author: {
 				name: `First result of ${query}`,
-				url: "https://rule34.xxx/index.php?page=post&s=view&id="+data.info.file.id
+				url: "https://rule34.xxx/index.php?page=post&s=view&id="+data.id
 			},
-			title: `\`${data.info.file.id}\``,
+			title: `\`${data.id}\``,
 			thumbnail: {
-				url: data.image.original
+				url: data.image.main.url
 			},
 			description:
 				`**Image URL:** \`${data.image.main.url}\`\n`+
@@ -91,7 +85,7 @@ module.exports = {
 
 		for (const [key, value] of Object.entries(data.tags.categories)) {
 			if (value.length) postEmbed.fields.push({
-				name: String(key).charAt(0).toUpperCase + String(key).slice(1),
+				name: String(key).charAt(0).toUpperCase() + String(key).slice(1),
 				value: (() => {
 					if (key === "general")
 						if (interaction.options.getBoolean("general"))
@@ -100,7 +94,7 @@ module.exports = {
 					else if (key === "other")
 						return value.map(e => `${e.type}: \`${e.name}\` (${e.count})`).join("\n");
 					else return value.map(e => `\`${e.name}\` (${e.count})`).join("\n");
-				}),
+				})(),
 				inline: true
 			});
 		}

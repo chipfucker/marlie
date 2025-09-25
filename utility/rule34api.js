@@ -1,3 +1,267 @@
+const { rule34 } = require("../config.json");
+const { DOMParser } = require("xmldom");
+
+const post = async (query) => {
+
+	const api = {};
+
+	api.json = await fetch(apiUrl.post({
+		json: true, query: query
+	})).then(e => e.json()).then(e => e[0]).catch(() => false);
+
+	if (!api.json) return null;
+
+	// api.children = await fetch(apiUrl.post({
+	// 	type: ""
+	// }))
+
+	api.xml = await fetch(apiUrl.post({
+		json: false, query: query
+	})).then(e => e.text())
+		.then(e => new DOMParser().parseFromString(e, "text/xml"))
+		.then(e => { return { posts: e.firstChild, post: e.getElementsByTagName("post")[0] }});
+	
+	api.comments = await fetch(apiUrl.comment({
+		id: api.json.id
+	})).then(e=>e.text())
+		.then(e=>new DOMParser().parseFromString(e, "text/xml"))
+		.then(e=>Array.from(e.getElementsByTagName("comment")));
+
+	const data = dataObject(api);
+	data.comments = api.comments.map(e => ({
+		creator: {
+			name: e.getAttribute("creator"),
+			id: Number(e.getAttribute("creator_id"))
+		},
+		id: Number(e.getAttribute("id")),
+		body: e.getAttribute("body")
+	}));
+
+	data.tags = {
+		string: api.json.tags,
+		// TODO: reformat tags to match jsdoc
+		array: api.json.tag_info,
+		categories: {
+			copyright: api.json.tag_info
+				.filter(e => e.type === "copyright")
+				.map(e => ({ name: e.tag, count: e.count })),
+			character: api.json.tag_info
+				.filter(e => e.type === "character")
+				.map(e => ({ name: e.tag, count: e.count })),
+			artist: api.json.tag_info
+				.filter(e => e.type === "artist")
+				.map(e => ({ name: e.tag, count: e.count })),
+			general: api.json.tag_info
+				.filter(e => e.type === "tag")
+				.map(e => ({ name: e.tag, count: e.count })),
+			metadata: api.json.tag_info
+				.filter(e => e.type === "metadata")
+				.map(e => ({ name: e.tag, count: e.count })),
+			null: api.json.tag_info
+				.filter(e => e.type === null)
+				.map(e => ({ name: e.tag, count: e.count })),
+			other: api.json.tag_info
+				.filter(e => ![
+					"copyright",
+					"character",
+					"artist",
+					"tag",
+					"metadata",
+					null
+				].includes(e.type))
+				.map(e => ({ name: e.tag, count: e.count, type: e.type }))
+		}
+	};
+	// old data
+	/* const data = {
+		image: {
+			original: api.json.file_url,
+			sample_bool: api.json.sample,
+			sample: api.json.sample_url,
+			thumbnail: api.json.preview_url,
+			size: {
+				original: {
+					width: api.json.width,
+					height: api.json.height
+				},
+				sample: {
+					width: api.json.sample_width,
+					height: api.json.sample_height
+				},
+				thumbnail: {
+					width: Number(api.xml.post.getAttribute("preview_width")),
+					height: Number(api.xml.post.getAttribute("preview_height"))
+				}
+			}
+		},
+		info: {
+			post: {
+				score: api.json.score,
+				creator: {
+					name: api.json.owner,
+					id: Number(api.xml.post.getAttribute("creator_id"))
+				},
+				rating: api.json.rating,
+				status: api.json.status,
+				notes: api.json.has_notes,
+				created: new Date(api.xml.post.getAttribute("created_at")),
+				updated: new Date(api.json.change * 1000),
+				comments: api.json.comment_count
+			},
+			link: {
+				parent: api.json.parent_id || false,
+				children: api.xml.post.getAttribute("has_children") === "true" ? true : false,
+				source: api.json.source ? api.json.source : false
+			},
+			file: {
+				id: api.json.id,
+				directory: api.json.directory,
+				filename: api.json.image,
+				hash: api.json.hash,
+				extension: api.json.image.split(".").pop()
+			}
+		},
+		tags: {
+			string: api.json.tags,
+			list: api.json.tag_info,
+			copyright: api.json.tag_info
+				.filter(e=>e.type === "copyright")
+				.map(e=>({name:e.tag,count:e.count})),
+			character: api.json.tag_info
+				.filter(e=>e.type === "character")
+				.map(e=>({name:e.tag,count:e.count})),
+			artist: api.json.tag_info
+				.filter(e=>e.type === "artist")
+				.map(e=>({name:e.tag,count:e.count})),
+			general: api.json.tag_info
+				.filter(e=>e.type === "tag")
+				.map(e=>({name:e.tag,count:e.count})),
+			meta: api.json.tag_info
+				.filter(e=>e.type === "metadata")
+				.map(e=>({name:e.tag,count:e.count})),
+			other: api.json.tag_info
+				.filter(e=>
+					e.type !== "copyright" &&
+					e.type !== "character" &&
+					e.type !== "artist" &&
+					e.type !== "tag" &&
+					e.type !== "metadata"
+				)
+				.map(e=>({name:e.tag,count:e.count,type:e.type}))
+		},
+		comments: api.comments.map(e=>({
+			creator: {
+				name: e.getAttribute("creator"),
+				id: Number(e.getAttribute("creator_id"))
+			},
+			id: Number(e.getAttribute("id")),
+			content: e.getAttribute("body")
+		}))
+	}; */
+
+	return data;
+};
+
+const search = async (query, options) => {
+
+};
+
+const apiUrl = {
+	post: (options) => {
+		return "https://api.rule34.xxx/?" + new URLSearchParams({
+			page: "dapi",
+			s: "post",
+			q: "index",
+			limit: options.limit ?? "1",
+			json: String(Number(options.json ?? false)),
+			fields: options.json ? "tag_info" : "",
+			tags: options.query ?? "",
+			api_key: rule34.token,
+			user_id: "2373207"
+		}).toString();
+	},
+	comment: (options) => {
+		return "https://api.rule34.xxx/?" + new URLSearchParams({
+			page: "dapi",
+			s: "comment",
+			q: "index",
+			post_id: options.id,
+			api_key: rule34.token,
+			user_id: "2373207"
+		}).toString();
+	}
+}
+
+function dataObject(api) {
+	const data = {
+		image: {
+			main: {
+				url: api.json.file_url,
+				width: api.json.width,
+				height: api.json.height
+			},
+			sample: {
+				url: api.json.sample_url,
+				width: api.json.sample_width,
+				height: api.json.sample_height,
+				necessary: api.json.sample
+			},
+			thumbnail: {
+				url: api.json.preview_url,
+				width: Number(api.xml.post.getAttribute("preview_width")),
+				height: Number(api.xml.post.getAttribute("preview_height"))
+			},
+			directory: api.json.directory,
+			name: api.json.image,
+			hash: api.json.hash,
+			extension: api.json.image.split(".").pop()
+		},
+		id: api.json.id,
+		created: dateObject(new Date(api.xml.post.getAttribute("created_at"))),
+		updated: dateObject(new Date(api.json.change * 1000)),
+		creator: {
+			name: api.json.owner,
+			id: Number(api.xml.post.getAttribute("creator_id"))
+		},
+		rating: api.json.rating,
+		score: api.json.score,
+		status: api.json.status,
+		notes: api.json.has_notes, // TODO: find out how to fetch note info
+		parent: api.json.parent_id, // TODO: find out how null parents are handled in the site
+		children: api.xml.post.getAttribute("has_children") === "true", // TODO: convert to array of children
+		source: api.json.source || null
+	};
+
+	return data;
+}
+
+function dateObject(object) {
+	const day = [
+		"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+	][object.getDay()];
+	const month = [
+		"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+	][object.getMonth()];
+	const date = String(object.getDate()).padStart(2, "0");
+
+	const hour = String(object.getHours()).padStart(2, "0");
+	const minute = String(object.getMinutes()).padStart(2, "0");
+	const second = String(object.getSeconds()).padStart(2, "0");
+
+	const zone = (() => {
+		const zone = object.getTimezoneOffset();
+		const pos = zone >= 0 ? "+" : "-";
+		const num = String(Math.abs(zone)).padStart(4, "0");
+		return pos + num;
+	})();
+	const year = String(object.getFullYear());
+
+	return {
+		string: `${day} ${month} ${date} ${hour}:${minute}:${second} ${zone} ${year}`,
+		date: object
+	};
+}
+
 // TODO: nest objects in r34 object
 const object = {
 	/**
@@ -122,419 +386,7 @@ const object = {
 	 * comments, or `null` if the query doesn't match any posts.
 	 */
 
-	post: async (query) => {
-		const { rule34 } = require("../config.json");
-		const { DOMParser } = require("xmldom");
-		const apiUrl = (obj) => {
-			if (obj.type === "post")
-				return "https://api.rule34.xxx/?"+new URLSearchParams({
-					page: "dapi",
-					s: "post",
-					q: "index",
-					limit: "1",
-					json: String(Number(obj.json)),
-					fields: obj.json ? "tag_info" : "",
-					tags: obj.query,
-					api_key: rule34.token,
-					user_id: "2373207"
-				}).toString();
-			else if (obj.type === "comment")
-				return "https://api.rule34.xxx/?"+new URLSearchParams({
-					page: "dapi",
-					s: "comment",
-					q: "index",
-					post_id: obj.id,
-					api_key: rule34.token,
-					user_id: "2373207"
-				}).toString();
-		};
-
-		const api = {};
-
-		api.json = await fetch(apiUrl({
-			type: "post", json: true, query: query
-		})).then(e=>e.json()).then(e=>e[0]).catch(() => false);
-
-		if (!api.json) return null;
-
-		api.xml = await fetch(apiUrl({
-			type: "post", json: false, query: query
-		})).then(e=>e.text())
-			.then(e=>new DOMParser().parseFromString(e, "text/xml"))
-			.then(e=>{return {posts:e.firstChild,post:e.getElementsByTagName("post")[0]}});
-		
-		api.comments = await fetch(apiUrl({
-			type: "comment", id: api.json.id
-		})).then(e=>e.text())
-			.then(e=>new DOMParser().parseFromString(e, "text/xml"))
-			.then(e=>Array.from(e.getElementsByTagName("comment")));
-
-		// TODO: simplify post properties
-		const data = {
-			image: {
-				main: {
-					url: api.json.file_url,
-					width: api.json.width,
-					height: api.json.height
-				},
-				sample: {
-					url: api.json.sample_url,
-					width: api.json.sample_width,
-					height: api.json.sample_height,
-					necessary: api.json.sample
-				},
-				thumbnail: {
-					url: api.json.preview_url,
-					width: Number(api.xml.post.getAttribute("preview_width")),
-					height: Number(api.xml.post.getAttribute("preview_height"))
-				},
-				directory: api.json.directory,
-				name: api.json.image,
-				hash: api.json.hash,
-				extension: api.json.image.split(".").pop()
-			},
-			id: api.json.id,
-			created: (() => {
-				const object = new Date(api.xml.post.getAttribute("created_at"));
-
-				// TODO: check how letter dates are represented
-				const day = [
-					"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
-				][object.getDay()];
-				const month = [
-					"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-				][object.getMonth()];
-				const date = String(object.getDate()).padStart(2, "0");
-
-				const hour = String(object.getHours()).padStart(2, "0");
-				const minute = String(object.getMinutes()).padStart(2, "0");
-				const second = String(object.getSeconds()).padStart(2, "0");
-
-				const zone = (() => {
-					const zone = object.getTimezoneOffset();
-					const pos = zone >= 0 ? "+" : "-";
-					const num = String(Math.abs(zone)).pad(4, "0");
-					return pos + num;
-				})();
-				const year = String(object.getFullYear());
-
-				return {
-					string: `${day} ${month} ${date} ${hour}:${minute}:${second} +${zone} ${year}`,
-					date: object
-				};
-			})(),
-			updated: (() => {
-				const object = new Date(api.json.change * 1000);
-
-				// TODO: check how letter dates are represented
-				const day = [
-					"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
-				][object.getDay()];
-				const month = [
-					"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-				][object.getMonth()];
-				const date = String(object.getDate()).padStart(2, "0");
-
-				const hour = String(object.getHours()).padStart(2, "0");
-				const minute = String(object.getMinutes()).padStart(2, "0");
-				const second = String(object.getSeconds()).padStart(2, "0");
-
-				const zone = (() => {
-					const zone = object.getTimezoneOffset();
-					const pos = zone >= 0 ? "+" : "-";
-					const num = String(Math.abs(zone)).pad(4, "0");
-					return pos + num;
-				})();
-				const year = String(object.getFullYear());
-
-				return {
-					string: `${day} ${month} ${date} ${hour}:${minute}:${second} +${zone} ${year}`,
-					date: object
-				};
-			})(),
-			creator: {
-				name: api.json.owner,
-				id: Number(api.xml.post.getAttribute("creator_id"))
-			},
-			rating: api.json.rating,
-			score: api.json.score,
-			status: api.json.status,
-			notes: api.json.has_notes, // TODO: find out how to fetch note info
-			parent: api.json.parent_id, // TODO: find out how null parents are handled in the site
-			children: api.xml.post.getAttribute("has_children") === "true", // TODO: convert to array of children
-			source: api.json.source || null,
-			tags: {
-				string: api.json.tags,
-				// TODO: reformat tags to match jsdoc
-				array: api.json.tag_info,
-				categories: {
-					copyright: api.json.tag_info
-						.filter(e => e.type === "copyright")
-						.map(e => ({ name: e.tag, count: e.count })),
-					character: api.json.tag_info
-						.filter(e => e.type === "character")
-						.map(e => ({ name: e.tag, count: e.count })),
-					artist: api.json.tag_info
-						.filter(e => e.type === "artist")
-						.map(e => ({ name: e.tag, count: e.count })),
-					general: api.json.tag_info
-						.filter(e => e.type === "tag")
-						.map(e => ({ name: e.tag, count: e.count })),
-					metadata: api.json.tag_info
-						.filter(e => e.type === "metadata")
-						.map(e => ({ name: e.tag, count: e.count })),
-					null: api.json.tag_info
-						.filter(e => e.type === null)
-						.map(e => ({ name: e.tag, count: e.count })),
-					other: api.json.tag_info
-						.filter(e => [
-							"copyright",
-							"character",
-							"artist",
-							"tag",
-							"metadata",
-							null
-						].includes(e.type))
-						.map(e => ({ name: e.tag, count: e.count, type: e.type }))
-				}
-			},
-			comments: api.comments.map(e => ({
-				creator: {
-					name: e.getAttribute("creator"),
-					id: Number(e.getAttribute("creator_id"))
-				},
-				id: Number(e.getAttribute("id")),
-				body: e.getAttribute("body")
-			}))
-		};
-		// old data
-		/* const data = {
-			image: {
-				original: api.json.file_url,
-				sample_bool: api.json.sample,
-				sample: api.json.sample_url,
-				thumbnail: api.json.preview_url,
-				size: {
-					original: {
-						width: api.json.width,
-						height: api.json.height
-					},
-					sample: {
-						width: api.json.sample_width,
-						height: api.json.sample_height
-					},
-					thumbnail: {
-						width: Number(api.xml.post.getAttribute("preview_width")),
-						height: Number(api.xml.post.getAttribute("preview_height"))
-					}
-				}
-			},
-			info: {
-				post: {
-					score: api.json.score,
-					creator: {
-						name: api.json.owner,
-						id: Number(api.xml.post.getAttribute("creator_id"))
-					},
-					rating: api.json.rating,
-					status: api.json.status,
-					notes: api.json.has_notes,
-					created: new Date(api.xml.post.getAttribute("created_at")),
-					updated: new Date(api.json.change * 1000),
-					comments: api.json.comment_count
-				},
-				link: {
-					parent: api.json.parent_id || false,
-					children: api.xml.post.getAttribute("has_children") === "true" ? true : false,
-					source: api.json.source ? api.json.source : false
-				},
-				file: {
-					id: api.json.id,
-					directory: api.json.directory,
-					filename: api.json.image,
-					hash: api.json.hash,
-					extension: api.json.image.split(".").pop()
-				}
-			},
-			tags: {
-				string: api.json.tags,
-				list: api.json.tag_info,
-				copyright: api.json.tag_info
-					.filter(e=>e.type === "copyright")
-					.map(e=>({name:e.tag,count:e.count})),
-				character: api.json.tag_info
-					.filter(e=>e.type === "character")
-					.map(e=>({name:e.tag,count:e.count})),
-				artist: api.json.tag_info
-					.filter(e=>e.type === "artist")
-					.map(e=>({name:e.tag,count:e.count})),
-				general: api.json.tag_info
-					.filter(e=>e.type === "tag")
-					.map(e=>({name:e.tag,count:e.count})),
-				meta: api.json.tag_info
-					.filter(e=>e.type === "metadata")
-					.map(e=>({name:e.tag,count:e.count})),
-				other: api.json.tag_info
-					.filter(e=>
-						e.type !== "copyright" &&
-						e.type !== "character" &&
-						e.type !== "artist" &&
-						e.type !== "tag" &&
-						e.type !== "metadata"
-					)
-					.map(e=>({name:e.tag,count:e.count,type:e.type}))
-			},
-			comments: api.comments.map(e=>({
-				creator: {
-					name: e.getAttribute("creator"),
-					id: Number(e.getAttribute("creator_id"))
-				},
-				id: Number(e.getAttribute("id")),
-				content: e.getAttribute("body")
-			}))
-		}; */
-
-		return data;
-	},
-	search: async (query) => {
-		const { rule34 } = require("../config.json");
-		const { DOMParser } = require("xmldom");
-		const apiOrigin = "https://api.rule34.xxx//index.php?";
-		const apiParams = new URLSearchParams({
-			page: "dapi",
-			s: "post",
-			q: "index",
-			limit: "1",
-			tags: query,
-			api_key: rule34.token,
-			user_id: "2373207"
-		}).toString();
-		const apiUrl = apiOrigin + apiParams;
-
-		const api = {};
-
-		api.json = await fetch(apiUrl+"&json=1&fields=tag_info")
-			.then(e=>e.json()).then(e=>e[0]);
-
-		api.xml = await fetch(apiUrl+"&json=0")
-			.then(e=>e.text())
-			.then(e=>new DOMParser().parseFromString(e, "text/xml"))
-			.then(e=>{return {posts:e.firstChild,post:e.getElementsByTagName("post")[0]}});
-		
-		api.comments = await fetch(apiOrigin+new URLSearchParams({
-			page: "dapi",
-			s: "comment",
-			q: "index",
-			post_id: api.json.id,
-			api_key: rule34.token,
-			user_id: "2373207"
-		}))
-			.then(e=>e.text())
-			.then(e=>new DOMParser().parseFromString(e, "text/xml"))
-			.then(e=>Array.from(e.getElementsByTagName("comment")));
-
-		const data = {
-			image: {
-				original: api.json.file_url,
-				sample: api.json.sample ? api.json.sample_url : false,
-				thumbnail: api.json.preview_url,
-				size: {
-					original: {
-						width: api.json.width,
-						height: api.json.height
-					},
-					sample: api.json.sample ? {
-						width: api.json.sample_width,
-						height: api.json.sample_height
-					} : false,
-					thumbnail: {
-						width: Number(api.xml.post.getAttribute("preview_width")),
-						height: Number(api.xml.post.getAttribute("preview_height"))
-					}
-				}
-			},
-			info: {
-				post: {
-					score: api.json.score,
-					creator: {
-						name: api.json.owner,
-						id: Number(api.xml.post.getAttribute("creator_id"))
-					},
-					rating: api.json.rating,
-					status: api.json.status,
-					notes: api.json.has_notes,
-					created: api.xml.post.getAttribute("created_at"),
-					updated: (() => {
-						const date = new Date(api.json.change * 1000);
-						const localTime = new Date(date.getTime() * 1000);
-					
-						const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-						const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-					
-						const day = days[localTime.getUTCDay()];
-						const month = months[localTime.getUTCMonth()];
-						const dateNum = String(localTime.getUTCDate()).padStart(2, "0");
-						const hours = String(localTime.getUTCHours()).padStart(2, "0");
-						const minutes = String(localTime.getUTCMinutes()).padStart(2, "0");
-						const seconds = String(localTime.getUTCSeconds()).padStart(2, "0");
-						const year = localTime.getUTCFullYear();
-					
-						return `${day} ${month} ${dateNum} ${hours}:${minutes}:${seconds} ${year}`;
-					})(),
-					comments: api.json.comment_count
-				},
-				link: {
-					parent: api.json.parent_id ? true : false,
-					children: api.xml.post.getAttribute("has_children")==="true" ? true : false,
-					source: api.json.source ? api.json.source : false
-				},
-				file: {
-					id: api.json.id,
-					directory: api.json.directory,
-					filename: api.json.image,
-					hash: api.json.hash
-				}
-			},
-			tags: {
-				string: api.json.tags,
-				list: api.json.tag_info,
-				copyright: api.json.tag_info
-					.filter(e=>e.type === "copyright")
-					.map(e=>({name:e.tag,count:e.count})),
-				character: api.json.tag_info
-					.filter(e=>e.type === "character")
-					.map(e=>({name:e.tag,count:e.count})),
-				artist: api.json.tag_info
-					.filter(e=>e.type === "artist")
-					.map(e=>({name:e.tag,count:e.count})),
-				general: api.json.tag_info
-					.filter(e=>e.type === "tag")
-					.map(e=>({name:e.tag,count:e.count})),
-				meta: api.json.tag_info
-					.filter(e=>e.type === "metadata")
-					.map(e=>({name:e.tag,count:e.count})),
-				other: api.json.tag_info
-					.filter(e=>
-						e.type !== "copyright" &&
-						e.type !== "character" &&
-						e.type !== "artist" &&
-						e.type !== "tag" &&
-						e.type !== "metadata"
-					)
-					.map(e=>({name:e.tag,count:e.count,type:e.type}))
-			},
-			comments: api.comments.map(e=>({
-				creator: {
-					name: e.getAttribute("creator"),
-					id: Number(e.getAttribute("creator_id"))
-				},
-				id: Number(e.getAttribute("id")),
-				content: e.getAttribute("body")
-			}))
-		};
-
-		return data;
-	},
+	post: post,
 
 	search: async (query) => {
 
