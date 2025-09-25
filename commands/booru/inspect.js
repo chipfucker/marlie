@@ -19,8 +19,8 @@ module.exports = {
 		.addBooleanOption(option => option
 			.setName("comments")
 			.setDescription("Whether to display comments")),
-	async execute(interaction) {
-		var query = interaction.options.getString("q");
+	async execute(i) {
+		var query = i.options.getString("q");
 		const urlRegex = /^https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)$/;
 		const numRegex = /^(\d+)$/;
 		if (query.match(urlRegex))
@@ -28,13 +28,13 @@ module.exports = {
 		else if (query.match(numRegex))
 			query = query.replace(numRegex, "id:$1");
 
-		await interaction.reply({embeds: [{
+		await i.reply({embeds: [{
 			title: query,
 			description: "Loading..."
 		}]});
 
 		if (!query) {
-			interaction.editReply({ embeds: [{
+			i.editReply({ embeds: [{
 				title: "You must specify a query or URL!",
 				color: 0xe9263d
 			}]});
@@ -43,20 +43,20 @@ module.exports = {
 
 		const data = await post(query);
 		if (!data) {
-			interaction.editReply({ embeds: [{
+			i.editReply({ embeds: [{
 				title: `No results for \`${query}\`!`,
 				color: 0xe9263d
 			}]});
 			return;
 		}
 		
-		if (interaction.options.getBoolean("raw")) {
+		if (i.options.getBoolean("raw")) {
 			let content = JSON.stringify(data, null, 4);
 			let attachment = {
 				attachment: Buffer.from(content),
 				name: `${data.info.file.id}-info.json`
 			};
-			interaction.editReply({ files: [attachment], embeds: [] });
+			i.editReply({ files: [attachment], embeds: [] });
 			return;
 		}
 
@@ -90,7 +90,7 @@ module.exports = {
 				name: String(key).charAt(0).toUpperCase() + String(key).slice(1),
 				value: (() => {
 					if (key === "general")
-						if (interaction.options.getBoolean("general"))
+						if (i.options.getBoolean("general"))
 							return value.map(e => `\`${e.name}\` (${e.count})`).join(", ");
 						else return `*${value.length} tags*`;
 					else if (key === "other")
@@ -102,7 +102,7 @@ module.exports = {
 		}
 
 		const commentEmbeds = [];
-		if (interaction.options.getBoolean("comments")) {
+		if (i.options.getBoolean("comments")) {
 			const chunks = 1;
 			const slice = 25;
 			const max = chunks * slice - 1;
@@ -124,6 +124,6 @@ module.exports = {
 			});
 		}
 
-		interaction.editReply({embeds: [postEmbed, ...commentEmbeds]});
+		i.editReply({embeds: [postEmbed, ...commentEmbeds]});
 	}
 };

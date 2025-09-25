@@ -9,14 +9,14 @@ module.exports = {
 			.setName("q")
 			.setDescription("Search query")
 			.setRequired(true)),
-	async execute(interaction) {
-		const query = interaction.options.getString("q");
-		await interaction.reply({ content: "Creating thread..." });
-		const searchChannel = await interaction.client.channels.fetch("1415155574026403840");
+	async execute(i) {
+		const query = i.options.getString("q");
+		await i.reply({ content: "Creating thread..." });
+		const searchChannel = await i.client.channels.fetch("1415155574026403840");
 
 		const data = await post(query);
 		if (!data) {
-			await interaction.editReply({ content: `No results for \`${query}\`!` });
+			await i.editReply({ content: `No results for \`${query}\`!` });
 			return;
 		}
 
@@ -45,14 +45,14 @@ module.exports = {
 				"1415395178742681742"
 			]
 		});
-		await interaction.editReply({ content: "Adding you to the thread..." });
-		await thread.members.add(interaction.user.id);
-		await interaction.editReply({ content: "Sending first message..." });
+		await i.editReply({ content: "Adding you to the thread..." });
+		await thread.members.add(i.user.id);
+		await i.editReply({ content: "Sending first message..." });
 		await thread.send({ embeds: [{
 			description: "first message"
 		}]});
 
-		await interaction.editReply({ content:
+		await i.editReply({ content:
 			`Created **${query}** thread in <#1415155574026403840>\n## <#${thread.id}>`
 		});
 	}

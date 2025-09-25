@@ -32,48 +32,48 @@ module.exports = {
 			.setName("autocomplete")
 			.setDescription("View autocomplete results for tag")
 			.setAutocomplete(true)),
-	async autocomplete(interaction) {
-		const focused = interaction.options.getFocused(true);
+	async autocomplete(i) {
+		const focused = i.options.getFocused(true);
 		const data = await autocomplete(focused.value);
 		if (!data) {
-			await interaction.respond([{ name: ">> Get typin', nerd.", value: "" }]);
+			await i.respond([{ name: ">> Get typin', nerd.", value: "" }]);
 			return;
 		}
 		if (focused.name === "q") {
 			if (!data.length) {
-				await interaction.respond([{
+				await i.respond([{
 					name: `>> No tags that begin with "${focused.value.split(" ").pop()}"!`,
 					value: focused.value
 				}]);
 				return;
 			}
-			await interaction.respond(
+			await i.respond(
 				data.map(obj => ({ name: obj.query, value: obj.query }))
 			);
 		}
 		if (focused.name === "autocomplete") {
 			if (!data.length) {
-				await interaction.respond([{ name: ">> NONE", value: "" }]);
+				await i.respond([{ name: ">> NONE", value: "" }]);
 				return;
 			}
-			await interaction.respond(
+			await i.respond(
 				data.map(obj => ({ name: `${obj.tag}  (${obj.count})`, value: "" }))
 			);
 		}
 	},
-	async execute(interaction) {
-		const input = interaction.options.getString("q");
+	async execute(i) {
+		const input = i.options.getString("q");
 		const sort = {
-			val: interaction.options.getString("sort") || "id",
-			dir: interaction.options.getString("dir") || "desc"
+			val: i.options.getString("sort") || "id",
+			dir: i.options.getString("dir") || "desc"
 		};
 
-		await interaction.reply({ content: `# ${input}\nLoading...` });
+		await i.reply({ content: `# ${input}\nLoading...` });
 		
 		const query = `${input} sort:${sort.val}:${sort.dir}`;
 		const data = await post(query);
 		if (!data) {
-			await interaction.editReply({ content: `No results for \`${query}\`!` });
+			await i.editReply({ content: `No results for \`${query}\`!` });
 			return;
 		}
 
@@ -89,7 +89,7 @@ module.exports = {
 			}})()
 		};
 
-		await interaction.editReply({
+		await i.editReply({
 			content: `-# [Data URL](https://data?${JSON.stringify(messageData)} "Ignore this!")\n`
 				+ `:mag_right: ${input}\n[Image](${data.image.main.url}?${data.id})`,
 			

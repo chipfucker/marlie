@@ -13,15 +13,15 @@ module.exports = {
 			.setName("url")
 			.setDescription("URL of file")
 			.setRequired(true)),
-	async execute(interaction) {
-		await interaction.reply({ content: "Fetching..." });
+	async execute(i) {
+		await i.reply({ content: "Fetching..." });
 
-		const input = await interaction.options.getString("url");
+		const input = await i.options.getString("url");
 
 		const pathname = new URL(input).pathname.split("/").pop();
 		const promise = await fetch(input);
 		if (!promise.ok) {
-			interaction.editReply({
+			i.editReply({
 				content: "There was a bad response from "+input+"!"
 			});
 			return;
@@ -29,16 +29,16 @@ module.exports = {
 		
 		const filename = pathname.includes(".") ? pathname : pathname ? `${pathname}.${promise.headers.get("content-type").split("/").pop()}` : "file";
 		
-		await interaction.editReply({ content: "Buffering..." });
+		await i.editReply({ content: "Buffering..." });
 		const arrayBuffer = await promise.arrayBuffer();
 		const buffer = Buffer.from(arrayBuffer);
 		const stream = Readable.from(buffer);
 		
-		await interaction.editReply({ content: "Creating form..." });
+		await i.editReply({ content: "Creating form..." });
 		const form = new FormData();
 		form.append("file", stream, filename);
 
-		await interaction.editReply({ content: "Uploading..." });
+		await i.editReply({ content: "Uploading..." });
 		const response = await fetch("https://temp.sh/upload", {
 			method: "POST",
 			body: form,
@@ -46,7 +46,7 @@ module.exports = {
 		});
 
 		if (!response.ok) {
-			interaction.editReply({
+			i.editReply({
 				content: "There was a bad response from temp.sh!"
 			});
 			return;
@@ -54,6 +54,6 @@ module.exports = {
 	
 		const url = await response.text();
 
-		interaction.editReply({ content: `Uploaded content!\n${url}` });
+		i.editReply({ content: `Uploaded content!\n${url}` });
 	}
 }

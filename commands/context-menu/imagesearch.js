@@ -5,10 +5,10 @@ module.exports = {
 		.setName("Send to #image-search")
 		.setType(3)
 		.setIntegrationTypes(1).setContexts(0, 2),
-	async execute(interaction) {
-		await interaction.deferReply({ flags: 64 });
+	async execute(i) {
+		await i.deferReply({ flags: 64 });
 
-		const target = interaction.targetMessage;
+		const target = i.targetMessage;
 
 		const message = {
 			content: target.content,
@@ -25,10 +25,10 @@ module.exports = {
 		if (message.files.length < (10 - target.embeds.length)) for (const embed of target.embeds) {
 		}
 		
-		const channel = await interaction.client.channels.fetch("1295111688881836203");
+		const channel = await i.client.channels.fetch("1295111688881836203");
 		const response = await channel.send(message);
-		await interaction.editReply(`Message sent to ${response.channel.url}!\n${
+		await i.editReply(`Message sent to ${response.channel.url}!\n${
 			""
-		}Jump back: ${interaction.targetMessage.url}`);
+		}Jump back: ${i.targetMessage.url}`);
 	}
 }

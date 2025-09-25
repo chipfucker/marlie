@@ -36,43 +36,43 @@ module.exports = {
 			.setName("autocomplete")
 			.setDescription("View autocomplete results for tag")
 			.setAutocomplete(true)),
-	async autocomplete(interaction) {
-		const focused = interaction.options.getFocused(true);
+	async autocomplete(i) {
+		const focused = i.options.getFocused(true);
 		const data = await autocomplete(focused.value);
 		if (!data) {
-			await interaction.respond([{ name: ">> Get typin', nerd.", value: "" }]);
+			await i.respond([{ name: ">> Get typin', nerd.", value: "" }]);
 			return;
 		}
 		if (focused.name === "q") {
 			if (!data.length) {
-				await interaction.respond([{
+				await i.respond([{
 					name: `>> No tags that begin with "${focused.value.split(" ").pop()}"!`,
 					value: focused.value
 				}]);
 				return;
 			}
-			await interaction.respond(
+			await i.respond(
 				data.map(obj => ({ name: obj.query, value: obj.query }))
 			);
 		}
 		if (focused.name === "autocomplete") {
 			if (!data.length) {
-				await interaction.respond([{ name: ">> NONE", value: "" }]);
+				await i.respond([{ name: ">> NONE", value: "" }]);
 				return;
 			}
-			await interaction.respond(
+			await i.respond(
 				data.map(obj => ({ name: `${obj.tag}  (${obj.count})`, value: "" }))
 			);
 		}
 	},
-	async execute(interaction) {
-		const input = interaction.options.getString("q");
+	async execute(i) {
+		const input = i.options.getString("q");
 		const sort = {
-			val: interaction.options.getString("sort") || "id",
-			dir: interaction.options.getString("dir") || "desc"
+			val: i.options.getString("sort") || "id",
+			dir: i.options.getString("dir") || "desc"
 		};
 
-		await interaction.reply({ embeds: [{
+		await i.reply({ embeds: [{
 			title: `\`${input}\` (${sort.val}:${sort.dir})`,
 			description: "Loading..."
 		}]});
@@ -80,7 +80,7 @@ module.exports = {
 		const query = `${input} sort:${sort.val}:${sort.dir}`;
 		const data = await post(query);
 		if (!data) {
-			await interaction.editReply({ embeds: [{
+			await i.editReply({ embeds: [{
 				title: `No results for \`${query}\`!`,
 				color: 0xe9263d
 			}]});
@@ -97,12 +97,12 @@ module.exports = {
 				case "score": return data.score;
 				default: return 0;
 			}})(),
-			general: interaction.options.getBoolean("general") ?? false,
+			general: i.options.getBoolean("general") ?? false,
 		};
 
 		const message = embed.searchEmbed(messageData.query, data, messageData.general);
 
-		await interaction.editReply({
+		await i.editReply({
 			content: `||\`\`\`json\n${JSON.stringify(messageData)}\n\`\`\`||`,
 			embeds: [message.embed],
 			components: [message.buttons],

@@ -7,16 +7,16 @@ module.exports = {
 		.setName("Throw message")
 		.setType(3)
 		.setIntegrationTypes(1).setContexts(0, 2),
-	async execute(interaction) {
-		if (interaction.channel.id === "1384093405017018399") await interaction.deferReply();
-		else await interaction.deferReply({ flags: 64 });
+	async execute(i) {
+		if (i.channel.id === "1384093405017018399") await i.deferReply();
+		else await i.deferReply({ flags: 64 });
 
 		const prefix = ("\x1b[93m\x1b[1mTHR\x1b[0m");
-		console.log(`${prefix}\x1b[2m catching message as \x1b[0m"${interaction.id}"`);
+		console.log(`${prefix}\x1b[2m catching message as \x1b[0m"${i.id}"`);
 
 		// set ./catch/message path
-		const message = interaction.targetMessage;
-		const msgPath = path.join("catch", interaction.id);
+		const message = i.targetMessage;
+		const msgPath = path.join("catch", i.id);
 
 		// create message folder
 		fs.mkdirSync(msgPath, (err) => { throw err; });
@@ -68,16 +68,16 @@ module.exports = {
 		console.log(
 			`\n######  Someone threw you a message! I wonder who...\n##\n##  ${
 				quote.replace(/\n/g, "\n##  ")
-			}\n##\n######  Saved to file://catch/${interaction.id}/`
+			}\n##\n######  Saved to file://catch/${i.id}/`
 		);
 
-		if (interaction.channel.id === "1384093405017018399") {
-			await interaction.editReply(`Message thrown!\n>>> ${quote}`);
+		if (i.channel.id === "1384093405017018399") {
+			await i.editReply(`Message thrown!\n>>> ${quote}`);
 		}
 		else {
-			const channel = await interaction.client.channels.fetch("1384093405017018399");
-			const response = await channel.send(`Message thrown from <#${interaction.channel.id}>!\n>>> ${quote}`);
-			await interaction.editReply(`Message thrown! https://discord.com/channels/1294885290275770430/1384093405017018399/${response.id}`);
+			const channel = await i.client.channels.fetch("1384093405017018399");
+			const response = await channel.send(`Message thrown from <#${i.channel.id}>!\n>>> ${quote}`);
+			await i.editReply(`Message thrown! https://discord.com/channels/1294885290275770430/1384093405017018399/${response.id}`);
 		}
 	}
 }
