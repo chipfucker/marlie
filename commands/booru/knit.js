@@ -22,7 +22,7 @@ module.exports = {
 
 		const threadData = {
 			query: query,
-			id: data.info.file.id,
+			id: data.id,
 			index: 1,
 			likes: 0,
 			packs: 0,

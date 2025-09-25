@@ -21,12 +21,17 @@ module.exports = {
 			.setDescription("Whether to display comments")),
 	async execute(i) {
 		var query = i.options.getString("q");
-		const urlRegex = /^https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)$/;
 		const numRegex = /^(\d+)$/;
-		if (query.match(urlRegex))
-			query = query.replace(urlRegex, "id:$1");
-		else if (query.match(numRegex))
-			query = query.replace(numRegex, "id:$1");
+		for (const regex of [
+			// Post URL
+			/^https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)$/,
+			// Image URL
+
+			// Digits by themselves
+			/^(\d+)$/
+		]) if (query.match(regex)) {
+			query = query.replace(regex, "id:$1"); break;
+		}
 
 		await i.reply({embeds: [{
 			title: query,
@@ -35,7 +40,7 @@ module.exports = {
 
 		if (!query) {
 			i.editReply({ embeds: [{
-				title: "You must specify a query or URL!",
+				title: "You must specify a query or applicable URL!",
 				color: 0xe9263d
 			}]});
 			return;
@@ -54,7 +59,7 @@ module.exports = {
 			let content = JSON.stringify(data, null, 4);
 			let attachment = {
 				attachment: Buffer.from(content),
-				name: `${data.info.file.id}-info.json`
+				name: `${data.id}-info.json`
 			};
 			i.editReply({ files: [attachment], embeds: [] });
 			return;
