@@ -1,6 +1,6 @@
 // TODO: rename members without 'embed'
 const object = {
-	// TODO: add showoff object
+	showoff: () => {},
 	infoEmbed: () => {},
 	searchEmbed: (query, data, general) => {
 		const message = {
