@@ -83,7 +83,7 @@ module.exports = {
 			fields: []
 		};
 
-		for (const [key, value] of Object.entries(data.tags.categories)) {
+		for (const [key, value] of Object.entries(data.tags.category)) {
 			if (value.length) postEmbed.fields.push({
 				name: String(key).charAt(0).toUpperCase() + String(key).slice(1),
 				value: (() => {

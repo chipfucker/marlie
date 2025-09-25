@@ -30,14 +30,14 @@ const object = {
 					url: `https://rule34.xxx/index.php?page=post&s=view&tags=${encodeURIComponent(query)}`
 					// TODO: adjust link
 				},
-				title: `\`${data.info.file.id}\``,
-				description: data.image.original,
+				title: `\`${data.id}\``,
+				description: data.image.main.url,
 				fields: [
 					{
 						name: "Copyright",
 						value: (()=>{
-							if (data.tags.copyright.length) {
-								const str = data.tags.copyright.map(e => `\`${e.name}\` (${e.count})`).join("\n");
+							if (data.tags.category.copyright.length) {
+								const str = data.tags.category.copyright.map(e => `\`${e.name}\` (${e.count})`).join("\n");
 								if (str.length > 1024) return cutTags(str);
 								else return str;
 							}
@@ -47,8 +47,8 @@ const object = {
 					{
 						name: "Character",
 						value: (()=>{
-							if (data.tags.character.length) {
-								const str = data.tags.character.map(e => `\`${e.name}\` (${e.count})`).join("\n");
+							if (data.tags.category.character.length) {
+								const str = data.tags.category.character.map(e => `\`${e.name}\` (${e.count})`).join("\n");
 								if (str.length > 1024) return cutTags(str);
 								else return str;
 							}
@@ -58,8 +58,8 @@ const object = {
 					{
 						name: "Artist",
 						value: (()=>{
-							if (data.tags.artist.length) {
-								const str = data.tags.artist.map(e => `\`${e.name}\` (${e.count})`).join("\n");
+							if (data.tags.category.artist.length) {
+								const str = data.tags.category.artist.map(e => `\`${e.name}\` (${e.count})`).join("\n");
 								if (str.length > 1024) return cutTags(str);
 								else return str;
 							}
@@ -70,13 +70,13 @@ const object = {
 						name: "General",
 						value: (()=>{
 							if (general)
-								if (data.tags.general.length) {
-									const str = data.tags.general.map(e => `\`${e.name}\` (${e.count})`).join("\n");
+								if (data.tags.category.general.length) {
+									const str = data.tags.category.general.map(e => `\`${e.name}\` (${e.count})`).join("\n");
 									if (str.length > 1024) return cutTags(str);
 									else return str;
 								}
 								else return "-# null";
-							else return `-# *${data.tags.general.length} tags*`;
+							else return `-# *${data.tags.category.general.length} tags*`;
 						})(),
 						inline: (() => {
 							if (general) return false;
@@ -86,7 +86,7 @@ const object = {
 					{
 						name: "Meta",
 						value: (()=>{
-							if (data.tags.meta.length) {
+							if (data.tags.category.meta.length) {
 								const str = data.tags.meta.map(e => `\`${e.name}\` (${e.count})`).join("\n");
 								if (str.length > 1024) return cutTags(str);
 								else return str;
@@ -97,7 +97,7 @@ const object = {
 					}
 				],
 				image: {
-					url: data.image.original
+					url: data.image.main.url
 				}
 			},
 
@@ -121,11 +121,11 @@ const object = {
 			}
 		};
 
-		if (data.tags.other.length) message.embed.fields.push({
-			name: "Other (null)",
+		if (data.tags.category.null.length) message.embed.fields.push({
+			name: "null",
 			value: (()=>{
 				{
-					const str = data.tags.other.map(e => `\`${e.name}\` (${e.count})`).join("\n");
+					const str = data.tags.category.null.map(e => `\`${e.name}\` (${e.count})`).join("\n");
 					if (str.length > 1024) return cutTags(str);
 					else return str;
 				}

@@ -116,10 +116,10 @@ const object = async i => {
 					sort: json.sort,
 					value: (() => {
 						switch (json.sort.val) {
-							case "width": return data.image.size.original.width;
-							case "height": return data.image.size.original.height;
-							case "id": return data.info.file.id;
-							case "score": return data.info.post.score;
+							case "width": return data.image.main.width;
+							case "height": return data.image.main.height;
+							case "id": return data.id;
+							case "score": return data.score;
 							default: return 0;
 						}
 					})()
@@ -127,7 +127,7 @@ const object = async i => {
 		
 				i.editReply({
 					content: `-# [Data URL](https://data?${JSON.stringify(messageData)} "Ignore this!")\n`
-						+ `:mag_right: ${json.query}\n[Image](${data.image.original}?${data.info.file.id})`,
+						+ `:mag_right: ${json.query}\n[Image](${data.image.main.url}?${data.id})`,
 					components: [{
 						type: 1,
 						components: [

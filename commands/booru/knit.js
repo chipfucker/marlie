@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const { post } = require ("../../utility/rule34api.js");
+const { post } = require("../../utility/rule34api.js");
 
 module.exports = {
 	data: new Discord.SlashCommandBuilder()
