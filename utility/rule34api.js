@@ -92,14 +92,14 @@ const post = async (query) => {
 	const api = {};
 
 	api.json = await fetch(apiUrl.post({
-		json: true, query: query
+		json: true, tags: true, query: query
 	})).then(e => e.json()).then(e => e[0]).catch(() => false);
 
 	if (!api.json) return null;
 
-	// api.children = await fetch(apiUrl.post({
-	// 	type: ""
-	// }))
+	api.children = await fetch(apiUrl.post({
+		limit: 1000, json: true, query: `parent:${api.json.id}`
+	}));
 
 	api.xml = await fetch(apiUrl.post({
 		json: false, query: query
@@ -258,9 +258,9 @@ const apiUrl = {
 			page: "dapi",
 			s: "post",
 			q: "index",
-			limit: options.limit ?? "1",
+			limit: String(options.limit ?? 1),
 			json: String(Number(options.json ?? false)),
-			fields: options.json ? "tag_info" : "",
+			fields: options.tags ? "tag_info" : "",
 			tags: options.query ?? "",
 			api_key: rule34.token,
 			user_id: "2373207"
@@ -314,7 +314,7 @@ function dataObject(api) {
 		status: api.json.status,
 		notes: api.json.has_notes, // TODO: find out how to fetch note info
 		parent: api.json.parent_id, // TODO: find out how null parents are handled in the site
-		children: api.xml.post.getAttribute("has_children") === "true", // TODO: convert to array of children
+		children: api.children.map(e => e.id),
 		source: api.json.source || null
 	};
 

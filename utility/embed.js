@@ -3,26 +3,6 @@ const object = {
 	// TODO: add showoff object
 	infoEmbed: () => {},
 	searchEmbed: (query, data, general) => {
-		if (!data) {
-			console.log("NO RESULTS THIS WAY");
-			return {
-				type: 1,
-				components: [
-					{
-						type: 2,
-						style: 2,
-						label: "Prev",
-						custom_id: "search:prev"
-					},
-					{
-						type: 2,
-						style: 2,
-						label: "Next",
-						custom_id: "search:next"
-					}
-				]
-			};
-		}
 		const message = {
 			embed: {
 				author: {
@@ -100,8 +80,6 @@ const object = {
 					url: data.image.main.url
 				}
 			},
-
-			
 			buttons: {
 				type: 1,
 				components: [

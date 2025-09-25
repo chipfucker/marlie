@@ -78,7 +78,9 @@ module.exports = {
 				`**Updated:** ${data.updated.string}\n\n`+
 				`**Source:** ${data.source || "none"}\n`+
 				`**Parent:** ${data.parent ? `\`${data.parent}\`` : "none"}\n`+
-				`**Children:** ${data.children ? "yes" : "none"}\n\n`+
+				`**Children:**${data.children.length
+					? "\n<:indent:1420550819568423043>" + data.children.join("\n<:indent:1420550819568423043>")
+					: "none"}\n\n`+
 				`**Hash:** \`${data.image.hash}\`\n`,
 			fields: []
 		};
