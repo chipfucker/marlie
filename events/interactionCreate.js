@@ -4,39 +4,49 @@ const terminal = require("../utility/terminal.json");
 
 module.exports = {
 	name: Discord.Events.InteractionCreate,
-	async execute(interaction) {
-		const cmdString =
-			`\x1b[96m\x1b[1mCMD\x1b[0m \x1b[97m${
-				interaction.user.username
-			}\x1b[0m ran \x1b[0m\x1b[1m${
-				interaction.commandName || interaction.message.interaction.commandName
-			}\x1b[0m \x1b[3m\x1b[90m(${
-				Discord.ApplicationCommandType[interaction.commandType || interaction.message.interaction.type]
-			} ${
-				Discord.InteractionType[interaction.type]
-			})\x1b[0m\x1b[2m`;
-		console.log(cmdString);
+	async execute(i) {
+		const tag = `${
+			terminal.color.fg.bright.cyan
+			+ terminal.font.start.bold
+		}CMD${terminal.font.reset}`;
+
+		console.log(`${tag} ${
+			terminal.color.fg.bright.white
+		}${i.user.username}${
+			terminal.color.fg.default
+		} ran ${
+			terminal.font.start.bold
+		}${(i.commandName || i.message.interaction.commandName)}${
+			terminal.font.reset
+		} ${
+			terminal.font.start.italic
+			+ terminal.font.start.faint
+		} (${Discord.ApplicationCommandType[
+			i.commandType || i.message.interaction.type
+		]} ${Discord.InteractionType[i.type]})${
+			terminal.font.reset
+		}`);
 		
-		if (interaction.isChatInputCommand() || interaction.isMessageContextMenuCommand()) {
-			const command = interaction.client.commands.get(interaction.commandName);
+		if (i.isChatInputCommand() || i.isMessageContextMenuCommand()) {
+			const command = i.client.commands.get(i.commandName);
 			try {
-				await command.execute(interaction);
+				await command.execute(i);
 			} catch (error) {
 				console.error(error);
-				if (interaction.replied || interaction.deferred)
-					await interaction.followUp({ content: "### ERROR:\n```\n"+error+"\n```" });
+				if (i.replied || i.deferred)
+					await i.followUp({ content: "### ERROR:\n```\n"+error+"\n```" });
 				else
-					await interaction.reply({ content: "### ERROR:\n```\n"+error+"\n```" });
+					await i.reply({ content: "### ERROR:\n```\n"+error+"\n```" });
 			}
-		} else if (interaction.isAutocomplete()) {
-			const command = interaction.client.commands.get(interaction.commandName);
+		} else if (i.isAutocomplete()) {
+			const command = i.client.commands.get(i.commandName);
 			try {
-				await command.autocomplete(interaction);
+				await command.autocomplete(i);
 			} catch (error) {
 				console.error(error);
 			}
-		} else if (interaction.isButton()) {
-			await buttonEvent(interaction);
+		} else if (i.isButton()) {
+			await buttonEvent(i);
 		}
 	},
 };
