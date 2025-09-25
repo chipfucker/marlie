@@ -14,7 +14,6 @@ module.exports = {
 		const prefix = ("\x1b[93m\x1b[1mTHR\x1b[0m");
 		console.log(`${prefix}\x1b[2m catching message as \x1b[0m"${i.id}"`);
 
-		// set ./catch/message path
 		const message = i.targetMessage;
 		const catchPath = path.join("./catch");
 		if (!fs.existsSync(catchPath)) fs.mkdirSync(catchPath);
