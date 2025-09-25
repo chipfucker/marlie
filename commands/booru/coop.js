@@ -3,8 +3,8 @@ const { autocomplete, post } = require("../../utility/rule34api.js");
 
 module.exports = {
 	data: new Discord.SlashCommandBuilder()
-		.setName("showoff")
-		.setDescription("Show off to a bud")
+		.setName("coop")
+		.setDescription("Goon with a pal")
 		.setIntegrationTypes(1).setContexts(0, 2)
 		.addStringOption(option => option
 			.setName("q")

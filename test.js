@@ -1,8 +1,7 @@
 async function test(client) {
-	const terminal = require("./utility/terminal.json");
-	console.log(
-		`${terminal.color.fg.bright.red}this is red`
-	)
+	const rule34 = require("./utility/rule34api.js");
+	const data = await rule34.post("id:3270373");
+	console.log(data);
 }
 
 const Discord = require("discord.js");

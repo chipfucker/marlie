@@ -1,4 +1,4 @@
-const { rule34 } = require("../config.json");
+const config = require("../config.json");
 const { DOMParser } = require("xmldom");
 	
 /**
@@ -99,7 +99,7 @@ const post = async (query) => {
 
 	api.children = await fetch(apiUrl.post({
 		limit: 1000, json: true, query: `parent:${api.json.id}`
-	}));
+	})).then(e => e.json());
 
 	api.xml = await fetch(apiUrl.post({
 		json: false, query: query
@@ -262,7 +262,7 @@ const apiUrl = {
 			json: String(Number(options.json ?? false)),
 			fields: options.tags ? "tag_info" : "",
 			tags: options.query ?? "",
-			api_key: rule34.token,
+			api_key: config.rule34.token,
 			user_id: "2373207"
 		}).toString();
 	},
@@ -272,7 +272,7 @@ const apiUrl = {
 			s: "comment",
 			q: "index",
 			post_id: options.id,
-			api_key: rule34.token,
+			api_key: config.rule34.token,
 			user_id: "2373207"
 		}).toString();
 	}
@@ -314,7 +314,7 @@ function dataObject(api) {
 		status: api.json.status,
 		notes: api.json.has_notes, // TODO: find out how to fetch note info
 		parent: api.json.parent_id, // TODO: find out how null parents are handled in the site
-		children: api.children.map(e => e.id),
+		children: api.children.filter(e => e.id !== api.json.id).map(e => e.id),
 		source: api.json.source || null
 	};
 

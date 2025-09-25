@@ -16,12 +16,9 @@ module.exports = {
 			flags: 4
 		};
 
-		for (const [key, value] of target.attachments) {
-			const file = await fetch(value.url)
-				.then(e => e.arrayBuffer())
-				.then(e => Buffer.from(e));
-			message.files.push(file);
-		}
+		for (const [key, value] of target.attachments)
+			message.files.push({ attachment: value.url });
+
 		if (message.files.length < (10 - target.embeds.length)) for (const embed of target.embeds) {
 		}
 		
