@@ -27,7 +27,6 @@ const { DOMParser } = require("xmldom");
  * @typedef {Object} Post
  * 
  * @prop {Object} image Info about the media of the post.
- * 
  * @prop {Object} image.main The original media.
  * @prop {string} image.main.url The URL of the media file.
  * @prop {number} image.main.width The width of the media in pixels.
@@ -69,12 +68,13 @@ const { DOMParser } = require("xmldom");
  * @prop {string} tags.string A string of all tags organized alphabetically and separated by spaces.
  * @prop {Array<ArrayTag>} tags.array An array of all tags organized alphabetically.
  * @prop {Object} tags.category Arrays of all tags, categorized by their type.
- * @prop {Array<CategoryTag>} tags.category.copyright An array of all 'copyright' tags.
- * @prop {Array<CategoryTag>} tags.category.character An array of all 'character' tags.
- * @prop {Array<CategoryTag>} tags.category.artist An array of all 'artist' tags.
- * @prop {Array<CategoryTag>} tags.category.general An array of all 'general' tags.
- * @prop {Array<CategoryTag>} tags.category.metadata An array of all 'metadata' tags.
+ * @prop {Array<CategoryTag>} tags.category.Copyright An array of all 'copyright' tags.
+ * @prop {Array<CategoryTag>} tags.category.Character An array of all 'character' tags.
+ * @prop {Array<CategoryTag>} tags.category.Artist An array of all 'artist' tags.
+ * @prop {Array<CategoryTag>} tags.category.General An array of all 'general' tags.
+ * @prop {Array<CategoryTag>} tags.category.Metadata An array of all 'metadata' tags.
  * @prop {Array<CategoryTag>} tags.category.null An array of all `null` tags.
+ * @prop {Array<ArrayTag>} tags.category.Other An array of tags that don't fall under the known tag types.
  * 
  * @prop {Array<Comment>} comments An array of all comments under the post.
  */
@@ -89,6 +89,7 @@ const { DOMParser } = require("xmldom");
  */
 
 const post = async (query) => {
+	console.time("Get post info");
 	const api = {};
 
 	api.json = await fetch(url.post({
@@ -201,7 +202,8 @@ const post = async (query) => {
 			content: e.getAttribute("body")
 		}))
 	}; */
-
+	
+	console.timeEnd("Get post info");
 	return data;
 };
 
@@ -235,95 +237,98 @@ const url = {
 	}
 }
 
-function dataObject(api, config) {
-	const data = {
-		image: {
-			main: {
-				url: api.json.file_url,
-				width: api.json.width,
-				height: api.json.height
+function formatData {
+	main: (api, config) => {
+		const data = {
+			image: {
+				main: {
+					url: api.json.file_url,
+					width: api.json.width,
+					height: api.json.height
+				},
+				sample: {
+					url: api.json.sample_url,
+					width: api.json.sample_width,
+					height: api.json.sample_height,
+					necessary: api.json.sample
+				},
+				thumbnail: {
+					url: api.json.preview_url,
+					width: Number(api.xml.post.getAttribute("preview_width")),
+					height: Number(api.xml.post.getAttribute("preview_height"))
+				},
+				directory: api.json.directory,
+				name: api.json.image,
+				hash: api.json.hash,
+				extension: api.json.image.split(".").pop()
 			},
-			sample: {
-				url: api.json.sample_url,
-				width: api.json.sample_width,
-				height: api.json.sample_height,
-				necessary: api.json.sample
-			},
-			thumbnail: {
-				url: api.json.preview_url,
-				width: Number(api.xml.post.getAttribute("preview_width")),
-				height: Number(api.xml.post.getAttribute("preview_height"))
-			},
-			directory: api.json.directory,
-			name: api.json.image,
-			hash: api.json.hash,
-			extension: api.json.image.split(".").pop()
-		},
-		id: api.json.id,
-		created: dateObject(new Date(api.xml.post.getAttribute("created_at"))),
-		updated: dateObject(new Date(api.json.change * 1000)),
-		creator: {
-			name: api.json.owner,
-			id: Number(api.xml.post.getAttribute("creator_id"))
-		},
-		rating: api.json.rating,
-		score: api.json.score,
-		status: api.json.status,
-		notes: api.json.has_notes, // TODO: find out how to fetch note info
-		parent: api.json.parent_id, // TODO: find out how null parents are handled in the site
-		children: config.children
-			? api.children.filter(e => e.id !== api.json.id).map(e => e.id)
-			: api.xml.post.getAttribute("has_children") === "true" ? true : false,
-		source: api.json.source || null
-	};
-
-	if (config.tags) data.tags = {
-		string: api.json.tags,
-		// TODO: reformat tags to match jsdoc
-		array: api.json.tag_info,
-		category: {
-			copyright: api.json.tag_info
-				.filter(e => e.type === "copyright")
-				.map(e => ({ name: e.tag, count: e.count })),
-			character: api.json.tag_info
-				.filter(e => e.type === "character")
-				.map(e => ({ name: e.tag, count: e.count })),
-			artist: api.json.tag_info
-				.filter(e => e.type === "artist")
-				.map(e => ({ name: e.tag, count: e.count })),
-			general: api.json.tag_info
-				.filter(e => e.type === "tag")
-				.map(e => ({ name: e.tag, count: e.count })),
-			metadata: api.json.tag_info
-				.filter(e => e.type === "metadata")
-				.map(e => ({ name: e.tag, count: e.count })),
-			null: api.json.tag_info
-				.filter(e => e.type === null)
-				.map(e => ({ name: e.tag, count: e.count })),
-			other: api.json.tag_info
-				.filter(e => ![
-					"copyright",
-					"character",
-					"artist",
-					"tag",
-					"metadata",
-					null
-				].includes(e.type))
-				.map(e => ({ name: e.tag, count: e.count, type: e.type }))
-		}
-	};
-
-	if (config.comments) 
-		data.comments = api.comments.map(e => ({
+			id: api.json.id,
+			created: dateObject(new Date(api.xml.post.getAttribute("created_at"))),
+			updated: dateObject(new Date(api.json.change * 1000)),
 			creator: {
-				name: e.getAttribute("creator"),
-				id: Number(e.getAttribute("creator_id"))
+				name: api.json.owner,
+				id: Number(api.xml.post.getAttribute("creator_id"))
 			},
-			id: Number(e.getAttribute("id")),
-			body: e.getAttribute("body")
-		}));
+			rating: api.json.rating,
+			score: api.json.score,
+			status: api.json.status,
+			notes: api.json.has_notes, // TODO: find out how to fetch note info
+			parent: api.json.parent_id, // TODO: find out how null parents are handled in the site
+			children: config.children
+				? api.children.filter(e => e.id !== api.json.id).map(e => e.id)
+				: api.xml.post.getAttribute("has_children") === "true" ? true : false,
+			source: api.json.source || null
+		};
 
-	return data;
+		if (config.tags) data.tags = {
+			string: api.json.tags,
+			// TODO: reformat tags to match jsdoc
+			array: api.json.tag_info
+				.map(e => ({ name: e.tag, count: e.count, type: e.type })),
+			category: {
+				Copyright: api.json.tag_info
+					.filter(e => e.type === "copyright")
+					.map(e => ({ name: e.tag, count: e.count })),
+				Character: api.json.tag_info
+					.filter(e => e.type === "character")
+					.map(e => ({ name: e.tag, count: e.count })),
+				Artist: api.json.tag_info
+					.filter(e => e.type === "artist")
+					.map(e => ({ name: e.tag, count: e.count })),
+				General: api.json.tag_info
+					.filter(e => e.type === "tag")
+					.map(e => ({ name: e.tag, count: e.count })),
+				Metadata: api.json.tag_info
+					.filter(e => e.type === "metadata")
+					.map(e => ({ name: e.tag, count: e.count })),
+				null: api.json.tag_info
+					.filter(e => e.type === null)
+					.map(e => ({ name: e.tag, count: e.count })),
+				Other: api.json.tag_info
+					.filter(e => ![
+						"copyright",
+						"character",
+						"artist",
+						"tag",
+						"metadata",
+						null
+					].includes(e.type))
+					.map(e => ({ name: e.tag, count: e.count, type: e.type }))
+			}
+		};
+
+		if (config.comments) 
+			data.comments = api.comments.map(e => ({
+				creator: {
+					name: e.getAttribute("creator"),
+					id: Number(e.getAttribute("creator_id"))
+				},
+				id: Number(e.getAttribute("id")),
+				body: e.getAttribute("body")
+			}));
+
+		return data;
+	}
 }
 
 function dateObject(object) {

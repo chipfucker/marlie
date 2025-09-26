@@ -1,7 +1,162 @@
+const Discord = require("discord.js");
+const emoij = require("./emoji.json");
+
 // TODO: rename members without 'embed'
-const object = {
+const embed = {
+	inspect: {
+		create: (query, data) => {
+			const message = {
+				flags: Discord.MessageFlags.IsComponentsV2,
+				components: [{
+					type: Discord.ComponentType.Container,
+					components: [
+						{
+							type: Discord.ComponentType.Section,
+							components: [
+								{
+									type: Discord.ComponentType.TextDisplay,
+									content: `First result of \`${query}\``
+								},
+								{
+									type: Discord.ComponentType.TextDisplay,
+									content: `## ${data.id}`,
+								},
+								{
+									type: Discord.ComponentType.TextDisplay,
+									content: Object.entries({
+										"Search URL": `https://rule34.xxx/?page=post&s=list&tags=${encodeURIComponent(query)}`,
+										"Post URL": `https://rule34.xxx/?page=post&s=view&id=${data.id}`,
+										"Image URL": data.image.main.url
+									}).map(def => `[${ def[0] }](${ def[1] })`).join("\n")
+								}
+							],
+							accessory: {
+								type: Discord.ComponentType.Thumbnail,
+								media: {
+									url: data.image.thumbnail.url
+								}
+							}
+						},
+						{
+							type: Discord.ComponentType.Separator,
+							divider: true,
+							spacing: Discord.SeparatorSpacingSize.Large
+						},
+						{
+							type: DiscordComponentType.TextDisplay,
+							content: definition({
+								"Creator": `\`${data.creator.name}\``,
+								"Score": `${data.score}`
+							})
+						},
+						{
+							type: Discord.ComponentType.Separator,
+							divider: false,
+							spacing: Discord.SeparatorSpacingSize.Small
+						},
+						{
+							type: Discord.ComponentType.TextDisplay,
+							content: definition({
+								"Created": data.created.string,
+								"Updated": data.updated.string
+							})
+						},
+						{
+							type: Discord.ComponentType.Separator,
+							divider: false,
+							spacing: Discord.SeparatorSpacingSize.Small
+						},
+						{
+							type: Discord.ComponentType.TextDisplay,
+							content: definition({
+								"Source": data.source ?? "none",
+								"Parent": data.parent ? `\`${data.parent}\`` : "none",
+								"Children": data.children.length
+									? data.children.map(id => `${emoji.indent}\`${id}\``).join("\n")
+									: "none"
+							})
+						},
+						{
+							type: Discord.ComponentType.Separator,
+							divider: false,
+							spacing: Discord.SeparatorSpacingSize.Small
+						},
+						{
+							type: Discord.ComponentType.TextDisplay,
+							content: definition({
+								"Directory": data.image.directory,
+								"Hash": data.image.hash
+							})
+						},
+						{
+							type: Discord.ComponentType.Separator,
+							divider: true,
+							spacing: Discord.SeparatorSpacingSize.Large
+						}
+					]
+				}]
+			};
+
+			if (data.tags.array.length) {
+				message.components[0].components.push({
+					type: Discord.ComponentType.Separator,
+					divider: true,
+					spacing: Discord.SeparatorSpacingSize.Large
+				});
+
+				for (const [name, tags] of Object.entries(data.tags.category)) {
+					if (tags.length) {
+						if (name === "General") message.components[0].components.push(
+							{
+								type: Discord.ComponentType.TextDisplay,
+								content: `### ${name}`
+							},
+							{
+								type: Discord.ComponentType.ActionRow,
+								components: [{
+									type: Discord.ComponentType.Button,
+									style: Discord.ButtonStyle.Secondary,
+									label: `${array.length} tags`,
+									custom_id: "inspect:general:show"
+								}]
+							}
+						);
+						
+						else message.components[0].components.push({
+							type: Discord.ComponentType.TextDisplay,
+							content: `### ${name}\n${ (() => {
+								else if (name === "Other")
+									return array.map(tag => `${tag.type}: \`${tag.name}\` (${tag.count})`).join("\n");
+								else return value.map(tag => `\`${tag.name}\` (${tag.count})`).join("\n")
+							})() }`
+						});
+					}
+				}
+			}
+
+			if (data.comments.length) message.components.push({
+				type: Discord.ComponentType.Container,
+				components: [
+					{
+						type: Discord.ComponentType.TextDisplay,
+						content: `There are ${data.comments.length} comments under this post.`
+					},
+					{
+						type: Discord.ComponentType.ActionRow,
+						components: [{
+							type: Discord.ComponentType.Button,
+							style: Discord.ButtonStyle.Secondary,
+							label: "Show comments",
+							custom_id: "inspect:comments:show"
+						}]
+					}
+				]
+			});
+
+			return message;
+		}
+	},
 	showoff: () => {},
-	infoEmbed: () => {},
 	searchEmbed: (query, data, general) => {
 		const message = {
 			embed: {
@@ -115,6 +270,11 @@ const object = {
 	}
 };
 
+function definition(object) {
+	return Object.entries(object)
+	.map(def => `${ def[0] }: ${ def[1] }`).join("\n");
+}
+
 function cutTags(str) {
 	const lines = str.split("\n");
 	let text = [];
@@ -135,4 +295,4 @@ function cutTags(str) {
 	return text.join("\n");
 }
 
-module.exports = object;
+module.exports = embed;

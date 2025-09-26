@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
 const { rule34 } = require ("../../utility/api.js");
+const embed = require("../../utility/embed.js");
 
 module.exports = {
 	data: new Discord.SlashCommandBuilder()
@@ -12,14 +13,12 @@ module.exports = {
 			.setRequired(true))
 		.addBooleanOption(option => option
 			.setName("raw")
-			.setDescription("Whether to send as raw file"))
-		.addBooleanOption(option => option
-			.setName("general")
-			.setDescription("Whether to include list of general tags"))
-		.addBooleanOption(option => option
-			.setName("comments")
-			.setDescription("Whether to display comments")),
+			.setDescription("Whether to send as raw file")),
 	async execute(i) {
+		await i.deferReply({
+			flags: Discord.MessageFlags.IsComponentsV2
+		});
+
 		var query = i.options.getString("q");
 		for (const regex of [
 			// Post URL
@@ -32,24 +31,52 @@ module.exports = {
 			query = query.replace(regex, "id:$1"); break;
 		}
 
-		await i.reply({embeds: [{
-			title: query,
-			description: "Loading..."
+		await i.editReply({ components: [{
+			type: Discord.ComponentType.Container,
+			components: [
+				{
+					type: Discord.ComponentType.TextDisplay,
+					content: `# ${query}`
+				},
+				{
+					type: Discord.ComponentType.TextDisplay,
+					// TODO: replace bullet points with loading emoji(s)
+					content: "Loading \u2022\u2022\u2022"
+				}
+			]
 		}]});
-
+		
 		if (!query) {
-			i.editReply({ embeds: [{
-				title: "You must specify a query or applicable URL!",
-				color: 0xe9263d
+			i.editReply({ components: [{
+				type: Discord.ComponentType.Container,
+				accent_color: 0xe9263d,
+				components: [{
+					type: Discord.ComponentType.TextDisplay,
+					content: "You must specify a query or applicable URL!"
+				}]
 			}]});
 			return;
 		}
-
+		
 		const data = await rule34.post(query);
+		
 		if (!data) {
-			i.editReply({ embeds: [{
-				title: `No results for \`${query}\`!`,
-				color: 0xe9263d
+			// TODO: fuzzy search tag for similar tags
+			i.editReply({ components: [{
+				type: Discord.ComponentType.Container,
+				accent_color: 0xe9263d,
+				components: [
+					{
+						type: Discord.ComponentType.TextDisplay,
+						content: `No results for \`${query}\`!`
+					},
+					{
+						type: Discord.ComponentType.TextDisplay,
+						content:
+						"Perhaps you meant one of these?"
+						+ `${ "list of similar tags" }`
+					}
+				]
 			}]});
 			return;
 		}
@@ -60,11 +87,13 @@ module.exports = {
 				attachment: Buffer.from(content),
 				name: `${data.id}-info.json`
 			};
-			i.editReply({ files: [attachment], embeds: [] });
+			i.editReply({ files: [attachment], components: [] });
 			return;
 		}
 
-		// TODO: add to embed.js
+		const message = embed.inspect.create(query, data);
+
+	/* OLD EMBED
 		const postEmbed = {
 			author: {
 				name: `First result of ${query}`,
@@ -129,5 +158,8 @@ module.exports = {
 		}
 
 		i.editReply({embeds: [postEmbed, ...commentEmbeds]});
+	*/
+
+		await i.editReply(message);
 	}
 };

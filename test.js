@@ -1,5 +1,5 @@
 async function test(client) {
-	const {rule34} = require("./utility/api.js");
+	const { rule34 } = require("./utility/api.js");
 	const emoji = require("./utility/emoji.json");
 	const data = await rule34.post("id:5823623");
 	console.log(data);
