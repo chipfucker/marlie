@@ -1,5 +1,5 @@
 const embed = require("./embed");
-const { post } = require("./rule34api");
+const { rule34 } = require("./api.js");
 
 const object = async i => {
 	const type = i.customId.split(":").shift();
@@ -27,12 +27,12 @@ const object = async i => {
 					const comparison = (json.sort.dir==="desc") ? ">" : "<";
 					const direction = (json.sort.dir==="desc") ? "asc" : "desc";
 					const query = `${json.query} ${json.sort.val}:${comparison}${json.value} sort:${json.sort.val}:${direction}`;
-					data = await post(query);
+					data = await rule34.post(query);
 				} else if (action === "next") {
 					const comparison = (json.sort.dir==="desc") ? "<" : ">";
 					const direction = json.sort.dir;
 					const query = `${json.query} ${json.sort.val}:${comparison}${json.value} sort:${json.sort.val}:${direction}`;
-					data = await post(query);
+					data = await rule34.post(query);
 				}
 
 				if (!data) {
@@ -93,12 +93,12 @@ const object = async i => {
 					const comparison = (json.sort.dir==="desc") ? ">" : "<";
 					const direction = (json.sort.dir==="desc") ? "asc" : "desc";
 					const query = `${json.query} ${json.sort.val}:${comparison}${json.value} sort:${json.sort.val}:${direction}`;
-					data = await post(query);
+					data = await rule34.post(query);
 				} else if (action === "next") {
 					const comparison = (json.sort.dir==="desc") ? "<" : ">";
 					const direction = json.sort.dir;
 					const query = `${json.query} ${json.sort.val}:${comparison}${json.value} sort:${json.sort.val}:${direction}`;
-					data = await post(query);
+					data = await rule34.post(query);
 				}
 
 				if (!data) {

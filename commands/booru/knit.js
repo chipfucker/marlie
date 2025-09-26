@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const { post } = require("../../utility/rule34api.js");
+const { rule34 } = require("../../utility/api.js");
 
 module.exports = {
 	data: new Discord.SlashCommandBuilder()
@@ -14,7 +14,7 @@ module.exports = {
 		await i.reply({ content: "Creating thread..." });
 		const searchChannel = await i.client.channels.fetch("1415155574026403840");
 
-		const data = await post(query);
+		const data = await rule34.post(query);
 		if (!data) {
 			await i.editReply({ content: `No results for \`${query}\`!` });
 			return;

@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const { autocomplete, post } = require("../../utility/rule34api.js");
+const { rule34 } = require("../../utility/api.js");
 const embed = require("../../utility/embed.js");
 
 module.exports = {
@@ -38,7 +38,7 @@ module.exports = {
 			.setAutocomplete(true)),
 	async autocomplete(i) {
 		const focused = i.options.getFocused(true);
-		const data = await autocomplete(focused.value);
+		const data = await rule34.autocomplete(focused.value);
 		if (!data) {
 			await i.respond([{ name: ">> Get typin', nerd.", value: "" }]);
 			return;
@@ -78,7 +78,7 @@ module.exports = {
 		}]});
 		
 		const query = `${input} sort:${sort.val}:${sort.dir}`;
-		const data = await post(query);
+		const data = await rule34.post(query);
 		if (!data) {
 			await i.editReply({ embeds: [{
 				title: `No results for \`${query}\`!`,

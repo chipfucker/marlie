@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const { config } = require("./config.json");
+const { config } = require("./secrets.json");
 const fs = require("node:fs");
 const path = require("node:path");
 const wait = require("node:timers/promises").setTimeout;

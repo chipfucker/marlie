@@ -1,7 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const Discord = require("discord.js");
-const { config } = require("./config.json");
+const { config } = require("./secrets.json");
 
 const client = new Discord.Client({ intents: [Discord.GatewayIntentBits.Guilds] });
 

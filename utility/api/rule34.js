@@ -1,4 +1,4 @@
-const config = require("../config.json");
+const config = require("../../secrets.json");
 const { DOMParser } = require("xmldom");
 	
 /**
@@ -91,73 +91,30 @@ const { DOMParser } = require("xmldom");
 const post = async (query) => {
 	const api = {};
 
-	api.json = await fetch(apiUrl.post({
+	api.json = await fetch(url.post({
 		json: true, tags: true, query: query
 	})).then(e => e.json()).then(e => e[0]).catch(() => false);
 
 	if (!api.json) return null;
 
-	api.children = await fetch(apiUrl.post({
+	api.children = await fetch(url.post({
 		limit: 1000, json: true, query: `parent:${api.json.id}`
 	})).then(e => e.json());
 
-	api.xml = await fetch(apiUrl.post({
+	api.xml = await fetch(url.post({
 		json: false, query: query
 	})).then(e => e.text())
 		.then(e => new DOMParser().parseFromString(e, "text/xml"))
 		.then(e => { return { posts: e.firstChild, post: e.getElementsByTagName("post")[0] }});
 	
-	api.comments = await fetch(apiUrl.comment({
+	api.comments = await fetch(url.comment({
 		id: api.json.id
 	})).then(e=>e.text())
 		.then(e=>new DOMParser().parseFromString(e, "text/xml"))
 		.then(e=>Array.from(e.getElementsByTagName("comment")));
 
-	const data = dataObject(api);
-	data.comments = api.comments.map(e => ({
-		creator: {
-			name: e.getAttribute("creator"),
-			id: Number(e.getAttribute("creator_id"))
-		},
-		id: Number(e.getAttribute("id")),
-		body: e.getAttribute("body")
-	}));
+	const data = dataObject(api, { children: true, tags: true, comments: true });
 
-	data.tags = {
-		string: api.json.tags,
-		// TODO: reformat tags to match jsdoc
-		array: api.json.tag_info,
-		category: {
-			copyright: api.json.tag_info
-				.filter(e => e.type === "copyright")
-				.map(e => ({ name: e.tag, count: e.count })),
-			character: api.json.tag_info
-				.filter(e => e.type === "character")
-				.map(e => ({ name: e.tag, count: e.count })),
-			artist: api.json.tag_info
-				.filter(e => e.type === "artist")
-				.map(e => ({ name: e.tag, count: e.count })),
-			general: api.json.tag_info
-				.filter(e => e.type === "tag")
-				.map(e => ({ name: e.tag, count: e.count })),
-			metadata: api.json.tag_info
-				.filter(e => e.type === "metadata")
-				.map(e => ({ name: e.tag, count: e.count })),
-			null: api.json.tag_info
-				.filter(e => e.type === null)
-				.map(e => ({ name: e.tag, count: e.count })),
-			other: api.json.tag_info
-				.filter(e => ![
-					"copyright",
-					"character",
-					"artist",
-					"tag",
-					"metadata",
-					null
-				].includes(e.type))
-				.map(e => ({ name: e.tag, count: e.count, type: e.type }))
-		}
-	};
 	// old data
 	/* const data = {
 		image: {
@@ -252,7 +209,7 @@ const search = async (query, options) => {
 
 };
 
-const apiUrl = {
+const url = {
 	post: (options) => {
 		return "https://api.rule34.xxx/?" + new URLSearchParams({
 			page: "dapi",
@@ -278,7 +235,7 @@ const apiUrl = {
 	}
 }
 
-function dataObject(api) {
+function dataObject(api, config) {
 	const data = {
 		image: {
 			main: {
@@ -314,9 +271,57 @@ function dataObject(api) {
 		status: api.json.status,
 		notes: api.json.has_notes, // TODO: find out how to fetch note info
 		parent: api.json.parent_id, // TODO: find out how null parents are handled in the site
-		children: api.children.filter(e => e.id !== api.json.id).map(e => e.id),
+		children: config.children
+			? api.children.filter(e => e.id !== api.json.id).map(e => e.id)
+			: api.xml.post.getAttribute("has_children") === "true" ? true : false,
 		source: api.json.source || null
 	};
+
+	if (config.tags) data.tags = {
+		string: api.json.tags,
+		// TODO: reformat tags to match jsdoc
+		array: api.json.tag_info,
+		category: {
+			copyright: api.json.tag_info
+				.filter(e => e.type === "copyright")
+				.map(e => ({ name: e.tag, count: e.count })),
+			character: api.json.tag_info
+				.filter(e => e.type === "character")
+				.map(e => ({ name: e.tag, count: e.count })),
+			artist: api.json.tag_info
+				.filter(e => e.type === "artist")
+				.map(e => ({ name: e.tag, count: e.count })),
+			general: api.json.tag_info
+				.filter(e => e.type === "tag")
+				.map(e => ({ name: e.tag, count: e.count })),
+			metadata: api.json.tag_info
+				.filter(e => e.type === "metadata")
+				.map(e => ({ name: e.tag, count: e.count })),
+			null: api.json.tag_info
+				.filter(e => e.type === null)
+				.map(e => ({ name: e.tag, count: e.count })),
+			other: api.json.tag_info
+				.filter(e => ![
+					"copyright",
+					"character",
+					"artist",
+					"tag",
+					"metadata",
+					null
+				].includes(e.type))
+				.map(e => ({ name: e.tag, count: e.count, type: e.type }))
+		}
+	};
+
+	if (config.comments) 
+		data.comments = api.comments.map(e => ({
+			creator: {
+				name: e.getAttribute("creator"),
+				id: Number(e.getAttribute("creator_id"))
+			},
+			id: Number(e.getAttribute("id")),
+			body: e.getAttribute("body")
+		}));
 
 	return data;
 }

@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const { post } = require ("../../utility/rule34api.js");
+const { rule34 } = require ("../../utility/api.js");
 
 module.exports = {
 	data: new Discord.SlashCommandBuilder()
@@ -21,7 +21,6 @@ module.exports = {
 			.setDescription("Whether to display comments")),
 	async execute(i) {
 		var query = i.options.getString("q");
-		const numRegex = /^(\d+)$/;
 		for (const regex of [
 			// Post URL
 			/^https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)$/,
@@ -46,7 +45,7 @@ module.exports = {
 			return;
 		}
 
-		const data = await post(query);
+		const data = await rule34.post(query);
 		if (!data) {
 			i.editReply({ embeds: [{
 				title: `No results for \`${query}\`!`,
