@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const emoij = require("./emoji.json");
+const emoji = require("./emoji.json");
 
 // TODO: rename members without 'embed'
 const embed = {
@@ -87,11 +87,6 @@ const embed = {
 								"Directory": data.image.directory,
 								"Hash": data.image.hash
 							})
-						},
-						{
-							type: Discord.ComponentType.Separator,
-							divider: true,
-							spacing: Discord.SeparatorSpacingSize.Large
 						}
 					]
 				}]
@@ -125,9 +120,13 @@ const embed = {
 						else message.components[0].components.push({
 							type: Discord.ComponentType.TextDisplay,
 							content: `### ${name}\n${ (() => {
-								else if (name === "Other")
-									return array.map(tag => `${tag.type}: \`${tag.name}\` (${tag.count})`).join("\n");
-								else return value.map(tag => `\`${tag.name}\` (${tag.count})`).join("\n")
+								if (name === "Other")
+									return array.map(tag =>
+										`${tag.type}: \`${tag.name}\` (${tag.count})`
+									).join("\n");
+								else return value.map(tag =>
+									`\`${tag.name}\` (${tag.count})`
+								).join("\n")
 							})() }`
 						});
 					}
@@ -154,6 +153,16 @@ const embed = {
 			});
 
 			return message;
+		},
+		general: ({ tags: { category: { General: tags }}}) => {
+			const content = {
+				content: `### General\n${
+					tags.map(tag =>
+						`\`${tag.name}\` (${tag.count})`
+					).join(", ")
+				}`
+			};
+			return content;
 		}
 	},
 	showoff: () => {},

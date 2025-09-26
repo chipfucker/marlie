@@ -1,5 +1,6 @@
+const fs = require("node:fs");
+const path = require("node:path");
 const Discord = require("discord.js");
-const buttonEvent = require("../utility/button.js");
 const terminal = require("../utility/terminal.json");
 
 module.exports = {
@@ -52,7 +53,10 @@ module.exports = {
 				console.error(error);
 			}
 		} else if (i.isButton()) {
-			await buttonEvent(i);
+			const id = i.customId.replace(/:/g, "/") + ".js";
+			const path = path.join(__dirname, "events/button", id);
+			const func = require(path);
+			await func(i);
 		}
 	},
 };
