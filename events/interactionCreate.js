@@ -54,8 +54,8 @@ module.exports = {
 			}
 		} else if (i.isButton()) {
 			const id = i.customId.replace(/:/g, "/") + ".js";
-			const path = path.join(__dirname, "events/button", id);
-			const func = require(path);
+			const filePath = path.join(__dirname, "button", id);
+			const func = require(filePath);
 			await func(i);
 		}
 	},

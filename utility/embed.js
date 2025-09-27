@@ -1,7 +1,6 @@
 const Discord = require("discord.js");
 const emoji = require("./emoji.json");
 
-// TODO: rename members without 'embed'
 const embed = {
 	inspect: {
 		create: (query, data) => {
@@ -43,7 +42,7 @@ const embed = {
 							spacing: Discord.SeparatorSpacingSize.Large
 						},
 						{
-							type: DiscordComponentType.TextDisplay,
+							type: Discord.ComponentType.TextDisplay,
 							content: definition({
 								"Creator": `\`${data.creator.name}\``,
 								"Score": `${data.score}`
@@ -111,7 +110,7 @@ const embed = {
 								components: [{
 									type: Discord.ComponentType.Button,
 									style: Discord.ButtonStyle.Secondary,
-									label: `${array.length} tags`,
+									label: `${tags.length} tags`,
 									custom_id: "inspect:general:show"
 								}]
 							}
@@ -121,10 +120,10 @@ const embed = {
 							type: Discord.ComponentType.TextDisplay,
 							content: `### ${name}\n${ (() => {
 								if (name === "Other")
-									return array.map(tag =>
+									return tags.map(tag =>
 										`${tag.type}: \`${tag.name}\` (${tag.count})`
 									).join("\n");
-								else return value.map(tag =>
+								else return tags.map(tag =>
 									`\`${tag.name}\` (${tag.count})`
 								).join("\n")
 							})() }`
@@ -155,13 +154,11 @@ const embed = {
 			return message;
 		},
 		general: ({ tags: { category: { General: tags }}}) => {
-			const content = {
-				content: `### General\n${
-					tags.map(tag =>
-						`\`${tag.name}\` (${tag.count})`
-					).join(", ")
-				}`
-			};
+			const content = `### General\n${
+				tags.map(tag =>
+					`\`${tag.name}\` (${tag.count})`
+				).join("\n")
+			}`;
 			return content;
 		}
 	},
@@ -172,7 +169,7 @@ const embed = {
 				author: {
 					name: query,
 					url: `https://rule34.xxx/index.php?page=post&s=view&tags=${encodeURIComponent(query)}`
-					// TODO: adjust link
+					// TONOTDO: adjust link
 				},
 				title: `\`${data.id}\``,
 				description: data.image.main.url,

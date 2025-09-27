@@ -15,9 +15,7 @@ module.exports = {
 			.setName("raw")
 			.setDescription("Whether to send as raw file")),
 	async execute(i) {
-		await i.deferReply({
-			flags: Discord.MessageFlags.IsComponentsV2
-		});
+		await i.deferReply();
 
 		var query = i.options.getString("q");
 		for (const regex of [
@@ -31,20 +29,23 @@ module.exports = {
 			query = query.replace(regex, "id:$1"); break;
 		}
 
-		await i.editReply({ components: [{
-			type: Discord.ComponentType.Container,
-			components: [
-				{
-					type: Discord.ComponentType.TextDisplay,
-					content: `# ${query}`
-				},
-				{
-					type: Discord.ComponentType.TextDisplay,
-					// TODO: replace bullet points with loading emoji(s)
-					content: "Loading \u2022\u2022\u2022"
-				}
-			]
-		}]});
+		await i.editReply({
+			flags: Discord.MessageFlags.IsComponentsV2,
+			components: [{
+				type: Discord.ComponentType.Container,
+				components: [
+					{
+						type: Discord.ComponentType.TextDisplay,
+						content: `# ${query}`
+					},
+					{
+						type: Discord.ComponentType.TextDisplay,
+						// TODO: replace bullet points with loading emoji(s)
+						content: "Loading \u2022\u2022\u2022"
+					}
+				]
+			}]
+		});
 		
 		if (!query) {
 			i.editReply({ components: [{
