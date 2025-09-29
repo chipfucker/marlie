@@ -20,4 +20,4 @@ client.once("clientReady", async (client) => {
 	}
 });
 
-client.login(secrets.config.token);
+client.login(secrets.discord.token);

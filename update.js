@@ -21,12 +21,12 @@ for (const folder of commandFolders) (async () => {
 	}
 })();
 
-const rest = new Discord.REST().setToken(secrets.config.token);
+const rest = new Discord.REST().setToken(secrets.discord.token);
 
 (async () => {
 	console.log(`\x1b[91m\x1b[1mRFS\x1b[0m REFRESHING ${commands.length} COMMANDS`);
 	console.log("  refreshing commands...");
-	await rest.put(Discord.Routes.applicationCommands(secrets.config.clientId), { body: commands })
+	await rest.put(Discord.Routes.applicationCommands(secrets.discord.clientId), { body: commands })
 		.then(e => console.log(`    refreshed ${e.length} commands`))
 		.catch(console.error);
 	

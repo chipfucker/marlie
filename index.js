@@ -36,4 +36,4 @@ for (const file of eventFiles) (async () => {
 	}
 })();
 
-client.login(secrets.config.token);
+client.login(secrets.discord.token);

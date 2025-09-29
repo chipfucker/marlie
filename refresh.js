@@ -26,22 +26,22 @@ for (const folder of commandFolders) (async () => {
 	}
 })();
 
-const rest = new Discord.REST().setToken(secrets.config.token);
+const rest = new Discord.REST().setToken(secrets.discord.token);
 
 (async () => {
 	console.log("\x1b[91m\x1b[1mRFS\x1b[0m deleting commands")
-	await rest.put(Discord.Routes.applicationCommands(secrets.config.clientId), { body: [] })
+	await rest.put(Discord.Routes.applicationCommands(secrets.discord.clientId), { body: [] })
 		.then(() => console.log("  deleted application commands"))
 		.catch(console.error);
-	await rest.put(Discord.Routes.applicationGuildCommands(secrets.config.clientId, secrets.config.guildId), { body: [] })
+	await rest.put(Discord.Routes.applicationGuildCommands(secrets.discord.clientId, secrets.discord.guildId), { body: [] })
 		.then(() => console.log("  deleted guild commands"))
 		.catch(console.error);
 	console.log(`\x1b[91m\x1b[1mRFS\x1b[0m refreshing ${commands.length} commands`);
 	await wait(500).then(() => console.log("  .5 seconds elapsed")).catch(console.error);
-	await rest.put(Discord.Routes.applicationCommands(secrets.config.clientId), { body: commands })
+	await rest.put(Discord.Routes.applicationCommands(secrets.discord.clientId), { body: commands })
 		.then(e => console.log(`  refreshed ${e.length} commands`))
 		.catch(console.error);
-	await client.login(secrets.config.token);
+	await client.login(secrets.discord.token);
 })();
 	
 client.once("clientReady", async (client) => {
