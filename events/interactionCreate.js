@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import terminal from "../utility/terminal.json" with { type: "json" };
+import terminal from "#/utility/terminal.json" with { type: "json" };
 
 export const name = Discord.Events.InteractionCreate;
 export async function execute(i) {
