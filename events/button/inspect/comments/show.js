@@ -15,6 +15,29 @@ export default async (i) => {
 				content: data.comments.map(comment =>
 					`**${comment.creator.name}** >> #${comment.id}\n${comment.content}`
 				).join("\n")
+			},
+			{
+				type: Discord.ComponentType.ActionRow,
+				components: [
+					{
+						type: Discord.ComponentType.Button,
+						style: Discord.ButtonStyle.Secondary,
+						label: "Prev",
+						custom_id: "inspect:comments:prev"
+					},
+					{
+						type: Discord.ComponentType.Button,
+						style: Discord.ButtonStyle.Secondary,
+						label: "Next",
+						custom_id: "inspect:comments:next"
+					},
+					{
+						type: Discord.ComponentType.Button,
+						style: Discord.ButtonStyle.Primary,
+						label: "Hide comments",
+						custom_id: "inspect:comments:hide"
+					}
+				]
 			}
 		]
 	}
