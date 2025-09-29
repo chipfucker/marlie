@@ -1,71 +1,72 @@
-const Discord = require("discord.js");
-const { rule34 } = require ("../../utility/api.js");
-const embed = require("../../utility/embed.js");
+import * as Discord from "discord.js";
+import { rule34 } from "../../utility/api.js";
+import * as embed from "../../utility/embed.js";
 
-module.exports = {
-	data: new Discord.SlashCommandBuilder()
-		.setName("inspect")
-		.setDescription("Get info of post")
-		.setIntegrationTypes(1).setContexts(0, 2)
-		.addStringOption(option => option
-			.setName("q")
-			.setDescription("Query for post")
-			.setRequired(true))
-		.addBooleanOption(option => option
-			.setName("raw")
-			.setDescription("Whether to send as raw file")),
-	async execute(i) {
-		await i.deferReply();
+export const data = new Discord.SlashCommandBuilder()
+	.setName("inspect")
+	.setDescription("Get info of post")
+	.setIntegrationTypes(1).setContexts(0, 2)
+	.addStringOption(option => option
+		.setName("q")
+		.setDescription("Query for post")
+		.setRequired(true))
+	.addBooleanOption(option => option
+		.setName("raw")
+		.setDescription("Whether to send as raw file"));
+export async function execute(i) {
+	await i.deferReply();
 
-		var query = i.options.getString("q");
-		for (const regex of [
-			// Post URL
-			/^https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)$/,
-			// Image URL
+	var query = i.options.getString("q");
+	for (const regex of [
+		// Post URL
+		/^https:\/\/rule34\.xxx\/index\.php\?page=post&s=view&id=(\d+)$/,
+		// Image URL
+		// Digits by themselves
+		/^(\d+)$/
+	]) if (query.match(regex)) {
+		query = query.replace(regex, "id:$1"); break;
+	}
 
-			// Digits by themselves
-			/^(\d+)$/
-		]) if (query.match(regex)) {
-			query = query.replace(regex, "id:$1"); break;
-		}
+	await i.editReply({
+		flags: Discord.MessageFlags.IsComponentsV2,
+		components: [{
+			type: Discord.ComponentType.Container,
+			components: [
+				{
+					type: Discord.ComponentType.TextDisplay,
+					content: `# ${query}`
+				},
+				{
+					type: Discord.ComponentType.TextDisplay,
+					// TODO: replace bullet points with loading emoji(s)
+					content: "Loading \u2022\u2022\u2022"
+				}
+			]
+		}]
+	});
 
-		await i.editReply({
-			flags: Discord.MessageFlags.IsComponentsV2,
+	if (!query) {
+		i.editReply({
 			components: [{
 				type: Discord.ComponentType.Container,
-				components: [
-					{
-						type: Discord.ComponentType.TextDisplay,
-						content: `# ${query}`
-					},
-					{
-						type: Discord.ComponentType.TextDisplay,
-						// TODO: replace bullet points with loading emoji(s)
-						content: "Loading \u2022\u2022\u2022"
-					}
-				]
-			}]
-		});
-		
-		if (!query) {
-			i.editReply({ components: [{
-				type: Discord.ComponentType.Container,
-				accent_color: 0xe9263d,
+				accent_color: 0xE9263d,
 				components: [{
 					type: Discord.ComponentType.TextDisplay,
 					content: "You must specify a query or applicable URL!"
 				}]
-			}]});
-			return;
-		}
-		
-		const data = await rule34.post(query);
-		
-		if (!data) {
-			// TODO: fuzzy search tag for similar tags
-			i.editReply({ components: [{
+			}]
+		});
+		return;
+	}
+
+	const data = await rule34.post(query);
+
+	if (!data) {
+		// TODO: fuzzy search tag for similar tags
+		i.editReply({
+			components: [{
 				type: Discord.ComponentType.Container,
-				accent_color: 0xe9263d,
+				accent_color: 0xE9263d,
 				components: [
 					{
 						type: Discord.ComponentType.TextDisplay,
@@ -73,26 +74,26 @@ module.exports = {
 					},
 					{
 						type: Discord.ComponentType.TextDisplay,
-						content:
-						"Perhaps you meant one of these?"
-						+ `${ "list of similar tags" }`
+						content: "Perhaps you meant one of these?"
+							+ `${"list of similar tags"}`
 					}
 				]
-			}]});
-			return;
-		}
-		
-		if (i.options.getBoolean("raw")) {
-			let content = JSON.stringify(data, null, 4);
-			let attachment = {
-				attachment: Buffer.from(content),
-				name: `${data.id}-info.json`
-			};
-			i.editReply({ files: [attachment], components: [] });
-			return;
-		}
+			}]
+		});
+		return;
+	}
 
-		const message = embed.inspect.create(query, data);
+	if (i.options.getBoolean("raw")) {
+		let content = JSON.stringify(data, null, 4);
+		let attachment = {
+			attachment: Buffer.from(content),
+			name: `${data.id}-info.json`
+		};
+		i.editReply({ files: [attachment], components: [] });
+		return;
+	}
+
+	const message = embed.inspect.create(query, data);
 
 	/* OLD EMBED
 		const postEmbed = {
@@ -149,7 +150,7 @@ module.exports = {
 			for (let x = 0; x < fields.length; x += slice) commentEmbeds.push({
 				fields: fields.slice(x, x+slice)
 			});
-			
+		    
 			if (data.comments.length > max) commentEmbeds[chunks - 1].fields.push({
 				name: "Wow, that's a lot of comments!",
 				value:
@@ -160,7 +161,5 @@ module.exports = {
 
 		i.editReply({embeds: [postEmbed, ...commentEmbeds]});
 	*/
-
-		await i.editReply(message);
-	}
-};
+	await i.editReply(message);
+}
