@@ -1,5 +1,6 @@
-const Discord = require("discord.js");
-const { config } = require("./secrets.json");
+import * as Discord from "discord.js";
+import { config } from "./secrets.json" with { type: "json" };
+
 const client = new Discord.Client({ intents: [Discord.GatewayIntentBits.Guilds] });
 
 const message =

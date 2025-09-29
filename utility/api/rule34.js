@@ -1,5 +1,5 @@
-const config = require("../../secrets.json");
-const { DOMParser } = require("xmldom");
+import secrets from "../../secrets.json" with { type: "json" };
+import { DOMParser } from "xmldom";
 
 const post = async (query) => {
 	console.time("Fetch post info");
@@ -56,7 +56,7 @@ const autocomplete = async (query) => {
 		count: Number(obj.label.replace(/.* \((\d*)\)/, "$1"))
 	}));
 	return data;
-}
+};
 
 const url = {
 	post: (options) => {
@@ -68,7 +68,7 @@ const url = {
 			json: String(Number(options.json ?? false)),
 			fields: options.tags ? "tag_info" : "",
 			tags: options.query ?? "",
-			api_key: config.rule34.token,
+			api_key: secrets.rule34.token,
 			user_id: "2373207"
 		}).toString();
 	},
@@ -78,7 +78,7 @@ const url = {
 			s: "comment",
 			q: "index",
 			post_id: options.id,
-			api_key: config.rule34.token,
+			api_key: secrets.rule34.token,
 			user_id: "2373207"
 		}).toString();
 	}
@@ -204,7 +204,7 @@ function dateObject(object) {
 	};
 }
 
-module.exports = {
+export default {
 	/**
 	 * @typedef {Object} AutocompleteSuggestion
 	 * @property {string} tag The full suggested tag.

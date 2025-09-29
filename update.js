@@ -1,25 +1,25 @@
-const Discord = require("discord.js");
-const { config } = require("./secrets.json");
-const fs = require("node:fs");
-const path = require("node:path");
+import * as Discord from "discord.js";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import { config } from "./secrets.json" with { type: "json" };
 
 const commands = [];
 const foldersPath = path.join(__dirname, "commands");
 const commandFolders = fs.readdirSync(foldersPath);
 
-for (const folder of commandFolders) {
+for (const folder of commandFolders) (async () => {
 	const commandsPath = path.join(foldersPath, folder);
 	const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith(".js"));
 	for (const file of commandFiles) {
 		const filePath = path.join(commandsPath, file);
-		const command = require(filePath);
+		const command = await import(filePath);
 		if ("data" in command && "execute" in command) {
 			commands.push(command.data.toJSON());
 		} else {
 			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
 		}
 	}
-}
+})();
 
 const rest = new Discord.REST().setToken(config.token);
 

@@ -1,5 +1,5 @@
-const Discord = require("discord.js");
-const emoji = require("./emoji.json");
+import * as Discord from "discord.js";
+import emoji from "./emoji.json" with { type: "json" };
 
 const embed = {
 	inspect: {
@@ -301,4 +301,4 @@ function cutTags(str) {
 	return text.join("\n");
 }
 
-module.exports = embed;
+export default embed;

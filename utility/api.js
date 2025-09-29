@@ -1,3 +1,1 @@
-module.exports = {
-	rule34: require("./api/rule34.js")
-}
+export const rule34 = await import("./api/rule34.js");

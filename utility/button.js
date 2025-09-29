@@ -1,7 +1,7 @@
-const embed = require("./embed");
-const { rule34 } = require("./api.js");
+import * as embed from "./embed";
+import { rule34 } from "./api.js";
 
-const object = async i => {
+export default async function (i) {
 	const type = i.customId.split(":").shift();
 	const action = i.customId.split(":").pop();
 	switch (type) {
@@ -175,4 +175,4 @@ const object = async i => {
 	}
 };
 
-module.exports = object;
+export default object;
