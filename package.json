@@ -1,5 +1,5 @@
 {
-	"type": "commonjs",
+	"type": "module",
 	"dependencies": {
 		"discord.js": "^14.22.1",
 		"form-data": "^4.0.4",
