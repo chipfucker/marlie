@@ -1,8 +1,8 @@
-const Discord = require("discord.js");
-const { rule34 } = require("../../../../utility/api.js");
-const embed = require("../../../../utility/embed.js");
+import * as Discord from "discord.js";
+import { rule34 } from "../../../../utility/api.js";
+import embed from "../../../../utility/embed.js";
 
-module.exports = async (i) => {
+export default async (i) => {
 	await i.deferUpdate();
 	const id = i.message.components[0].components[0].components[1].content.replace(/## (\d+)/, "$1");
 	const components = i.message.toJSON().components;

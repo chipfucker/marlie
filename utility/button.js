@@ -1,7 +1,7 @@
 import * as embed from "./embed";
 import { rule34 } from "./api.js";
 
-export default async function (i) {
+export default async (i) => {
 	const type = i.customId.split(":").shift();
 	const action = i.customId.split(":").pop();
 	switch (type) {
