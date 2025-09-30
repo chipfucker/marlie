@@ -1,5 +1,5 @@
-import * as embed from "#/utility/embed.js";
-import { rule34 } from "#/utility/api.js";
+import * as embed from "../utility/embed.js";
+import { rule34 } from "../utility/api.js";
 
 export default async (i) => {
 	const type = i.customId.split(":").shift();
@@ -174,5 +174,3 @@ export default async (i) => {
 		} break;
 	}
 };
-
-export default object;

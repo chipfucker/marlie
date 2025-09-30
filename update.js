@@ -1,6 +1,7 @@
 import * as Discord from "discord.js";
 import * as fs from "node:fs";
 import * as path from "node:path";
+const __dirname = import.meta.dirname;
 import secrets from "./secrets.json" with { type: "json" };
 
 const commands = [];
@@ -12,7 +13,8 @@ for (const folder of commandFolders) (async () => {
 	const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith(".js"));
 	for (const file of commandFiles) {
 		const filePath = path.join(commandsPath, file);
-		const command = await import(filePath);
+		const fileUrl = new URL(`file://${filePath}`).href;
+		const command = await import(fileUrl);
 		if ("data" in command && "execute" in command) {
 			commands.push(command.data.toJSON());
 		} else {
