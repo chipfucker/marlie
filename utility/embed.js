@@ -185,48 +185,62 @@ export default {
 				return components;
 			}
 		},
-		comments: ({ comments }, page) => {
-			const items = 10;
-			const index = page * items;
-			const endIndex = index + (items - 1);
-			const components = [
-				{
-					type: Discord.ComponentType.TextDisplay,
-					content: comments.slice(index, endIndex).map(comment =>
-						`**${comment.creator.name}** \u00BB #${comment.id}\n${comment.content}`
-					).join("\n\n")
-				},
-				{
-					type: Discord.ComponentType.TextDisplay,
-					content: `Page ${page + 1} / ${Math.ceil(comments.length / items)}`
-				},
-				{
+		comments: {
+			shown: ({ comments }, page) => {
+				const items = 10;
+				const index = page * items;
+				const endIndex = index + (items - 1);
+				const components = [
+					{
+						type: Discord.ComponentType.TextDisplay,
+						content: comments.slice(index, endIndex).map(comment =>
+							`**${comment.creator.name}** \u00BB #${comment.id}\n${comment.content}`
+						).join("\n\n")
+					},
+					{
+						type: Discord.ComponentType.TextDisplay,
+						content: `Page ${page + 1} / ${Math.ceil(comments.length / items)}`
+					},
+					{
+						type: Discord.ComponentType.ActionRow,
+						components: [
+							{
+								type: Discord.ComponentType.Button,
+								style: Discord.ButtonStyle.Secondary,
+								label: "Prev",
+								custom_id: "inspect:comments:prev",
+								disabled: page === 0
+							},
+							{
+								type: Discord.ComponentType.Button,
+								style: Discord.ButtonStyle.Secondary,
+								label: "Next",
+								custom_id: "inspect:comments:prev",
+								disabled: endIndex >= comments.length
+							},
+							{
+								type: Discord.ComponentType.Button,
+								style: Discord.ButtonStyle.Primary,
+								label: "Hide comments",
+								custom_id: "inspect:comments:hide"
+							}
+						]
+					}
+				];
+				return components;
+			},
+			hidden: ({ comments }) => {
+				const component = {
 					type: Discord.ComponentType.ActionRow,
-					components: [
-						{
-							type: Discord.ComponentType.Button,
-							style: Discord.ButtonStyle.Secondary,
-							label: "Prev",
-							custom_id: "inspect:comments:prev",
-							disabled: page === 0
-						},
-						{
-							type: Discord.ComponentType.Button,
-							style: Discord.ButtonStyle.Secondary,
-							label: "Next",
-							custom_id: "inspect:comments:prev",
-							disabled: endIndex >= comments.length
-						},
-						{
-							type: Discord.ComponentType.Button,
-							style: Discord.ButtonStyle.Primary,
-							label: "Hide comments",
-							custom_id: "inspect:comments:hide"
-						}
-					]
-				}
-			];
-			return components;
+					components: [{
+						type: Discord.ComponentType.Button,
+						style: Discord.ButtonStyle.Secondary,
+						label: `${comments.length} comment${comments.length === 1 ? "" : "s"}`,
+						custom_id: "inspect:comments:show"
+					}]
+				};
+				return component;
+			}
 		}
 	},
 	showoff: () => {},
