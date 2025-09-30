@@ -2,7 +2,6 @@ import * as Discord from "discord.js";
 import * as fs from "node:fs";
 import * as path from "node:path";
 const __dirname = import.meta.dirname;
-import { setTimeout as wait } from "node:timers/promises";
 import secrets from "./secrets.json" with { type: "json" };
 
 const client = new Discord.Client({ intents: [Discord.GatewayIntentBits.Guilds] });
@@ -39,15 +38,14 @@ const rest = new Discord.REST().setToken(secrets.discord.token);
 		.then(() => console.log("  deleted guild commands"))
 		.catch(console.error);
 	console.log(`\x1b[91m\x1b[1mRFS\x1b[0m refreshing ${commands.length} commands`);
-	await wait(500).then(() => console.log("  .5 seconds elapsed")).catch(console.error);
 	await rest.put(Discord.Routes.applicationCommands(secrets.discord.clientId), { body: commands })
 		.then(e => console.log(`  refreshed ${e.length} commands`))
 		.catch(console.error);
 	await client.login(secrets.discord.token);
 })();
 	
-client.once("clientReady", async (client) => {
-	console.log(`\x1b[91m\x1b[1mRFS\x1b[0m setting profile...`);
+client.once(Discord.Events.ClientReady, async (client) => {
+	console.log(`\x1b[91m\x1b[1mRFS\x1b[0m setting profile`);
 	try { await client.user.setAvatar("profile/avatar.png"); }
 	catch (error) {
 		if (error.code === "ENOENT") await client.user.setAvatar();
