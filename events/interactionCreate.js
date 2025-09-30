@@ -1,6 +1,7 @@
 import * as Discord from "discord.js";
 import * as fs from "node:fs";
 import * as path from "node:path";
+const __dirname = import.meta.dirname;
 import terminal from "../utility/terminal.json" with { type: "json" };
 
 export const name = Discord.Events.InteractionCreate;
@@ -35,6 +36,6 @@ export async function execute(i) {
 		const filePath = path.join(__dirname, "button", id);
 		const fileUrl = new URL(`file://${filePath}`).href;
 		const func = await import(fileUrl);
-		await func(i);
+		await func.default(i);
 	}
 }

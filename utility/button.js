@@ -1,4 +1,4 @@
-import * as embed from "../utility/embed.js";
+import embed from "../utility/embed.js";
 import { rule34 } from "../utility/api.js";
 
 export default async (i) => {
