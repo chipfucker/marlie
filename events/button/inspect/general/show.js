@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import { rule34 } from "../../../../utility/api";
+import { rule34 } from "../../../../utility/api/index.js";
 import embed from "../../../../utility/embed.js";
 
 export default async (i) => {
@@ -10,8 +10,8 @@ export default async (i) => {
 	for (let index in components[0].components) {
 		const component = components[0].components[index];
 		if (component.content?.match(/### General/)) {
-			components[0].components[index] = embed.inspect.general.hidden(data)[0];
-			components[0].components[++index] = embed.inspect.general.hidden(data)[1];
+			components[0].components[index] = embed.inspect.general.shown(data)[0];
+			components[0].components[++index] = embed.inspect.general.shown(data)[1];
 			break;
 		}
 	}

@@ -151,14 +151,14 @@ export default {
 					{
 						type: Discord.ComponentType.TextDisplay,
 						content: `### General\n${tags.map(tag =>
-							`${tag.name}\` (${tag.count})`
+							`\`${tag.name}\` (${tag.count})`
 						).join("\n")}`
 					},
 					{
 						type: Discord.ComponentType.ActionRow,
 						components: [{
 							type: Discord.ComponentType.Button,
-							style: Discord.ButtonStyle.Secondary,
+							style: Discord.ButtonStyle.Primary,
 							label: "Hide tags",
 							custom_id: "inspect:general:hide"
 						}]
@@ -187,14 +187,14 @@ export default {
 		},
 		comments: {
 			shown: ({ comments }, page) => {
-				const items = 10;
+				const items = 5;
 				const index = page * items;
-				const endIndex = index + (items - 1);
+				const endIndex = index + items;
 				const components = [
 					{
 						type: Discord.ComponentType.TextDisplay,
 						content: comments.slice(index, endIndex).map(comment =>
-							`**${comment.creator.name}** \u00BB #${comment.id}\n${comment.content}`
+							`**${comment.creator.name}** \u00BB #${comment.id}\n${comment.body}`
 						).join("\n\n")
 					},
 					{
@@ -215,7 +215,7 @@ export default {
 								type: Discord.ComponentType.Button,
 								style: Discord.ButtonStyle.Secondary,
 								label: "Next",
-								custom_id: "inspect:comments:prev",
+								custom_id: "inspect:comments:next",
 								disabled: endIndex >= comments.length
 							},
 							{

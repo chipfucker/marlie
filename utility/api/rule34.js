@@ -137,15 +137,23 @@ export const autocomplete = async (query) => {
  * tags, and comments, or `null` if the query doesn't match any posts.
  */
 export const post = async (query) => {
-	console.time("Fetch post info");
-	console.time("Format post info");
+	const timeLabel = {
+		total:  "    FETCH total      ",
+		json:   "    FETCH Rule34 JSON",
+		others: "    FETCH Rule34 XML+"
+	};
 
+	console.time(timeLabel.total);
+
+	console.time(timeLabel.json);
 	const initial = await fetch(url.post({
 		json: true, tags: true, query: query
 	})).then(e => e.json().then(e => e[0])).catch(() => false);
+	console.timeEnd(timeLabel.json);
 
 	if (!initial) return null;
 
+	console.time(timeLabel.others);
 	const api = await Promise.all([
 		fetch(url.post({
 			limit: 1000, json: true, query: `parent:${initial.id}`
@@ -165,10 +173,11 @@ export const post = async (query) => {
 		})),
 		comments: await array[2].text().then(e => new DOMParser().parseFromString(e, "text/xml")).then(e => Array.from(e.getElementsByTagName("comment")))
 	}));
-	console.timeEnd("Fetch post info");
+	console.timeEnd(timeLabel.others);
+
+	console.timeEnd(timeLabel.total);
 
 	const data = formatData.main(api, { children: true, tags: true, comments: true });
-	console.timeEnd("Format post info");
 
 	return data;
 };

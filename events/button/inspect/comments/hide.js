@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import { rule34 } from "../../../../utility/api";
+import { rule34 } from "../../../../utility/api/index.js";
 import embed from "../../../../utility/embed.js";
 
 export default async (i) => {
