@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import { rule34 } from "../../utility/api/index.js";
+import { rule34 } from "#util/api/index.js";
 
 export const data = new Discord.SlashCommandBuilder()
 	.setName("knit")

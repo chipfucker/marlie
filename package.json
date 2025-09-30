@@ -8,6 +8,8 @@
 	},
 	"imports": {
 		"#root/*.js": "./*.js",
-		"#util/*.js": "./utility/*.js"
+		"#root/*.json": "./*.json",
+		"#util/*.js": "./utility/*.js",
+		"#util/*.json": "./utility/*.json"
 	}
 }

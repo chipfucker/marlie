@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import emoji from "../utility/emoji.json" with { type: "json" };
+import emoji from "#util/emoji.json" with { type: "json" };
 
 // TODO: split into different files
 export default {
