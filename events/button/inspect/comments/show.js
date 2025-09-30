@@ -9,42 +9,7 @@ export default async (i) => {
 	const components = i.message.toJSON().components;
 	components[1] = {
 		type: Discord.ComponentType.Container,
-		// TODO: move to embed.js
-		components: [
-			{
-				type: Discord.ComponentType.TextDisplay,
-				content: data.comments.slice(0, 9).map(comment =>
-					`**${comment.creator.name}** >> #${comment.id}\n${comment.content}`
-				).join("\n")
-			},
-			{
-				type: Discord.ComponentType.TextDisplay,
-				content: `Page 1 / ${Math.ceil(data.comments.length / 10)}`
-			},
-			{
-				type: Discord.ComponentType.ActionRow,
-				components: [
-					{
-						type: Discord.ComponentType.Button,
-						style: Discord.ButtonStyle.Secondary,
-						label: "Prev",
-						custom_id: "inspect:comments:prev"
-					},
-					{
-						type: Discord.ComponentType.Button,
-						style: Discord.ButtonStyle.Secondary,
-						label: "Next",
-						custom_id: "inspect:comments:next"
-					},
-					{
-						type: Discord.ComponentType.Button,
-						style: Discord.ButtonStyle.Primary,
-						label: "Hide comments",
-						custom_id: "inspect:comments:hide"
-					}
-				]
-			}
-		]
-	}
+		components: embed.inspect.comments(data, 0)
+	};
 	await i.editReply({ components: components });
 };
