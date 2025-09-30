@@ -94,6 +94,7 @@ export async function execute(i) {
 	}
 
 	const message = embed.inspect.create(query, data);
+	message.components[0].spoiler = !i.channel.nsfw;
 
 	/* OLD EMBED
 		const postEmbed = {
