@@ -1,4 +1,4 @@
-import secrets from "#/secrets.json" with { type: "json" };
+import secrets from "../../secrets.json" with { type: "json" };
 import { DOMParser } from "xmldom";
 
 const post = async (query) => {

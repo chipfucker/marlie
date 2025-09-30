@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import terminal from "#/utility/terminal.json" with { type: "json" };
+import terminal from "../utility/terminal.json" with { type: "json" };
 
 export const name = Discord.Events.InteractionCreate;
 export async function execute(i) {
@@ -33,7 +33,8 @@ export async function execute(i) {
 	} else if (i.isButton()) {
 		const id = i.customId.replace(/:/g, "/") + ".js";
 		const filePath = path.join(__dirname, "button", id);
-		const func = await import(filePath);
+		const fileUrl = new URL(`file://${filePath}`).href;
+		const func = await import(fileUrl);
 		await func(i);
 	}
 }
