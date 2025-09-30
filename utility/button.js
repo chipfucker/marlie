@@ -1,5 +1,5 @@
 import embed from "../utility/embed.js";
-import { rule34 } from "../utility/api.js";
+import { rule34 } from "../utility/api";
 
 export default async (i) => {
 	const type = i.customId.split(":").shift();

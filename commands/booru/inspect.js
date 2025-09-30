@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import { rule34 } from "../../utility/api.js";
+import { rule34 } from "../../utility/api";
 import embed from "../../utility/embed.js";
 
 export const data = new Discord.SlashCommandBuilder()
