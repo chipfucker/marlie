@@ -41,7 +41,7 @@ export async function execute(i) {
 		embeds: [{
 			title: "User warned!",
 			description: "We have decided that this message goes against policy.\nThank you for keeping our community safe!",
-			color: 5701501
+			color: 0x56FDBB
 		}]
 	};
 
@@ -52,7 +52,7 @@ export async function execute(i) {
 	catch (e) {
 		i.followUp({
 			content: `couldn't dm user: ${e.message}`,
-			flags: 64
+			flags: Discord.MessageFlags.Ephemeral
 		});
 	}
 	await i.editReply(warned);
