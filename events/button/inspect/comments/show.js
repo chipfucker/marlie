@@ -9,6 +9,7 @@ export default async (i) => {
 	const components = i.message.toJSON().components;
 	components[1] = {
 		type: Discord.ComponentType.Container,
+		spoiler: !i.channel.nsfw,
 		components: embed.inspect.comments.shown(data, 0)
 	};
 	await i.editReply({ components: components });
