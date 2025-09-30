@@ -145,13 +145,45 @@ export default {
 
 			return message;
 		},
-		general: ({ tags: { category: { General: tags }}}) => {
-			const content = `### General\n${
-				tags.map(tag =>
-					`\`${tag.name}\` (${tag.count})`
-				).join("\n")
-			}`;
-			return content;
+		general: {
+			shown: ({ tags: { category: { General: tags }}}) => {
+				const components = [
+					{
+						type: Discord.ComponentType.TextDisplay,
+						content: `### General\n${tags.map(tag =>
+							`${tag.name}\` (${tag.count})`
+						).join("\n")}`
+					},
+					{
+						type: Discord.ComponentType.ActionRow,
+						components: [{
+							type: Discord.ComponentType.Button,
+							style: Discord.ButtonStyle.Secondary,
+							label: "Hide tags",
+							custom_id: "inspect:general:hide"
+						}]
+					}
+				];
+				return components;
+			},
+			hidden: ({ tags: { category: { General: tags }}}) => {
+				const components = [
+					{
+						type: Discord.ComponentType.TextDisplay,
+						content: "### General"
+					},
+					{
+						type: Discord.ComponentType.ActionRow,
+						components: [{
+							type: Discord.ComponentType.Button,
+							style: Discord.ButtonStyle.Secondary,
+							label: `${tags.length} tags`,
+							custom_id: "inspect:general:show"
+						}]
+					}
+				];
+				return components;
+			}
 		},
 		comments: ({ comments }, page) => {
 			const items = 10;

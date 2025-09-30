@@ -10,16 +10,8 @@ export default async (i) => {
 	for (let index in components[0].components) {
 		const component = components[0].components[index];
 		if (component.content?.match(/### General/)) {
-			components[0].components[index] = {
-				type: Discord.ComponentType.TextDisplay,
-				content: embed.inspect.general(data)
-			};
-			components[0].components[++index].components[0] = {
-				type: Discord.ComponentType.Button,
-				style: Discord.ButtonStyle.Secondary,
-				label: "Hide tags",
-				custom_id: "inspect:general:hide"
-			};
+			components[0].components[index] = embed.inspect.general.hidden(data)[0];
+			components[0].components[++index] = embed.inspect.general.hidden(data)[1];
 			break;
 		}
 	}
