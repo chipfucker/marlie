@@ -9,12 +9,17 @@ export default async (i) => {
 	const components = i.message.toJSON().components;
 	components[1] = {
 		type: Discord.ComponentType.Container,
+		// TODO: move to embed.js
 		components: [
 			{
 				type: Discord.ComponentType.TextDisplay,
-				content: data.comments.map(comment =>
+				content: data.comments.slice(0, 9).map(comment =>
 					`**${comment.creator.name}** >> #${comment.id}\n${comment.content}`
 				).join("\n")
+			},
+			{
+				type: Discord.ComponentType.TextDisplay,
+				content: `Page 1 / ${Math.ceil(data.comments.length / 10)}`
 			},
 			{
 				type: Discord.ComponentType.ActionRow,
