@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import { config } from "./secrets.json" with { type: "json" };
+import secrets from "./secrets.json" with { type: "json" };
 
 const client = new Discord.Client({ intents: [Discord.GatewayIntentBits.Guilds] });
 
@@ -17,4 +17,4 @@ client.once("clientReady", async () => {
 	process.exit(0);
 });
 
-client.login(config.token);
+client.login(secrets.discord.token);

@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 import * as fs from "node:fs";
-import terminal from "../utility/terminal.json" with { type: "json" };
+import terminal from "#/utility/terminal.json" with { type: "json" };
 
 export const name = Discord.Events.ClientReady;
 export const once = true;
