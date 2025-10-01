@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 import { rule34 } from "#util/api/index.js";
-import embed from "#util/embed.js";
+import embed from "#util/embed/index.js";
 
 export const data = {
 	name: "sift",
