@@ -1,8 +1,5 @@
 import Color from "color";
 
-/**
- * 
- */
 export const code = {
 	bold: "1",
 	faint: "2",
@@ -42,17 +39,14 @@ export const code = {
 		magenta: "35",
 		cyan: "36",
 		white: "37",
-		gray: "90",
-		bright: {
-			black: "90",
-			red: "91",
-			green: "92",
-			yellow: "93",
-			blue: "94",
-			magenta: "95",
-			cyan: "96",
-			white: "97"
-		},
+		brightBlack: "90",
+		brightRed: "91",
+		brightGreen: "92",
+		brightYellow: "93",
+		brightBlue: "94",
+		brightMagenta: "95",
+		brightCyan: "96",
+		brightWhite: "97",
 		custom: {
 			eightbit: (...input = [null]) => {
 				const code = "38;5;";
@@ -102,17 +96,15 @@ export const code = {
 		magenta: "45",
 		cyan: "46",
 		white: "47",
+		brightBlack: "100",
 		gray: "100",
-		bright: {
-			black: "100",
-			red: "101",
-			green: "102",
-			yellow: "103",
-			blue: "104",
-			magenta: "105",
-			cyan: "106",
-			white: "107"
-		},
+		brightRed: "101",
+		brightGreen: "102",
+		brightYellow: "103",
+		brightBlue: "104",
+		brightMagenta: "105",
+		brightCyan: "106",
+		brightWhite: "107",
 		custom: {
 			eightbit: (...input = [null]) => {
 				const code = "48;5;";
@@ -156,3 +148,24 @@ export const code = {
 };
 
 export const escape = (...args) => `\x1b[${args.join(";")}m`;
+
+const list = {
+	refresh: {
+		abbreviation: "RFS",
+		style: [ code.bold, code.fgColor.brightRed ]
+	},
+	throw: {
+		abbreviation: "THR",
+		style: [ code.bold, code.fgColor.brightYellow ]
+	}
+};
+
+const tagsExport = {};
+
+for (const [name, value] of Object.entries(list))
+	tagsExport[name] = {
+		tag: escape(...value.style) + value.abbreviation + escape(),
+		sub: " ".repeat(value.abbreviation.length)
+	};
+
+export const tags = tagsExport;
