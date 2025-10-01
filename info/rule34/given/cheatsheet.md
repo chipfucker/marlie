@@ -18,7 +18,7 @@ bright and so on according to the
 **-tag1**   
 Search for posts that don't have tag1.
 
-**ta*1**   
+**ta\*1**   
 Search for posts with tags that starts with ta and ends with 1.
 
 **user:bob**   
@@ -27,7 +27,7 @@ Search for posts uploaded by the user Bob.
 **md5:foo**   
 Search for posts with the MD5 hash foo.
 
-**md5:foo***   
+**md5:foo\***   
 Search for posts whose MD5 starts with the MD5 hash foo. 
 
 **rating:questionable**   
