@@ -8,13 +8,7 @@ const message = {
 	flags: Discord.MessageFlags.IsComponentsV2,
 	files: [],
 	embeds: [],
-	components: [{
-		type: Discord.ComponentType.Container,
-		components: [{
-			type: Discord.ComponentType.TextDisplay,
-			content: "# <:marlie:1415395229862985768> Heading 1\n## <:marlie:1415395229862985768> Heading 2\n### <:marlie:1415395229862985768> Heading 3\n<:marlie:1415395229862985768> Paragraph\n-# <:marlie:1415395229862985768> Subtext"
-		}]
-	}]
+	components: []
 };
 
 client.once("clientReady", async () => {
