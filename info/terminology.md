@@ -40,3 +40,16 @@ garden, such as [this repository's `basket` folder.](../basket/)
 
 A *farm* is a place that is universally used to throw and catch, such as a
 Discord channel.
+
+## The Pit
+
+The *Pit* refers to activity revolving posts, such as [saving](#save) or
+[packing.](#pack)
+
+### Save
+
+### Pack
+
+### Hunt
+
+### Tour
