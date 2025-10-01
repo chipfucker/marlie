@@ -4,6 +4,9 @@ import * as path from "node:path";
 const __dirname = import.meta.dirname;
 import secrets from "../secrets.json" with { type: "json" };
 
+const tag = "\x1b[1;91mRFS\x1b[m";
+const subtag = "   ";
+
 const commands = [];
 const foldersPath = path.join(__dirname, "/../commands");
 const commandFolders = fs.readdirSync(foldersPath);
@@ -28,15 +31,15 @@ const commandFolders = fs.readdirSync(foldersPath);
 const rest = new Discord.REST().setToken(secrets.discord.token);
 
 (async () => {
-	console.log("\x1b[91m\x1b[1mRFS\x1b[0m deleting commands");
+	console.log(`${tag} deleting commands`);
 	await rest.put(Discord.Routes.applicationCommands(secrets.discord.clientId), { body: [] })
-		.then(() => console.log("    deleted application commands"))
+		.then(() => console.log(`${subtag} deleted application commands`))
 		.catch(console.error);
 	await rest.put(Discord.Routes.applicationGuildCommands(secrets.discord.clientId, secrets.discord.guildId), { body: [] })
-		.then(() => console.log("    deleted guild commands"))
+		.then(() => console.log(`${subtag} deleted guild commands`))
 		.catch(console.error);
-	console.log(`\x1b[91m\x1b[1mRFS\x1b[0m adding ${commands.length} commands`);
+	console.log(`${tag} adding ${commands.length} commands`);
 	await rest.put(Discord.Routes.applicationCommands(secrets.discord.clientId), { body: commands })
-		.then(e => console.log(`    added ${e.length} commands`))
+		.then(e => console.log(`${subtag} added ${e.length} commands`))
 		.catch(console.error);
 })();

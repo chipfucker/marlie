@@ -15,8 +15,10 @@ export async function execute(i) {
 	if (i.channelId === "1384093405017018399") await i.deferReply();
 	else await i.deferReply({ flags: 64 });
 
-	const prefix = ("\x1b[93m\x1b[1mTHR\x1b[0m");
-	console.log(`${prefix}\x1b[2m catching message as \x1b[0m"${i.id}"`);
+	const tag = "\x1b[1;93mTHR\x1b[m";
+	const subtag = "   ";
+
+	console.log(`${tag} \x1b[2mcatching message as \x1b[m"${i.id}"`);
 
 	const catchPath = path.join("./basket");
 	if (!fs.existsSync(catchPath)) fs.mkdirSync(catchPath);
@@ -25,7 +27,7 @@ export async function execute(i) {
 
 	fs.writeFileSync(file, JSON.stringify(i.targetMessage, null, "\t"));
 
-	console.log(`    MESSAGE CAUGHT: ${file}`);
+	console.log(`${subtag} MESSAGE CAUGHT: ${file}`);
 	if (i.channelId === "1384093405017018399") {
 		await i.editReply(`Message thrown!\n\`${file}\``);
 	}

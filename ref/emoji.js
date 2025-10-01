@@ -5,16 +5,19 @@ const __dirname = import.meta.dirname;
 import { setTimeout as wait } from "node:timers/promises";
 import secrets from "../secrets.json" with { type: "json" };
 
+const tag = "\x1b[1;91mRFS\x1b[m";
+const subtag = "   ";
+
 const client = new Discord.Client({ intents: [Discord.GatewayIntentBits.Guilds] });
 	
 client.once(Discord.Events.ClientReady, async (client) => {
-	console.log(`\x1b[91m\x1b[1mRFS\x1b[0m deleting emojis`);
+	console.log(`${tag} deleting emojis`);
 	await client.application.emojis.fetch()
 		.then(emojis => emojis.forEach(emoji => emoji.delete()));
-	console.log("    deleted emojis");
+	console.log(`${subtag} deleted emojis`);
 
-	console.log(`\x1b[91m\x1b[1mRFS\x1b[0m creating emojis`);
-	await wait(2000).then(() => console.log("    2 seconds elapsed")).catch(console.error);
+	console.log(`${tag} creating emojis`);
+	await wait(2000).then(() => console.log(`${subtag} 2 seconds elapsed`)).catch(console.error);
 	const json = {};
 	const dirPath = path.join(__dirname, "/../resource/emoji");
 	const dir = fs.readdirSync(dirPath);
