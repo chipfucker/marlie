@@ -9,7 +9,7 @@ import secrets from "./secrets.json" with { type: "json" };
 const client = new Discord.Client({ intents: [Discord.GatewayIntentBits.Guilds] });
 
 const commands = [];
-const foldersPath = path.join(__dirname, "commands");
+const foldersPath = path.join(__dirname, "command");
 const commandFolders = fs.readdirSync(foldersPath);
 
 (async () => {
