@@ -99,12 +99,22 @@ export default {
 					spacing: Discord.SeparatorSpacingSize.Large
 				});
 
+				const catEmoji = {
+					"Copyright": emoji.TC.h3.Copyright,
+					"Character": emoji.TC.h3.Character,
+					"Artist": emoji.TC.h3.Artist,
+					"General": emoji.TC.h3.General,
+					"Metadata": emoji.TC.h3.Metadata,
+					"null": emoji.TC.h3.null,
+					"Other": emoji.TC.h3.Other,
+				}
+
 				for (const [name, tags] of Object.entries(data.tags.category)) {
 					if (tags.length) {
 						if (name === "General") message.components[0].components.push(
 							{
 								type: Discord.ComponentType.TextDisplay,
-								content: `### ${name}`
+								content: `### ${catEmoji[name]} ${name}`
 							},
 							{
 								type: Discord.ComponentType.ActionRow,
@@ -119,7 +129,7 @@ export default {
 						
 						else message.components[0].components.push({
 							type: Discord.ComponentType.TextDisplay,
-							content: `### ${name}\n${ (() => {
+							content: `### ${catEmoji[name]} ${name}\n${ (() => {
 								if (name === "Other")
 									return tags.map(tag =>
 										`${tag.type}: \`${tag.name}\` (${tag.count})`

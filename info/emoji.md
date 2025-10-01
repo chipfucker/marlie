@@ -22,14 +22,24 @@
 | Field name | 18 | 45 |
 | Field paragraph | 18 | 45 |
 | Field subtext | 18 | 45 |
-| Button | 19 | 48 |
-| Reaction | 20 | 60 |
+
+### TextDisplay Component
+
+| Format | Desktop | Mobile |
+| ------ | ------- | ------ |
+| Heading 1 | 33 | 78 |
+| Heading 2 | 28 | 64 |
+| Heading 3 | 22 | 53 |
+| Paragraph | 19 | 45 |
+| Subtext | 17 | 45 |
 
 ### Other
 
 | Format | Desktop | Mobile |
 | ------ | ------- | ------ |
 | Forum preview | 18 | 54 |
+| Button | 19 | 48 |
+| Reaction | 20 | 60 |
 
 ## To-Do
 

@@ -1,3 +1,14 @@
 {
-	"indent": "<:indent:1420550819568423043>"
+	"indent": "<:indent:1420550819568423043>",
+	"TC": {
+		"h3": {
+			"Copyright": "<:TCh3_copyright:1422770615529635850>",
+			"Character": "<:TCh3_character:1422770632910835783>",
+			"Artist": "<:TCh3_artist:1422770645032505404>",
+			"General": "<:TCh3_general:1422770657866813440>",
+			"Metadata": "<:TCh3_metadata:1422770670999179385>",
+			"null": "<:TCh3_null:1422773239301668915>",
+			"Other": "<:TCh3_other:1422770684601303100>"
+		}
+	}
 }
