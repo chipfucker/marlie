@@ -154,6 +154,14 @@ const list = {
 		abbreviation: "RFS",
 		style: [ code.bold, code.fgColor.brightRed ]
 	},
+	ready: {
+		abbreviation: "RDY",
+		style: [ code.bold, code.fgColor.brightRed ]
+	},
+	interaction: {
+		abbreviation: "CMD",
+		style: [ code.bold, code.fgColor.brightCyan ]
+	},
 	throw: {
 		abbreviation: "THR",
 		style: [ code.bold, code.fgColor.brightYellow ]

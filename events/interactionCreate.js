@@ -2,22 +2,21 @@ import * as Discord from "discord.js";
 import * as fs from "node:fs";
 import * as path from "node:path";
 const __dirname = import.meta.dirname;
-import terminal from "#util/terminal.json" with { type: "json" };
+import * as tm from "#util/terminal.js";
+const { tag, sub } = tm.tags.interaction;
 
 export const name = Discord.Events.InteractionCreate;
 export async function execute(i) {
-	const tag = `${terminal.color.fg.bright.cyan
-		+ terminal.font.start.bold}CMD${terminal.font.reset}`;
 
-	console.log(`${tag} ${terminal.color.fg.bright.white}${
+	console.log(`${tag} \x1b[97m${
 			i.user.username
-		}${terminal.color.fg.default} ran ${terminal.font.start.bold}${
+		}\x1b[39m ran \x1b[1m${
 			(i.commandName || i.message.interaction.commandName)
-		}${terminal.font.reset} ${terminal.font.start.italic + terminal.font.start.faint}(${
+		}\x1b[m \x1b[2;3m(${
 			Discord.ApplicationCommandType[i.commandType || i.message.interaction.type]
 		} ${
 			Discord.InteractionType[i.type]
-		})${terminal.font.reset}`);
+		})\x1b[m`);
 
 	if (i.isChatInputCommand() || i.isMessageContextMenuCommand()) {
 		const command = i.client.commands.get(i.commandName);
