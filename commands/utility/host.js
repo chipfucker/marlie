@@ -25,18 +25,18 @@ export async function execute(i) {
 	const input = await i.options.getString("url");
 
 	const pathname = new URL(input).pathname.split("/").pop();
-	const promise = await fetch(input);
-	if (!promise.ok) {
+	const response = await fetch(input);
+	if (!response.ok) {
 		i.editReply({
 			content: "There was a bad response from " + input + "!"
 		});
 		return;
 	}
 
-	const filename = pathname.includes(".") ? pathname : pathname ? `${pathname}.${promise.headers.get("content-type").split("/").pop()}` : "file";
+	const filename = pathname.includes(".") ? pathname : pathname ? `${pathname}.${response.headers.get("content-type").split("/").pop()}` : "file";
 
 	await i.editReply({ content: "Buffering..." });
-	const arrayBuffer = await promise.arrayBuffer();
+	const arrayBuffer = await response.arrayBuffer();
 	const buffer = Buffer.from(arrayBuffer);
 	const stream = Readable.from(buffer);
 
@@ -45,20 +45,20 @@ export async function execute(i) {
 	form.append("file", stream, filename);
 
 	await i.editReply({ content: "Uploading..." });
-	const response = await fetch("https://temp.sh/upload", {
+	const post = await fetch("https://temp.sh/upload", {
 		method: "POST",
 		body: form,
 		headers: form.getHeaders()
 	});
 
-	if (!response.ok) {
+	if (!post.ok) {
 		i.editReply({
 			content: "There was a bad response from temp.sh!"
 		});
 		return;
 	}
 
-	const url = await response.text();
+	const url = await post.text();
 
 	i.editReply({ content: `Uploaded content!\n${url}` });
 }

@@ -27,11 +27,11 @@
 
 | Format | Desktop | Mobile |
 | ------ | ------- | ------ |
-| Heading 1 | 33 | 78 |
-| Heading 2 | 28 | 64 |
-| Heading 3 | 22 | 53 |
-| Paragraph | 19 | 45 |
-| Subtext | 17 | 45 |
+| Heading 1 | 33 | ? |
+| Heading 2 | 28 | ? |
+| Heading 3 | 22 | ? |
+| Paragraph | 19 | ? |
+| Subtext | 17 | ? |
 
 ### Other
 

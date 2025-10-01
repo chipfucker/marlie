@@ -9,6 +9,6 @@ export async function execute(client) {
 		+ terminal.font.start.bold}RDY${terminal.font.reset}`;
 
 	console.log(`${tag} logged into ${client.user.tag}`);
-	await client.user.setActivity(fs.readFileSync("profile/status.txt", "utf8"), { type: 4 });
+	await client.user.setActivity(fs.readFileSync("resource/profile/status.txt", "utf8"), { type: 4 });
 	console.log(`${tag} set status`);
 }

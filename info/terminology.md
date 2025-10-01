@@ -8,30 +8,35 @@ do), this is only here as a reference for *me.*
 
 ## Marlie
 
-*Marlie* is the name of the bot, derieved from the artist that animated
-beatbangers of the Zoologist.
+*Marlie* is the name of the bot, derieved from the artist that animated Beat
+Banger levels of the Zoologist.
 
-## Boomerang
+## Fruit
 
-The *Boomerang* refers to activity revolving [throwing or
-catching](#throwcatch) items between [spaces](#space).
+*Fruit* refers to activity revolving [throwing or catching](#throwcatch) items
+between [gardens](#garden).
 
 ### Throw/Catch
 
-To *throw* an item is to send the item to another space.
+To *throw* an item is to send the item to another garden.
 
-To *catch* an item is to receive an item from another space.
+To *catch* an item is to receive an item from another garden.
 
-### Space
+### Garden
 
-A *space* refers to an area where the Boomerang may be found useful, such as a
-Discord channel, folder, software, or wherever items may be thrown or caught.
+A *garden* refers to an area where Fruit may be found useful, such as a Discord
+channel, folder, software, or wherever items may be thrown or caught.
+
+### Bush
+
+A *bush* refers to a place where items may be thrown to another garden.
 
 ### Basket
 
-A *basket* is the place to find items that have been caught on the applicable
-space, such as [the repository's `basket` folder.](../basket/)
+A *basket* is a place to find items that have been caught with the applicable
+garden, such as [this repository's `basket` folder.](../basket/)
 
-> [!NOTE]
-> If an area used to catch is also used to throw, such as a Discord channel,
-> such should be labelled as a Boomerang, not as a basket.
+### Farm
+
+A *farm* is a place that is universally used to throw and catch, such as a
+Discord channel.
