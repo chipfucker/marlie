@@ -102,7 +102,7 @@ export async function execute(i) {
 		await i.editReply({
 			embeds: [{
 				title: `No results for \`${query}\`!`,
-				color: 0xE9263d
+				color: 0xE9263D
 			}]
 		});
 		return;

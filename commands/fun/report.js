@@ -18,7 +18,7 @@ export async function execute(i) {
 		embeds: [{
 			title: "Message successfully reported.",
 			description: "We will update you when we've taken action.\nThank you for keeping our community safe!",
-			color: 0xE9263d
+			color: 0xE9263D
 		}]
 	};
 

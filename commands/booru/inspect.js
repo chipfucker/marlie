@@ -58,16 +58,14 @@ export async function execute(i) {
 	});
 
 	if (!query) {
-		i.editReply({
+		i.editReply({ components: [{
+			type: Discord.ComponentType.Container,
+			accent_color: 0xE9263D,
 			components: [{
-				type: Discord.ComponentType.Container,
-				accent_color: 0xE9263d,
-				components: [{
-					type: Discord.ComponentType.TextDisplay,
-					content: "You must specify a query or applicable URL!"
-				}]
+				type: Discord.ComponentType.TextDisplay,
+				content: "You must specify a query or applicable URL!"
 			}]
-		});
+		}]});
 		return;
 	}
 
@@ -75,23 +73,21 @@ export async function execute(i) {
 
 	if (!data) {
 		// TODO: fuzzy search tag for similar tags
-		i.editReply({
-			components: [{
-				type: Discord.ComponentType.Container,
-				accent_color: 0xE9263d,
-				components: [
-					{
-						type: Discord.ComponentType.TextDisplay,
-						content: `No results for \`${query}\`!`
-					},
-					{
-						type: Discord.ComponentType.TextDisplay,
-						content: "Perhaps you meant one of these?"
-							+ `${"list of similar tags"}`
-					}
-				]
-			}]
-		});
+		i.editReply({ components: [{
+			type: Discord.ComponentType.Container,
+			accent_color: 0xE9263D,
+			components: [
+				{
+					type: Discord.ComponentType.TextDisplay,
+					content: `No results for \`${query}\`!`
+				},
+				{
+					type: Discord.ComponentType.TextDisplay,
+					content: "Perhaps you meant one of these?"
+						+ `${"list of similar tags"}`
+				}
+			]
+		}]});
 		return;
 	}
 
