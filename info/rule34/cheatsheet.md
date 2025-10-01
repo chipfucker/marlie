@@ -98,7 +98,7 @@ There are only certain values that are accepted in place of `foo`. (Note that
 > `questionable`.
 
 > [!CAUTION]
-> The rating of posts is user-based; To insert an opinion, users don't usually
+> The rating of posts is user-based; to insert an opinion, users don't usually
 > label things properly. For example, a mildly questionable post may be labeled
 > `explicit` because of the user's interests, and a post with a visible penis
 > may be labeled `questionable` because of the user's lack of sensitivity.
