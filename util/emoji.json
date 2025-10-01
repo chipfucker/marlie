@@ -1,13 +1,14 @@
 {
+	"indent": "<:indent:1422823926987362307>",
 	"TC": {
 		"h3": {
-			"Artist": "<:TC_h3_Artist:1422819797422571571>",
-			"Character": "<:TC_h3_Character:1422819798378876928>",
-			"Copyright": "<:TC_h3_Copyright:1422819799074869309>",
-			"General": "<:TC_h3_General:1422819799926571138>",
-			"Metadata": "<:TC_h3_Metadata:1422819800484417537>",
-			"null": "<:TC_h3_null:1422819801474011237>",
-			"Other": "<:TC_h3_Other:1422819802195693661>"
+			"Artist": "<:TC_h3_Artist:1422823928019292201>",
+			"Character": "<:TC_h3_Character:1422823929361203232>",
+			"Copyright": "<:TC_h3_Copyright:1422823930397331466>",
+			"General": "<:TC_h3_General:1422823931429261356>",
+			"Metadata": "<:TC_h3_Metadata:1422823932716912732>",
+			"null": "<:TC_h3_null:1422823933912289362>",
+			"Other": "<:TC_h3_Other:1422823935174639698>"
 		}
 	}
 }

@@ -34,8 +34,8 @@ client.once(Discord.Events.ClientReady, async (client) => {
 			}
 		}, json);
 	}
-	console.log(json);
 	fs.writeFileSync("util/emoji.json", JSON.stringify(json, null, "\t"));
+	console.log(`file:///${path.join(__dirname, "/../util/emoji.json")} updated`);
 	client.destroy();
 });
 
