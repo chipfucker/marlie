@@ -48,8 +48,9 @@ export const code = {
 		brightCyan: "96",
 		brightWhite: "97",
 		custom: {
-			eightbit: (...input = [null]) => {
+			eightbit: (...input) => {
 				const code = "38;5;";
+				if (!input) return code;
 				if (input.length === 1) input = input[0];
 				if (typeof input === "number")
 					if (input >= 255) return code + input;
@@ -66,8 +67,9 @@ export const code = {
 					return code + num;
 				}
 			},
-			twentyFourBit: (...input = [null]) => {
+			twentyFourBit: (...input) => {
 				const code = "38;2;";
+				if (!input) return code;
 				if (input.length === 1) input = input[0];
 				if (typeof input === "number") {
 					const colors = [
@@ -106,8 +108,9 @@ export const code = {
 		brightCyan: "106",
 		brightWhite: "107",
 		custom: {
-			eightbit: (...input = [null]) => {
+			eightbit: (...input) => {
 				const code = "48;5;";
+				if (!input) return code;
 				if (input.length === 1) input = input[0];
 				if (typeof input === "number")
 					if (input >= 255) return code + input;
@@ -124,8 +127,9 @@ export const code = {
 					return code + num;
 				}
 			},
-			twentyFourBit: (...input = [null]) => {
+			twentyFourBit: (...input) => {
 				const code = "48;2;";
+				if (!input) return code;
 				if (input.length === 1) input = input[0];
 				if (typeof input === "number") {
 					const colors = [

@@ -1,4 +1,5 @@
 import * as Discord from "discord.js";
+import Sharp from "sharp";
 import * as fs from "node:fs";
 import * as path from "node:path";
 const __dirname = import.meta.dirname;
@@ -23,8 +24,15 @@ client.once(Discord.Events.ClientReady, async (client) => {
 
 	for (const file of dir) {
 		const filename = file.replace(/(.*)\.png/, "$1");
+		const buffer = new Sharp(path.join(dirPath, file));
+		const metadata = await buffer.metadata();
+		const resized = await buffer.resize({
+			width: metadata.width * 8,
+			height: metadata.height * 8,
+			kernel: "nearest"
+		}).toBuffer();
 		const emoji = await client.application.emojis.create({
-			attachment: path.join(dirPath, file),
+			attachment: resized,
 			name: filename
 		}).then(emoji => emoji.toString());
 		const keys = filename.split("_");

@@ -8,9 +8,9 @@ const { tag, sub } = tm.tags.interaction;
 export const name = Discord.Events.InteractionCreate;
 export async function execute(i) {
 
-	console.log(`${tag} \x1b[97m${
+	console.log(`${tag} \x1b[1m${
 			i.user.username
-		}\x1b[39m ran \x1b[1m${
+		}\x1b[m ran \x1b[1m${
 			(i.commandName || i.message.interaction.commandName)
 		}\x1b[m \x1b[2;3m(${
 			Discord.ApplicationCommandType[i.commandType || i.message.interaction.type]
@@ -26,9 +26,7 @@ export async function execute(i) {
 			console.error(error);
 			if (i.replied || i.deferred)
 				await i.followUp({ content: "### ERROR:\n```\n" + error + "\n```" });
-
-			else
-				await i.reply({ content: "### ERROR:\n```\n" + error + "\n```" });
+			else await i.reply({ content: "### ERROR:\n```\n" + error + "\n```" });
 		}
 	} else if (i.isAutocomplete()) {
 		const command = i.client.commands.get(i.commandName);
