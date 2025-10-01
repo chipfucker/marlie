@@ -155,4 +155,4 @@ export const code = {
 	}
 };
 
-export const escape = (...args) => `\x1b${args.join(";")}m`;
+export const escape = (...args) => `\x1b[${args.join(";")}m`;
