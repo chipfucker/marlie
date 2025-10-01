@@ -9,7 +9,7 @@
 	"imports": {
 		"#root/*.js": "./*.js",
 		"#root/*.json": "./*.json",
-		"#util/*.js": "./utility/*.js",
-		"#util/*.json": "./utility/*.json"
+		"#util/*.js": "./util/*.js",
+		"#util/*.json": "./util/*.json"
 	}
 }

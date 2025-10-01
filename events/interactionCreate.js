@@ -32,8 +32,8 @@ export async function execute(i) {
 			console.error(error);
 		}
 	} else if (i.isButton()) {
-		const id = i.customId.replace(/:/g, "/") + ".js";
-		const filePath = path.join(__dirname, "button", id);
+		const file = i.customId.replace(/:/g, "/") + ".js";
+		const filePath = path.join(__dirname, "../interact/button", file);
 		const fileUrl = new URL(`file://${filePath}`).href;
 		const func = await import(fileUrl);
 		await func.default(i);
