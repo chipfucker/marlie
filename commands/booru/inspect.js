@@ -2,17 +2,29 @@ import * as Discord from "discord.js";
 import { rule34 } from "#util/api/index.js";
 import embed from "#util/embed.js";
 
-export const data = new Discord.SlashCommandBuilder()
-	.setName("inspect")
-	.setDescription("Get info of post")
-	.setIntegrationTypes(1).setContexts(0, 2)
-	.addStringOption(option => option
-		.setName("q")
-		.setDescription("Query for post")
-		.setRequired(true))
-	.addBooleanOption(option => option
-		.setName("raw")
-		.setDescription("Whether to send as raw file"));
+export const data = {
+	name: "inspect",
+	description: "Get info of post",
+	type: Discord.ApplicationCommandType.ChatInput,
+	integration_types: [ Discord.ApplicationIntegrationType.UserInstall ],
+	contexts: [
+		Discord.InteractionContextType.Guild,
+		Discord.InteractionContextType.PrivateChannel
+	],
+	options: [
+		{
+			name: "q",
+			description: "Query for post",
+			type: Discord.ApplicationCommandOptionType.String,
+			required: true
+		},
+		{
+			name: "raw",
+			description: "Whether to send as raw file",
+			type: Discord.ApplicationCommandOptionType.Boolean
+		}
+	]
+};
 export async function execute(i) {
 	await i.deferReply();
 

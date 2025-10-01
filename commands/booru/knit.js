@@ -1,13 +1,18 @@
 import * as Discord from "discord.js";
 import { rule34 } from "#util/api/index.js";
 
-export const data = new Discord.SlashCommandBuilder()
-	.setName("knit")
-	.setDescription("Create a thread in #search")
-	.addStringOption(option => option
-		.setName("q")
-		.setDescription("Search query")
-		.setRequired(true));
+export const data = {
+	name: "knit",
+	description: "Create a thread in #search",
+	type: Discord.ApplicationCommandType.ChatInput,
+	options: [
+		{
+			name: "q",
+			description: "Search query",
+			type: Discord.ApplicationCommandOptionType.String
+		}
+	]
+};
 export async function execute(i) {
 	const query = i.options.getString("q");
 	await i.reply({ content: "Creating thread..." });

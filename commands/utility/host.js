@@ -3,14 +3,22 @@ import fetch from "node-fetch";
 import FormData from "form-data";
 import { Readable } from "stream";
 
-export const data = new Discord.SlashCommandBuilder()
-	.setName("host")
-	.setDescription("Host image/video file on temp.sh")
-	.setIntegrationTypes(1).setContexts(0, 2)
-	.addStringOption(option => option
-		.setName("url")
-		.setDescription("URL of file")
-		.setRequired(true));
+export const data = {
+	name: "host",
+	description: "Host image/video file on temp.sh",
+	type: Discord.ApplicationCommandType.ChatInput,
+	integration_types: [ Discord.ApplicationIntegrationType.UserInstall ],
+	contexts: [
+		Discord.InteractionContextType.Guild,
+		Discord.InteractionContextType.PrivateChannel
+	],
+	options: [{
+		name: "url",
+		description: "URL of file",
+		type: Discord.ApplicationCommandOptionType.String,
+		required: true
+	}]
+};
 export async function execute(i) {
 	await i.reply({ content: "Fetching..." });
 

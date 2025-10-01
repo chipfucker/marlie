@@ -19,14 +19,13 @@ const commandFolders = fs.readdirSync(foldersPath);
 		const fileUrl = new URL(`file://${filePath}`).href;
 		const command = await import(fileUrl);
 		if ("data" in command && "execute" in command) {
-			const json = command.data.toJSON();
-			// console.debug(json);
+			const json = command.data.toJSON ? command.data.toJSON() : command.data;
 			commands.push(json);
 		} else {
 			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
 		}
 	}
-}})();
+} console.dir(commands, { depth: null }); })();
 
 const rest = new Discord.REST().setToken(secrets.discord.token);
 

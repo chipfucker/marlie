@@ -1,36 +1,52 @@
 import * as Discord from "discord.js";
 import { rule34 } from "#util/api/index.js";
 
-export const data = new Discord.SlashCommandBuilder()
-	.setName("coop")
-	.setDescription("Goon with a pal")
-	.setIntegrationTypes(1).setContexts(0, 2)
-	.addStringOption(option => option
-		.setName("q")
-		.setDescription("Search query")
-		.setRequired(true)
-		.setAutocomplete(true))
-	.addStringOption(option => option
-		.setName("sort")
-		.setDescription("What to sort by")
-		.setChoices(
-			{ name: "Image width", value: "width" },
-			{ name: "Image height", value: "height" },
-			{ name: "ID", value: "id" },
-			{ name: "Score", value: "score" },
-			{ name: "Random", value: "random" }
-		))
-	.addStringOption(option => option
-		.setName("dir")
-		.setDescription("What direction to sort in")
-		.setChoices(
-			{ name: "Descending", value: "desc" },
-			{ name: "Ascending", value: "asc" }
-		))
-	.addStringOption(option => option
-		.setName("autocomplete")
-		.setDescription("View autocomplete results for tag")
-		.setAutocomplete(true));
+export const data = {
+	name: "coop",
+	description: "Goon with a pal",
+	type: Discord.ApplicationCommandType.ChatInput,
+	integration_types: [ Discord.ApplicationIntegrationType.UserInstall ],
+	contexts: [
+		Discord.InteractionContextType.Guild,
+		Discord.InteractionContextType.PrivateChannel
+	],
+	options: [
+		{
+			name: "q",
+			description: "Search query",
+			type: Discord.ApplicationCommandOptionType.String,
+			required: true
+		},
+		{
+			name: "sort",
+			description: "What to sort by",
+			type: Discord.ApplicationCommandOptionType.String,
+			choices: [
+				{ name: "Image width", value: "width" },
+				{ name: "Image height", value: "height" },
+				{ name: "ID", value: "id" },
+				{ name: "Score", value: "score" },
+				{ name: "Random", value: "random" }
+			]
+		},
+		{
+			name: "dir",
+			description: "What direction to sort in",
+			type: Discord.ApplicationCommandOptionType.String,
+			choices: [
+				{ name: "Descending", value: "desc" },
+				{ name: "Ascending", value: "asc" }
+			]
+		},
+		{
+			name: "autocomplete",
+			description: "View autocomplete results for tag",
+			type: Discord.ApplicationCommandOptionType.String,
+			required: false,
+			autocomplete: true
+		}
+	]
+};
 export async function autocomplete(i) {
 	const focused = i.options.getFocused(true);
 	const data = await rule34.autocomplete(focused.value);

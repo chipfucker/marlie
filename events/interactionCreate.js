@@ -9,8 +9,15 @@ export async function execute(i) {
 	const tag = `${terminal.color.fg.bright.cyan
 		+ terminal.font.start.bold}CMD${terminal.font.reset}`;
 
-	console.log(`${tag} ${terminal.color.fg.bright.white}${i.user.username}${terminal.color.fg.default} ran ${terminal.font.start.bold}${(i.commandName || i.message.interaction.commandName)}${terminal.font.reset} ${terminal.font.start.italic
-		+ terminal.font.start.faint}(${Discord.ApplicationCommandType[i.commandType || i.message.interaction.type]} ${Discord.InteractionType[i.type]})${terminal.font.reset}`);
+	console.log(`${tag} ${terminal.color.fg.bright.white}${
+			i.user.username
+		}${terminal.color.fg.default} ran ${terminal.font.start.bold}${
+			(i.commandName || i.message.interaction.commandName)
+		}${terminal.font.reset} ${terminal.font.start.italic + terminal.font.start.faint}(${
+			Discord.ApplicationCommandType[i.commandType || i.message.interaction.type]
+		} ${
+			Discord.InteractionType[i.type]
+		})${terminal.font.reset}`);
 
 	if (i.isChatInputCommand() || i.isMessageContextMenuCommand()) {
 		const command = i.client.commands.get(i.commandName);

@@ -2,10 +2,15 @@ import * as Discord from "discord.js";
 import * as fs from "node:fs";
 import * as path from "node:path";
 
-export const data = new Discord.ContextMenuCommandBuilder()
-	.setName("Throw message")
-	.setType(3)
-	.setIntegrationTypes(1).setContexts(0, 2);
+export const data = {
+	name: "Throw to basket",
+	type: Discord.ApplicationCommandType.Message,
+	integration_types: [ Discord.ApplicationIntegrationType.UserInstall ],
+	contexts: [
+		Discord.InteractionContextType.Guild,
+		Discord.InteractionContextType.PrivateChannel
+	]
+};
 export async function execute(i) {
 	if (i.channelId === "1384093405017018399") await i.deferReply();
 	else await i.deferReply({ flags: 64 });
