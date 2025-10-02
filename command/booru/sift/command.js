@@ -19,11 +19,6 @@ export const data = {
 			required: true
 		},
 		{
-			name: "general",
-			description: "Whether to show general tags",
-			type: Discord.ApplicationCommandOptionType.Boolean
-		},
-		{
 			name: "sort",
 			description: "What to sort by",
 			type: Discord.ApplicationCommandOptionType.String,
@@ -60,24 +55,9 @@ export async function autocomplete(i) {
 		await i.respond([{ name: ">> Get typin', nerd.", value: "" }]);
 		return;
 	}
-	if (focused.name === "q") {
-		if (!data.length) {
-			await i.respond([{
-				name: `>> No tags that begin with "${focused.value.split(" ").pop()}"!`,
-				value: focused.value
-			}]);
-			return;
-		}
-		await i.respond(
-			data.map(obj => ({ name: obj.query, value: obj.query }))
-		);
-	}
 	if (focused.name === "autocomplete") {
-		if (!data.length) {
-			await i.respond([{ name: ">> NONE", value: "" }]);
-			return;
-		}
-		await i.respond(
+		if (!data.length) await i.respond([{ name: ">> NONE", value: "" }]);
+		else await i.respond(
 			data.map(obj => ({ name: `${obj.tag}  (${obj.count})`, value: "" }))
 		);
 	}
@@ -108,22 +88,7 @@ export async function execute(i) {
 		return;
 	}
 
-	const messageData = {
-		query: input,
-		sort: sort,
-		value: (() => {
-			switch (sort.val) {
-				case "width": return data.image.main.width;
-				case "height": return data.image.main.height;
-				case "id": return data.id;
-				case "score": return data.score;
-				default: return 0;
-			}
-		})(),
-		general: i.options.getBoolean("general") ?? false,
-	};
-
-	const message = embed.searchEmbed(messageData.query, data, messageData.general);
+	const message = embed.searchEmbed(data, input, sort);
 
 	await i.editReply({
 		content: `||\`\`\`json\n${JSON.stringify(messageData)}\n\`\`\`||`,

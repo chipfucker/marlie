@@ -35,15 +35,18 @@ export async function execute(i) {
 			console.error(error);
 		}
 	} else if (i.isButton()) {
-		const id = i.customId.split(":");
-		const parent = id.shift();
-		const file = id.pop() + ".js";
+		const id = i.customId.split(/(?:\:|\?)/g);
+		const parent = id[0];
+		const file = id[1] + ".js";
+		const params = id[2]?.split(";");
 
 		const filePath = path.join(__dirname, "../command", parent, "interact/button", file);
 		const fileUrl = new URL(`file://${filePath}`).href;
 
 		const func = await import(fileUrl);
-		await func.default(i);
+		if (params) await func.default(i, params);
+		else await func.default(i);
+		await func.default(i, params);
 	} else if (i.isModalSubmit()) {
 		const id = i.customId.split(":");
 		const parent = id.shift();

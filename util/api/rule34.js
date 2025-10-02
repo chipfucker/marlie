@@ -182,8 +182,42 @@ export const post = async (query) => {
 	return data;
 };
 
-const search = async (query, options) => {
+export const search = async (query, options) => {
+	const timeLabel = {
+		total:  "    FETCH total      ",
+		json:   "    FETCH Rule34 JSON",
+		others: "    FETCH Rule34 XML+"
+	};
 
+	console.time(timeLabel.total);
+
+	console.time(timeLabel.json);
+	const initial = await fetch(url.post({
+		json: true, tags: false, limit: options?.limit ?? 50, query: query
+	})).then(e => e.json()).catch(() => false);
+	console.timeEnd(timeLabel.json);
+
+	if (!initial) return null;
+
+	console.time(timeLabel.others);
+	const api = await Promise.all([
+		fetch(url.post({
+			json: false, limit: options?.limit ?? 50, query: query
+		}))
+	]).then(async array => ({
+		json: initial,
+		xml: await array[0].text().then(e => new DOMParser().parseFromString(e, "text/xml")).then(e => ({
+			posts: e.firstChild,
+			post: e.getElementsByTagName("post")
+		})),
+	}));
+	console.timeEnd(timeLabel.others);
+
+	console.timeEnd(timeLabel.total);
+
+	const data = formatData.multiple(api);
+
+	return data;
 };
 
 const url = {
@@ -192,10 +226,10 @@ const url = {
 			page: "dapi",
 			s: "post",
 			q: "index",
-			limit: String(options.limit ?? 1),
-			json: String(Number(options.json ?? false)),
-			fields: options.tags ? "tag_info" : "",
-			tags: options.query ?? "",
+			limit: String(options?.limit ?? 1),
+			json: String(Number(options?.json ?? false)),
+			fields: options?.tags ? "tag_info" : "",
+			tags: options?.query ?? "",
 			api_key: secrets.rule34.api_key,
 			user_id: secrets.rule34.user_id
 		}).toString();
@@ -205,7 +239,7 @@ const url = {
 			page: "dapi",
 			s: "comment",
 			q: "index",
-			post_id: options.id,
+			post_id: options?.id,
 			api_key: secrets.rule34.api_key,
 			user_id: secrets.rule34.user_id
 		}).toString();
@@ -251,7 +285,7 @@ const formatData = {
 			parent: api.json[0].parent_id,
 			children: config.children
 				? api.children.filter(e => e.id !== api.json[0].id).map(e => e.id)
-				: api.xml.post.getAttribute("has_children") === "true" ? true : false,
+				: api.xml.post.getAttribute("has_children") === "true",
 			source: api.json[0].source || null
 		};
 
@@ -303,6 +337,53 @@ const formatData = {
 
 		return data;
 	},
+	multiple: (api, config) => {
+		const data = [];
+		for (const index in api.json) {
+			const post = {
+				image: {
+					main: {
+						url: api.json[index].file_url,
+						width: api.json[index].width,
+						height: api.json[index].height
+					},
+					sample: {
+						url: api.json[index].sample_url,
+						width: api.json[index].sample_width,
+						height: api.json[index].sample_height,
+						necessary: api.json[index].sample
+					},
+					thumbnail: {
+						url: api.json[index].preview_url,
+						width: Number(api.xml.post[index].getAttribute("preview_width")),
+						height: Number(api.xml.post[index].getAttribute("preview_height"))
+					},
+					directory: api.json[index].directory,
+					name: api.json[index].image,
+					hash: api.json[index].hash,
+					extension: api.json[index].image.split(".").pop()
+				},
+				id: api.json[0].id,
+				created: dateObject(new Date(api.xml.post[index].getAttribute("created_at"))),
+				updated: dateObject(new Date(api.json[index].change * 1000)),
+				creator: {
+					name: api.json[index].owner,
+					id: Number(api.xml.post[index].getAttribute("creator_id"))
+				},
+				rating: api.json[index].rating,
+				score: api.json[index].score,
+				status: api.json[index].status,
+				notes: api.json[index].has_notes,
+				parent: api.json[index].parent_id,
+				children: api.xml.post[index].getAttribute("has_children") === "true",
+				source: api.json[index].source || null
+			};
+
+			data.push(post);
+		}
+
+		return data;
+	}
 }
 
 function dateObject(object) {

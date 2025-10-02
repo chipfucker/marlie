@@ -1,18 +1,7 @@
+import { rule34 } from "#util/api/index.js";
 async function test(client) {
-	const message = {
-		flags: Discord.MessageFlags.IsComponentsV2,
-		components: [{
-			type: Discord.ComponentType.ActionRow,
-			components: [{
-				type: Discord.ComponentType.Button,
-				custom_id: "this/is/a/test",
-				label: "label",
-				style: Discord.ButtonStyle.Secondary
-			}]
-		}]
-	};
-	const channel = await client.channels.fetch("1314695908621025310");
-	await channel.send(message);
+	const data = await rule34.search("angstrom");
+	console.log(data);
 }
 
 import * as Discord from "discord.js";
