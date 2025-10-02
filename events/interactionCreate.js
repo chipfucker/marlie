@@ -36,19 +36,20 @@ export async function execute(i) {
 		}
 	} else if (i.isButton()) {
 		const id = i.customId.split(":");
-		const command = id.shift();
-		const file = id.join("/") + ".js";
+		const parent = id.shift();
+		const file = id.pop() + ".js";
 
-		const commandPath = path.join(__dirname, "../command");
-		const folders = fs.readdirSync(commandPath, { recursive: true });
-		var folderPath;
-		for (const folder of folders) {
-			if (folder.endsWith(command)) {
-				folderPath = folder; break;
-			}
-		}
-		const filePath = path.join(commandPath, folderPath, "interact/button", file);
-		console.debug(filePath);
+		const filePath = path.join(__dirname, "../command", parent, "interact/button", file);
+		const fileUrl = new URL(`file://${filePath}`).href;
+
+		const func = await import(fileUrl);
+		await func.default(i);
+	} else if (i.isModalSubmit()) {
+		const id = i.customId.split(":");
+		const parent = id.shift();
+		const file = id.pop() + ".js";
+
+		const filePath = path.join(__dirname, "../command", parent, "interact/modal", file);
 		const fileUrl = new URL(`file://${filePath}`).href;
 
 		const func = await import(fileUrl);

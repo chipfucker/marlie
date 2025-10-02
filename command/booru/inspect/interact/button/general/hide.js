@@ -9,7 +9,7 @@ export default async (i) => {
 	const components = i.message.toJSON().components;
 	for (let index in components[0].components) {
 		const component = components[0].components[index];
-		if (component.content?.match(/### <:TC_h3_General:\d*> General/)) {
+		if (component.content?.match(embed.general.regex)) {
 			components[0].components[index] = embed.general.hidden(data)[0];
 			components[0].components[++index] = embed.general.hidden(data)[1];
 			break;

@@ -15,7 +15,6 @@ const commandFolders = fs.readdirSync(foldersPath);
 	const commandFiles = fs.readdirSync(commandsPath).filter(file => !file.match(/\./));
 	for (const parent of commandFiles) {
 		const filePath = path.join(commandsPath, parent, "command.js");
-		console.debug(filePath);
 		const fileUrl = new URL(`file://${filePath}`).href;
 		const command = await import(fileUrl);
 		if ("data" in command && "execute" in command) {

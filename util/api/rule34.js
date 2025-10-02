@@ -148,7 +148,7 @@ export const post = async (query) => {
 	console.time(timeLabel.json);
 	const initial = await fetch(url.post({
 		json: true, tags: true, query: query
-	})).then(e => e.json().then(e => e[0])).catch(() => false);
+	})).then(e => e.json()).catch(() => false);
 	console.timeEnd(timeLabel.json);
 
 	if (!initial) return null;
@@ -156,13 +156,13 @@ export const post = async (query) => {
 	console.time(timeLabel.others);
 	const api = await Promise.all([
 		fetch(url.post({
-			limit: 1000, json: true, query: `parent:${initial.id}`
+			limit: 1000, json: true, query: `parent:${initial[0].id}`
 		})),
 		fetch(url.post({
 			json: false, query: query
 		})),
 		fetch(url.comment({
-			id: initial.id
+			id: initial[0].id
 		}))
 	]).then(async array => ({
 		json: initial,
@@ -196,8 +196,8 @@ const url = {
 			json: String(Number(options.json ?? false)),
 			fields: options.tags ? "tag_info" : "",
 			tags: options.query ?? "",
-			api_key: secrets.rule34.token,
-			user_id: "2373207"
+			api_key: secrets.rule34.api_key,
+			user_id: secrets.rule34.user_id
 		}).toString();
 	},
 	comment: (options) => {
@@ -206,8 +206,8 @@ const url = {
 			s: "comment",
 			q: "index",
 			post_id: options.id,
-			api_key: secrets.rule34.token,
-			user_id: "2373207"
+			api_key: secrets.rule34.api_key,
+			user_id: secrets.rule34.user_id
 		}).toString();
 	}
 }
@@ -217,68 +217,68 @@ const formatData = {
 		const data = {
 			image: {
 				main: {
-					url: api.json.file_url,
-					width: api.json.width,
-					height: api.json.height
+					url: api.json[0].file_url,
+					width: api.json[0].width,
+					height: api.json[0].height
 				},
 				sample: {
-					url: api.json.sample_url,
-					width: api.json.sample_width,
-					height: api.json.sample_height,
-					necessary: api.json.sample
+					url: api.json[0].sample_url,
+					width: api.json[0].sample_width,
+					height: api.json[0].sample_height,
+					necessary: api.json[0].sample
 				},
 				thumbnail: {
-					url: api.json.preview_url,
+					url: api.json[0].preview_url,
 					width: Number(api.xml.post.getAttribute("preview_width")),
 					height: Number(api.xml.post.getAttribute("preview_height"))
 				},
-				directory: api.json.directory,
-				name: api.json.image,
-				hash: api.json.hash,
-				extension: api.json.image.split(".").pop()
+				directory: api.json[0].directory,
+				name: api.json[0].image,
+				hash: api.json[0].hash,
+				extension: api.json[0].image.split(".").pop()
 			},
-			id: api.json.id,
+			id: api.json[0].id,
 			created: dateObject(new Date(api.xml.post.getAttribute("created_at"))),
-			updated: dateObject(new Date(api.json.change * 1000)),
+			updated: dateObject(new Date(api.json[0].change * 1000)),
 			creator: {
-				name: api.json.owner,
+				name: api.json[0].owner,
 				id: Number(api.xml.post.getAttribute("creator_id"))
 			},
-			rating: api.json.rating,
-			score: api.json.score,
-			status: api.json.status,
-			notes: api.json.has_notes, // TODO: find out how to fetch note info
-			parent: api.json.parent_id, // TODO: find out how null parents are handled in the site
+			rating: api.json[0].rating,
+			score: api.json[0].score,
+			status: api.json[0].status,
+			notes: api.json[0].has_notes, // TODO: find out how to fetch note info
+			parent: api.json[0].parent_id,
 			children: config.children
-				? api.children.filter(e => e.id !== api.json.id).map(e => e.id)
+				? api.children.filter(e => e.id !== api.json[0].id).map(e => e.id)
 				: api.xml.post.getAttribute("has_children") === "true" ? true : false,
-			source: api.json.source || null
+			source: api.json[0].source || null
 		};
 
 		if (config.tags) data.tags = {
-			string: api.json.tags,
-			array: api.json.tag_info
+			string: api.json[0].tags,
+			array: api.json[0].tag_info
 				.map(e => ({ name: e.tag, count: e.count, type: e.type })),
 			category: {
-				Copyright: api.json.tag_info
+				Copyright: api.json[0].tag_info
 					.filter(e => e.type === "copyright")
 					.map(e => ({ name: e.tag, count: e.count })),
-				Character: api.json.tag_info
+				Character: api.json[0].tag_info
 					.filter(e => e.type === "character")
 					.map(e => ({ name: e.tag, count: e.count })),
-				Artist: api.json.tag_info
+				Artist: api.json[0].tag_info
 					.filter(e => e.type === "artist")
 					.map(e => ({ name: e.tag, count: e.count })),
-				General: api.json.tag_info
+				General: api.json[0].tag_info
 					.filter(e => e.type === "tag")
 					.map(e => ({ name: e.tag, count: e.count })),
-				Metadata: api.json.tag_info
+				Metadata: api.json[0].tag_info
 					.filter(e => e.type === "metadata")
 					.map(e => ({ name: e.tag, count: e.count })),
-				null: api.json.tag_info
+				null: api.json[0].tag_info
 					.filter(e => e.type === null)
 					.map(e => ({ name: e.tag, count: e.count })),
-				Other: api.json.tag_info
+				Other: api.json[0].tag_info
 					.filter(e => ![
 						"copyright",
 						"character",
@@ -302,7 +302,7 @@ const formatData = {
 			}));
 
 		return data;
-	}
+	},
 }
 
 function dateObject(object) {

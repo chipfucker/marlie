@@ -32,13 +32,12 @@ export async function execute(i) {
 		});
 		return;
 	}
-
-	const filename = pathname.includes(".") ? pathname : pathname ? `${pathname}.${response.headers.get("content-type").split("/").pop()}` : "file";
-
+	
 	await i.editReply({ content: "Buffering..." });
 	const arrayBuffer = await response.arrayBuffer();
 	const buffer = Buffer.from(arrayBuffer);
 	const stream = Readable.from(buffer);
+	const filename = pathname.includes(".") ? pathname : pathname ? `${pathname}.${response.headers.get("content-type").split("/").pop()}` : "file";
 
 	await i.editReply({ content: "Creating form..." });
 	const form = new FormData();

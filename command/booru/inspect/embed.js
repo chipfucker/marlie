@@ -111,7 +111,7 @@ export default {
 								type: Discord.ComponentType.Button,
 								style: Discord.ButtonStyle.Secondary,
 								label: `${tags.length} tags`,
-								custom_id: "inspect:general:show"
+								custom_id: "booru/inspect:general/show"
 							}]
 						}
 					);
@@ -138,7 +138,7 @@ export default {
 				type: Discord.ComponentType.Button,
 				style: Discord.ButtonStyle.Secondary,
 				label: `${data.comments.length} comment${data.comments.length === 1 ? "" : "s"}`,
-				custom_id: "inspect:comments:show"
+				custom_id: "booru/inspect:comments/show"
 			}]
 		});
 
@@ -159,7 +159,7 @@ export default {
 						type: Discord.ComponentType.Button,
 						style: Discord.ButtonStyle.Primary,
 						label: "Hide tags",
-						custom_id: "inspect:general:hide"
+						custom_id: "booru/inspect:general/hide"
 					}]
 				}
 			];
@@ -177,12 +177,13 @@ export default {
 						type: Discord.ComponentType.Button,
 						style: Discord.ButtonStyle.Secondary,
 						label: `${tags.length} tags`,
-						custom_id: "inspect:general:show"
+						custom_id: "booru/inspect:general/show"
 					}]
 				}
 			];
 			return components;
-		}
+		},
+		regex: new RegExp(`### ${emoji.TC.h3.General} General`)
 	},
 	comments: {
 		shown: ({ comments }, page) => {
@@ -193,7 +194,7 @@ export default {
 				{
 					type: Discord.ComponentType.TextDisplay,
 					content: comments.slice(index, endIndex).map(comment =>
-						`**${comment.creator.name}** \u00BB #${comment.id}\n${comment.body}`
+						`**${comment.creator.name}** \u00BB #${comment.id}\n${comment.body.trim()}`
 					).join("\n\n")
 				},
 				{
@@ -207,21 +208,27 @@ export default {
 							type: Discord.ComponentType.Button,
 							style: Discord.ButtonStyle.Secondary,
 							label: "Prev",
-							custom_id: "inspect:comments:prev",
+							custom_id: "booru/inspect:comments/prev",
 							disabled: page === 0
 						},
 						{
 							type: Discord.ComponentType.Button,
 							style: Discord.ButtonStyle.Secondary,
 							label: "Next",
-							custom_id: "inspect:comments:next",
+							custom_id: "booru/inspect:comments/next",
 							disabled: endIndex >= comments.length
 						},
 						{
 							type: Discord.ComponentType.Button,
+							style: Discord.ButtonStyle.Success,
+							label: "Post",
+							custom_id: "booru/inspect:comments/post"
+						},
+						{
+							type: Discord.ComponentType.Button,
 							style: Discord.ButtonStyle.Primary,
-							label: "Hide comments",
-							custom_id: "inspect:comments:hide"
+							label: "Hide",
+							custom_id: "booru/inspect:comments/hide"
 						}
 					]
 				}
@@ -235,10 +242,27 @@ export default {
 					type: Discord.ComponentType.Button,
 					style: Discord.ButtonStyle.Secondary,
 					label: `${comments.length} comment${comments.length === 1 ? "" : "s"}`,
-					custom_id: "inspect:comments:show"
+					custom_id: "booru/inspect:comments/show"
 				}]
 			};
 			return component;
+		},
+		post: (id) => {
+			const modal = {
+				title: `Comment on post ${id}`,
+				custom_id: "booru/inspect:comments/post",
+				components: [{
+					type: Discord.ComponentType.ActionRow,
+					components: [{
+						type: Discord.ComponentType.TextInput,
+						custom_id: "content",
+						label: "Content",
+						placeholder: "At least 3 words!",
+						style: Discord.TextInputStyle.Paragraph
+					}]
+				}]
+			};
+			return modal;
 		}
 	}
 };
