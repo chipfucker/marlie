@@ -11,11 +11,11 @@ const foldersPath = path.join(__dirname, "command");
 const commandFolders = fs.readdirSync(foldersPath);
 
 (async () => { for (const folder of commandFolders) {
-	if (folder === "button") continue;
 	const commandsPath = path.join(foldersPath, folder);
-	const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith(".js"));
-	for (const file of commandFiles) {
-		const filePath = path.join(commandsPath, file);
+	const commandFiles = fs.readdirSync(commandsPath).filter(file => !file.match(/\./));
+	for (const parent of commandFiles) {
+		const filePath = path.join(commandsPath, parent, "command.js");
+		console.debug(filePath);
 		const fileUrl = new URL(`file://${filePath}`).href;
 		const command = await import(fileUrl);
 		if ("data" in command && "execute" in command) {

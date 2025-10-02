@@ -357,10 +357,10 @@ export default {
     }
 };
 
-function definition(object) {
+export function definition(object) {
     return Object.entries(object)
     .map(def => `${ def[0] }: ${ def[1] }`).join("\n");
-}
+};
 
 function cutTags(str) {
     const lines = str.split("\n");

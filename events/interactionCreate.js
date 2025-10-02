@@ -7,7 +7,6 @@ const { tag, sub } = tm.tags.interaction;
 
 export const name = Discord.Events.InteractionCreate;
 export async function execute(i) {
-
 	console.log(`${tag} \x1b[1m${
 			i.user.username
 		}\x1b[m ran \x1b[1m${
@@ -36,9 +35,22 @@ export async function execute(i) {
 			console.error(error);
 		}
 	} else if (i.isButton()) {
-		const file = i.customId.replace(/:/g, "/") + ".js";
-		const filePath = path.join(__dirname, "../interact/button", file);
+		const id = i.customId.split(":");
+		const command = id.shift();
+		const file = id.join("/") + ".js";
+
+		const commandPath = path.join(__dirname, "../command");
+		const folders = fs.readdirSync(commandPath, { recursive: true });
+		var folderPath;
+		for (const folder of folders) {
+			if (folder.endsWith(command)) {
+				folderPath = folder; break;
+			}
+		}
+		const filePath = path.join(commandPath, folderPath, "interact/button", file);
+		console.debug(filePath);
 		const fileUrl = new URL(`file://${filePath}`).href;
+
 		const func = await import(fileUrl);
 		await func.default(i);
 	}

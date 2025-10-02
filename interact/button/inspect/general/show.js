@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 import { rule34 } from "#util/api/index.js";
-import embed from "#util/embed/index.js";
+import embed from "#util/embed.js";
 
 export default async (i) => {
 	await i.deferUpdate();
@@ -10,8 +10,8 @@ export default async (i) => {
 	for (let index in components[0].components) {
 		const component = components[0].components[index];
 		if (component.content?.match(/### General/)) {
-			components[0].components[index] = embed.inspect.general.shown(data)[0];
-			components[0].components[++index] = embed.inspect.general.shown(data)[1];
+			components[0].components[index] = embed.general.shown(data)[0];
+			components[0].components[++index] = embed.general.shown(data)[1];
 			break;
 		}
 	}

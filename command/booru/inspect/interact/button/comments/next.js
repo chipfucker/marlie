@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 import { rule34 } from "#util/api/index.js";
-import embed from "#util/embed.js";
+import embed from "../../../embed.js";
 
 export default async (i) => {
 	await i.deferUpdate();
@@ -11,7 +11,7 @@ export default async (i) => {
 	components[1] = {
 		type: Discord.ComponentType.Container,
 		spoiler: !i.channel.nsfw,
-		components: embed.comments.shown(data, --page)
+		components: embed.comments.shown(data, ++page)
 	};
 	await i.editReply({ components: components });
 };
