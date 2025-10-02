@@ -12,9 +12,7 @@ export async function execute(i) {
 	}\x1b[m ran \x1b[1m${
 		(i.commandName || i.message.interaction.commandName)
 	}\x1b[m \x1b[2;3m(${
-		Discord.ApplicationCommandType[i.commandType || i.message.interaction.type]
-	} ${
-		Discord.InteractionType[i.type]
+		i.constructor.name
 	})\x1b[m`);
 	
 	switch (true) {
@@ -25,11 +23,12 @@ export async function execute(i) {
 				await command.execute(i);
 			} catch (error) {
 				console.error(error);
-				if (i.replied || i.deferred)
-					await i.followUp({ content: "### ERROR:\n```\n" + error + "\n```" });
-				else await i.reply({ content: "### ERROR:\n```\n" + error + "\n```" });
+				const message = { content: "### ERROR:\n```\n" + error + "\n```" };
+				if (i.replied || i.deferred) await i.followUp(message);
+				else await i.reply(message);
 			}
 		} break;
+
 		case i.isAutocomplete(): {
 			const command = i.client.commands.get(i.commandName);
 			try {
@@ -38,8 +37,10 @@ export async function execute(i) {
 				console.error(error);
 			}
 		} break;
+
 		case i.isButton():
 		case i.isModalSubmit(): {
+			// custom id format: directory:file?params
 			// split custom id into dir and rest
 			const [dir, rest] = i.customId.split(/\:/);
 			// split rest into file and params
@@ -50,28 +51,14 @@ export async function execute(i) {
 			const params = restArr[1]?.split(";");
 	
 			// create path
-			const path = path.join(__dirname, "../command", dir, "interact", file);
-			const url = new URL(`file://${path}`).href;
+			const filePath = path.join(__dirname, "../command", dir, "interact", file);
+			const url = new URL(`file://${filePath}`).href;
 	
 			// import and execute file
 			const func = await import(url);
-			if (params) await func.default(i, params);
-			else await func.default(i);
-			await func.default(i, params);
+			await func[i.constructor.name](i, params);
 		} break;
-		default: {
-			throw new Error(`This interaction type (${i.type})is not supported yet.`);
-		}
+
+		default: throw new Error(`This interaction type (${i.constructor.name})is not supported yet.`);
 	}
-	// if (i.isModalSubmit()) {
-	// 	const id = i.customId.split(":");
-	// 	const parent = id.shift();
-	// 	const file = id.pop() + ".js";
-
-	// 	const filePath = path.join(__dirname, "../command", parent, "interact/modal", file);
-	// 	const fileUrl = new URL(`file://${filePath}`).href;
-
-	// 	const func = await import(fileUrl);
-	// 	await func.default(i);
-	// }
 }

@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 import { rule34 } from "#util/api/index.js";
-import embed from "../../../embed.js";
+import embed from "../../embed.js";
 
 export default async (i) => {
 	await i.deferUpdate();

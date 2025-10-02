@@ -1,11 +1,18 @@
 import * as Discord from "discord.js";
 import fetch from "node-fetch";
 import FormData from "form-data";
-import { rule34 } from "#util/api/index.js";
-import embed from "../../../embed.js";
-import secrets from "#root/secrets.json" with { type: "json" };
+import embed from "../../embed.js";
+import secret from "#root/secret.json" with { type: "json" };
 
-export default async (i) => {
+export async function ButtonInteraction(i) {
+	const id = i.message.components[0].components[0].components[1].content.replace(/## (\d+)/, "$1");
+
+	const modal = embed.comments.post(id);
+
+	await i.showModal(modal);
+}
+
+export async function ModalSubmitInteraction(i) {
 	await i.deferReply();
 	
 	const id = i.message.components[0].components[0].components[1].content.replace(/## (\d+)/, "$1");
@@ -38,10 +45,10 @@ export default async (i) => {
 		method: "POST",
 		body: form,
 		headers: {
-			"Cookie": `user_id=${secrets.rule34.user_id}; pass_hash=${secrets.rule34.pass_hash}`,
+			"Cookie": `user_id=${secret.rule34.user_id}; pass_hash=${secret.rule34.pass_hash}`,
 			"Origin": "https://rule34.xxx",
 			"Referer": `https://rule34.xxx/?page=post&s=view&id=${id}`,
-			"User-Agent": secrets.UserAgent
+			"User-Agent": secret.UserAgent
 		}
 	});
 
@@ -62,5 +69,5 @@ export default async (i) => {
 		return;
 	}
 
-	i.editReply(`Comment posted!\n>>> ${content}`)
-};
+	i.editReply(`Comment posted!\n>>> ${content}`);
+}

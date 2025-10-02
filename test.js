@@ -1,11 +1,8 @@
-import { rule34 } from "#util/api/index.js";
 async function test(client) {
-	const data = await rule34.search("angstrom");
-	console.log(data);
 }
 
 import * as Discord from "discord.js";
-import secrets from "./secrets.json" with { type: "json" };
+import secret from "./secret.json" with { type: "json" };
 
 const client = new Discord.Client({ intents: [Discord.GatewayIntentBits.Guilds] });
 
@@ -22,4 +19,4 @@ client.once("clientReady", async (client) => {
 	}
 });
 
-client.login(secrets.discord.token);
+client.login(secret.discord.token);

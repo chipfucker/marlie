@@ -1,7 +1,7 @@
 * reformat command/interaction folders so components and modals aren't split
 * update ref/commands.js to match index.js
-* add channels object and search forum tag object to secrets.json
-* rename secrets.json file and imports to secret.json
+* add channels object and search forum tag object to secret.json
+* rename secret.json file and imports to secret.json
 * work on pallete
 
 ## emoji

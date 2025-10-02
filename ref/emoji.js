@@ -6,7 +6,7 @@ const __dirname = import.meta.dirname;
 import { setTimeout as wait } from "node:timers/promises";
 import * as tm from "#util/terminal.js";
 const { tag, sub } = tm.tags.refresh;
-import secrets from "../secrets.json" with { type: "json" };
+import secret from "../secret.json" with { type: "json" };
 
 const client = new Discord.Client({ intents: [Discord.GatewayIntentBits.Guilds] });
 	
@@ -49,4 +49,4 @@ client.once(Discord.Events.ClientReady, async (client) => {
 	client.destroy();
 });
 
-client.login(secrets.discord.token);
+client.login(secret.discord.token);

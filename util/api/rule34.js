@@ -1,4 +1,4 @@
-import secrets from "../../secrets.json" with { type: "json" };
+import secret from "../../secret.json" with { type: "json" };
 import { DOMParser } from "xmldom";
 
 /**
@@ -230,8 +230,8 @@ const url = {
 			json: String(Number(options?.json ?? false)),
 			fields: options?.tags ? "tag_info" : "",
 			tags: options?.query ?? "",
-			api_key: secrets.rule34.api_key,
-			user_id: secrets.rule34.user_id
+			api_key: secret.rule34.api_key,
+			user_id: secret.rule34.user_id
 		}).toString();
 	},
 	comment: (options) => {
@@ -240,8 +240,8 @@ const url = {
 			s: "comment",
 			q: "index",
 			post_id: options?.id,
-			api_key: secrets.rule34.api_key,
-			user_id: secrets.rule34.user_id
+			api_key: secret.rule34.api_key,
+			user_id: secret.rule34.user_id
 		}).toString();
 	}
 }

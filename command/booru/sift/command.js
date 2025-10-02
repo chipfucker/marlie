@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 import { rule34 } from "#util/api/index.js";
-import { sift as embed } from "#command/booru/sift/embed.js";
+import embed from "#command/booru/sift/embed.js";
 
 export const data = {
 	name: "sift",
