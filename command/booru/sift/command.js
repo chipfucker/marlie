@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 import { rule34 } from "#util/api/index.js";
-import embed from "#util/embed.js";
+import { sift as embed } from "#command/booru/sift/embed.js";
 
 export const data = {
 	name: "sift",
@@ -23,10 +23,10 @@ export const data = {
 			description: "What to sort by",
 			type: Discord.ApplicationCommandOptionType.String,
 			choices: [
-				{ name: "Image width", value: "width" },
-				{ name: "Image height", value: "height" },
 				{ name: "ID", value: "id" },
 				{ name: "Score", value: "score" },
+				{ name: "Image width", value: "width" },
+				{ name: "Image height", value: "height" },
 				{ name: "Random", value: "random" }
 			]
 		},
@@ -61,39 +61,41 @@ export async function autocomplete(i) {
 			data.map(obj => ({ name: `${obj.tag}  (${obj.count})`, value: "" }))
 		);
 	}
-}
+};
 export async function execute(i) {
-	const input = i.options.getString("q");
+	const query = i.options.getString("q");
 	const sort = {
 		val: i.options.getString("sort") || "id",
 		dir: i.options.getString("dir") || "desc"
 	};
 
 	await i.reply({
-		embeds: [{
-			title: `\`${input}\` (${sort.val}:${sort.dir})`,
-			description: "Loading..."
-		}]
+		flags: Discord.MessageFlags.IsComponentsV2,
+		components: [{ type: Discord.ComponentType.Container, components: [
+			{ type: Discord.ComponentType.TextDisplay,
+				content: `## \`${query}\` (${sort.val}:${sort.dir})`
+			},
+			{ type: Discord.ComponentType.TextDisplay,
+				content: "Loading..."
+			}
+		]}]
 	});
 
-	const query = `${input} sort:${sort.val}:${sort.dir}`;
-	const data = await rule34.post(query);
+	const resultQuery = `${query} sort:${sort.val}:${sort.dir}`;
+	const data = await rule34.post(resultQuery);
 	if (!data) {
-		await i.editReply({
-			embeds: [{
-				title: `No results for \`${query}\`!`,
-				color: 0xE9263D
+		await i.editReply({ components: [{
+			type: Discord.ComponentType.Container,
+			accent_color: 0xE9263D,
+			components: [{ type: Discord.ComponentType.TextDisplay,
+				content: `### No results for \`${resultQuery}\`!`
 			}]
-		});
+		}]});
 		return;
 	}
 
-	const message = embed.searchEmbed(data, input, sort);
+	const message = embed.create(data, query, sort);
+	message.components[0].spoiler = !i.channel.nsfw;
 
-	await i.editReply({
-		content: `||\`\`\`json\n${JSON.stringify(messageData)}\n\`\`\`||`,
-		embeds: [message.embed],
-		components: [message.buttons],
-		withResponse: true
-	});
-}
+	await i.editReply(message);
+};

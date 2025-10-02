@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 import { rule34 } from "#util/api/index.js";
-import embed from "./embed.js";
+import embed from "#command/booru/inspect/embed.js";
 
 export const data = {
 	name: "inspect",
@@ -83,8 +83,8 @@ export async function execute(i) {
 				},
 				{
 					type: Discord.ComponentType.TextDisplay,
-					content: "Perhaps you meant one of these?"
-						+ `${"list of similar tags"}`
+					content: "Perhaps you meant one of these?\n"
+						+ `${"(list of similar tags)"}`
 				}
 			]
 		}]});

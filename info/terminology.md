@@ -41,10 +41,15 @@ garden, such as [this repository's `basket` folder.](../basket/)
 A *farm* is a place that is universally used to throw and catch, such as a
 Discord channel.
 
-## The Pit
+## Stock
 
-The *Pit* refers to activity revolving posts, such as [saving](#save) or
+<!-- TODO: rename stock to something more unique
+https://www.wordhippo.com/what-is/another-word-for/storage.html -->
+
+*Stock* refers to activity revolving posts, such as [saving](#save) or
 [packing.](#pack)
+
+<!-- TODO: verify names of actions -->
 
 ### Save
 

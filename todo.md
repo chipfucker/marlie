@@ -1,18 +1,17 @@
-* move everything for each command to its own folder, such as
-    ```
-    command/
-     └─ inspect/
-         ├─ interact/
-         │   └─ button/
-         │       ├─ comments/
-         │       │   ├─ hide.js
-         │       │   ├─ next.js
-         │       │   ├─ prev.js
-         │       │   ├─ show.js
-         │       └─ general/
-         │           ├─ hide.js
-         │           └─ show.js
-         ├─ command.js
-         └─ embed.js
-    ```
+* reformat command/interaction folders so components and modals aren't split
+* update ref/commands.js to match index.js
+* add channels object and search forum tag object to secrets.json
+* rename secrets.json file and imports to secret.json
 * work on pallete
+
+## emoji
+
+* row of emojis that display stylized text for each tag type
+* periods continuously moving horizontally
+* suitcase (save)
+* package (pack)
+* magnifying goggles (hunt)
+* magnifying glass (inspect)
+* pickaxe (sift)
+* spool of thread (knit)
+* 
