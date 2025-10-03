@@ -12,7 +12,7 @@ const client = new Discord.Client({ intents: [ Discord.GatewayIntentBits.Guilds 
 client.once(Discord.Events.ClientReady, async (client) => {
 	console.log(`${tag} deleting emojis`);
 	await client.application.emojis.fetch()
-		.then(emojis => emojis.forEach(emoji => emoji.delete()));
+		.then(emojis => emojis.forEach(emoji => await emoji.delete()));
 	console.log(`${sub} deleted emojis`);
 
 	console.log(`${tag} creating emojis`);
@@ -37,11 +37,12 @@ client.once(Discord.Events.ClientReady, async (client) => {
 		const keys = name.split("_");
 		keys.reduce((obj, key, index) => {
 			if (index === keys.length - 1) {
-				if (key.match(/0$/)) obj[key.replace(/(.+)0$/, "$1")] = emoji;
-				else if (key.match(/\d+$/)) obj[key.replace(/(.+[^\d])\d+$/, "$1")] += emoji;
+				const match = key.match(/^(.+?)(\d+)?$/);
+				if (match[2] === "0") obj[match[1]] = emoji;
+				else if (match[2]) obj[match[1]] += emoji;
 				else obj[key] = emoji;
 			} else {
-				if (!obj[key]) obj[key] = {};
+				obj[key] ??= {};
 				return obj[key]; // TODO: see if you can just return {}
 			}
 		}, json);
