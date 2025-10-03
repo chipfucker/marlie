@@ -1,20 +1,19 @@
 import * as Discord from "discord.js";
 import * as fs from "node:fs";
-import * as path from "node:path";
-const __dirname = import.meta.dirname;
+import { posix as path } from "node:path";
 import * as tm from "#util/terminal.js";
 const { tag, sub } = tm.tags.interaction;
 
 export const name = Discord.Events.InteractionCreate;
 export async function execute(i) {
-	console.log(`${tag} \x1b[1m${
+	console.log(`${tag} ${
 		i.user.username
-	}\x1b[m ran \x1b[1m${
+	} used \x1b[1m${
 		(i.commandName || i.message.interaction.commandName)
 	}\x1b[m \x1b[2;3m(${
 		i.constructor.name
 	})\x1b[m`);
-	
+
 	switch (true) {
 		case i.isChatInputCommand():
 		case i.isMessageContextMenuCommand(): {
@@ -40,25 +39,23 @@ export async function execute(i) {
 
 		case i.isButton():
 		case i.isModalSubmit(): {
-			// custom id format: directory:file?params
-			// split custom id into dir and rest
-			const [dir, rest] = i.customId.split(/\:/);
-			// split rest into file and params
-			const restArr = rest.split(/\?/);
+			const [dir, paramString] = i.customId.replace(/\:/, "/interact/").split(/\?/);
 			// assign filename to file
-			const file = restArr[0] + ".js";
+			const file = dir + ".js";
 			// split params string if it exists, else return undefined
-			const params = restArr[1]?.split(";");
-	
+			const params = paramString?.split(/;/g);
+
 			// create path
-			const filePath = path.join(__dirname, "../command", dir, "interact", file);
-			const url = new URL(`file://${filePath}`).href;
-	
+			const filePath = path.resolve("command", file);
+			console.debug(filePath);
+			// const url = new URL(`file://${filePath}`).href;
+			const url = filePath;
+
 			// import and execute file
 			const func = await import(url);
 			await func[i.constructor.name](i, params);
 		} break;
 
-		default: throw new Error(`This interaction type (${i.constructor.name})is not supported yet.`);
+		default: throw new Error(`This interaction type (${i.constructor.name}) is not supported yet.`);
 	}
 }

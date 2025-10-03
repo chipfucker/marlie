@@ -1,4 +1,5 @@
 async function test(client) {
+	console.log(eval("Discord.ComponentType.Button"));
 }
 
 import * as Discord from "discord.js";

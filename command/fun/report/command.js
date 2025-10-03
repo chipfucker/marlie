@@ -34,7 +34,7 @@ export async function execute(i) {
 				name: "You've been warned!"
 			},
 			title: "Please refrain from activity that goes against policy.",
-			description: `Reason for warn:\n>>> ${fs.readFileSync("commands/fun/report.txt", "utf8")}`,
+			description: `Reason for warn:\n>>> ${fs.readFileSync(path.resolve("resource/live/report.txt"), "utf8")}`,
 			footer: {
 				text: "You may be banned if you must be warned again!"
 			},
@@ -54,11 +54,9 @@ export async function execute(i) {
 	await delay((Math.random() * 6000) + 4000);
 	await i.editReply(responded);
 	try { await i.client.users.cache.get(i.targetMessage.author.id).send(warning); }
-	catch (e) {
-		i.followUp({
-			content: `couldn't dm user: ${e.message}`,
-			flags: Discord.MessageFlags.Ephemeral
-		});
-	}
+	catch (e) { i.followUp({
+		flags: Discord.MessageFlags.Ephemeral,
+		content: `couldn't dm user: ${e.message}`
+	}); }
 	await i.editReply(warned);
 }

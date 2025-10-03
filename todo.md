@@ -1,7 +1,8 @@
-* reformat command/interaction folders so components and modals aren't split
+* update node:path imports to:
+  ```js
+  import { posix as path } from "node:path";
+  ```
 * update ref/commands.js to match index.js
-* add channels object and search forum tag object to secret.json
-* rename secret.json file and imports to secret.json
 * work on pallete
 
 ## emoji
@@ -14,4 +15,4 @@
 * magnifying glass (inspect)
 * pickaxe (sift)
 * spool of thread (knit)
-* 
+* left and right arrows / chevrons

@@ -1,13 +1,12 @@
 import * as Discord from "discord.js";
 import * as fs from "node:fs";
 import * as path from "node:path";
-const __dirname = import.meta.dirname;
 import * as tm from "#util/terminal.js";
 const { tag, sub } = tm.tags.refresh;
 import secret from "../secret.json" with { type: "json" };
 
 const commands = [];
-const foldersPath = path.join(__dirname, "/../commands");
+const foldersPath = path.resolve("commands");
 const commandFolders = fs.readdirSync(foldersPath);
 
 (async () => { for (const folder of commandFolders) {

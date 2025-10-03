@@ -1,13 +1,12 @@
 import * as Discord from "discord.js";
 import * as fs from "node:fs";
 import * as path from "node:path";
-const __dirname = import.meta.dirname;
 import secret from "./secret.json" with { type: "json" };
 
 const client = new Discord.Client({ intents: [Discord.GatewayIntentBits.Guilds] });
 
 client.commands = new Discord.Collection();
-const foldersPath = path.join(__dirname, "command");
+const foldersPath = path.resolve("command");
 const commandFolders = fs.readdirSync(foldersPath);
 
 (async () => { for (const folder of commandFolders) {
@@ -25,7 +24,7 @@ const commandFolders = fs.readdirSync(foldersPath);
 	}
 }})();
 
-const eventsPath = path.join(__dirname, "events");
+const eventsPath = path.resolve("events");
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith(".js"));
 
 (async () => { for (const file of eventFiles) {
