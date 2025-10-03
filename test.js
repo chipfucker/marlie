@@ -5,7 +5,7 @@ async function test(client) {
 import * as Discord from "discord.js";
 import secret from "./secret.json" with { type: "json" };
 
-const client = new Discord.Client({ intents: [Discord.GatewayIntentBits.Guilds] });
+const client = new Discord.Client({ intents: [ Discord.GatewayIntentBits.Guilds ] });
 
 client.once("clientReady", async (client) => {
 	console.log("EXECUTING TEST...");

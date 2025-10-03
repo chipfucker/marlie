@@ -7,7 +7,7 @@ import * as tm from "#util/terminal.js";
 const { tag, sub } = tm.tags.refresh;
 import secret from "../secret.json" with { type: "json" };
 
-const client = new Discord.Client({ intents: [Discord.GatewayIntentBits.Guilds] });
+const client = new Discord.Client({ intents: [ Discord.GatewayIntentBits.Guilds ] });
 	
 client.once(Discord.Events.ClientReady, async (client) => {
 	console.log(`${tag} deleting emojis`);
@@ -22,7 +22,7 @@ client.once(Discord.Events.ClientReady, async (client) => {
 	const dir = fs.readdirSync(dirPath);
 
 	for (const file of dir) {
-		const filename = file.replace(/(.*)\.png/, "$1");
+		const name = path.basename(file, ".png");
 		const buffer = new Sharp(path.join(dirPath, file));
 		const metadata = await buffer.metadata();
 		const resized = await buffer.resize({
@@ -32,14 +32,17 @@ client.once(Discord.Events.ClientReady, async (client) => {
 		}).toBuffer();
 		const emoji = await client.application.emojis.create({
 			attachment: resized,
-			name: filename
+			name: name
 		}).then(emoji => emoji.toString());
-		const keys = filename.split("_");
+		const keys = name.split("_");
 		keys.reduce((obj, key, index) => {
-			if (index === keys.length - 1) obj[key] = emoji;
-			else {
+			if (index === keys.length - 1) {
+				if (key.match(/0$/)) obj[key.replace(/(.+)0$/, "$1")] = emoji;
+				else if (key.match(/\d+$/)) obj[key.replace(/(.+[^\d])\d+$/, "$1")] += emoji;
+				else obj[key] = emoji;
+			} else {
 				if (!obj[key]) obj[key] = {};
-				return obj[key];
+				return obj[key]; // TODO: see if you can just return {}
 			}
 		}, json);
 	}

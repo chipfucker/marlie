@@ -7,7 +7,8 @@
   - or operators `||` and assignments `||=`
   - nullish opterators `??` and assignments `??=`
 - [ ] update ref/commands.js to match index.js
-- [ ] dynamically hide knit prev button when `sort.val = "random"` 
+- [x] dynamically hide knit prev button when `sort.val = "random"`
+- [ ] add support for multi-emoji cards 
 - [ ] work on pallete
 
 ## home
