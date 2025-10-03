@@ -38,12 +38,11 @@ client.once(Discord.Events.ClientReady, async (client) => {
 		keys.reduce((obj, key, index) => {
 			if (index === keys.length - 1) {
 				const match = key.match(/^(.+?)(\d+)?$/);
-				if (match[2] === "0") obj[match[1]] = emoji;
-				else if (match[2]) obj[match[1]] += emoji;
-				else obj[key] = emoji;
+				if ((match[2] ?? "0") === "0") obj[match[1]] = emoji;
+				else obj[match[1]] += emoji;
 			} else {
-				obj[key] ??= {};
-				return obj[key]; // TODO: see if you can just return {}
+				obj[key] = {};
+				return obj[key];
 			}
 		}, json);
 	}
