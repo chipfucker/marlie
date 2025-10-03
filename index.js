@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 import * as fs from "node:fs";
-import * as path from "node:path";
+import { posix as path } from "node:path";
 import secret from "./secret.json" with { type: "json" };
 
 const client = new Discord.Client({ intents: [Discord.GatewayIntentBits.Guilds] });

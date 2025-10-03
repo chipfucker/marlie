@@ -50,8 +50,7 @@ export async function execute(i) {
 				},
 				{
 					type: Discord.ComponentType.TextDisplay,
-					// TODO: replace bullet points with loading emoji(s)
-					content: "Loading \u2022\u2022\u2022"
+					content: "Loading..." // EMOJI: load
 				}
 			]
 		}]

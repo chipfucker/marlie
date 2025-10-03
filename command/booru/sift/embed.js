@@ -4,17 +4,26 @@ import emoji from "#util/emoji.json" with { type: "json" };
 
 export default {
 	create: (data, query, sort) => {
-		const value = {
-			"id": { type: CT.TextDisplay, content: `### ID: ${data.id}` },
-			"score": { type: CT.TextDisplay, content: `### Score: ${data.score}` },
-			"width": { type: CT.TextDisplay, content: `### Width: ${data.image.main.width}` },
-			"height": { type: CT.TextDisplay, content: `### Height: ${data.image.main.height}` },
-			"random": false
-		}[sort.val];
+		if (sort.val === "random") sort = false;
+		else {
+			sort.name = {
+				"id": "ID",
+				"score": "Score",
+				"width": "Width",
+				"height": "Height"
+			}[sort.val];
+			sort.num = {
+				"id": data.id,
+				"score": data.score,
+				"width": data.image.main.width,
+				"height": data.image.main.height
+			}[sort.val];
+		}
+
 		const message = { flags: Discord.MessageFlags.IsComponentsV2, components: [
 			{ type: CT.Container, components: [
 				{ type: CT.TextDisplay, content: `## \`${query}\` (${sort.val}:${sort.dir})` },
-				value,
+				sort && { type: CT.TextDisplay, content: `### ${sort.name}: ${sort.num}`},
 				{ type: CT.Separator,
 					spacing: Discord.SeparatorSpacingSize.Small,
 					divider: false
@@ -50,19 +59,19 @@ export default {
 				]}
 			].filter(e => e)},
 			{ type: CT.ActionRow, components: [
-				{ type: CT.Button,
+				sort && { type: CT.Button,
 					style: Discord.ButtonStyle.Secondary,
 					label: "Prev",
 					emoji: { name: "⬅️" },
-					custom_id: "booru/sift:nav?prev;0"
+					custom_id: "booru/sift:nav?prev"
 				},
 				{ type: CT.Button,
 					style: Discord.ButtonStyle.Secondary,
 					label: "Next",
 					emoji: { name: "➡️" },
-					custom_id: "booru/sift:nav?next;0"
+					custom_id: "booru/sift:nav?next"
 				}
-			]}
+			].filter(e => e)}
 		]};
 
 		return message;

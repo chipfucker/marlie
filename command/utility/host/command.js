@@ -20,7 +20,7 @@ export const data = {
 	}]
 };
 export async function execute(i) {
-	await i.reply({ content: "Fetching..." });
+	await i.reply({ content: "Fetching..." }); // EMOJI: load
 
 	const input = await i.options.getString("url");
 
@@ -33,17 +33,17 @@ export async function execute(i) {
 		return;
 	}
 	
-	await i.editReply({ content: "Buffering..." });
+	await i.editReply({ content: "Buffering..." }); // EMOJI: load
 	const arrayBuffer = await response.arrayBuffer();
 	const buffer = Buffer.from(arrayBuffer);
 	const stream = Readable.from(buffer);
 	const filename = pathname.includes(".") ? pathname : pathname ? `${pathname}.${response.headers.get("content-type").split("/").pop()}` : "file";
 
-	await i.editReply({ content: "Creating form..." });
+	await i.editReply({ content: "Creating form..." }); // EMOJI: load
 	const form = new FormData();
 	form.append("file", stream, filename);
 
-	await i.editReply({ content: "Uploading..." });
+	await i.editReply({ content: "Uploading..." }); // EMOJI: load
 	const post = await fetch("https://temp.sh/upload", {
 		method: "POST",
 		body: form,

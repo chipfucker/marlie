@@ -76,19 +76,19 @@ export async function execute(i) {
 				content: `## \`${query}\` (${sort.val}:${sort.dir})`
 			},
 			{ type: Discord.ComponentType.TextDisplay,
-				content: "Loading..."
+				content: "Loading..." // EMOJI: load
 			}
 		]}]
 	});
 
-	const resultQuery = `${query} sort:${sort.val}:${sort.dir}`;
-	const data = await rule34.post(resultQuery);
+	const dataQuery = `${query} sort:${sort.val}:${sort.dir}`;
+	const data = await rule34.post(dataQuery);
 	if (!data) {
 		await i.editReply({ components: [{
 			type: Discord.ComponentType.Container,
 			accent_color: 0xE9263D,
 			components: [{ type: Discord.ComponentType.TextDisplay,
-				content: `### No results for \`${resultQuery}\`!`
+				content: `### No results for \`${dataQuery}\`!`
 			}]
 		}]});
 		return;

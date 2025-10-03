@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import Sharp from "sharp";
 import * as fs from "node:fs";
-import * as path from "node:path";
+import { posix as path } from "node:path";
 import { setTimeout as wait } from "node:timers/promises";
 import * as tm from "#util/terminal.js";
 const { tag, sub } = tm.tags.refresh;

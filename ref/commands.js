@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 import * as fs from "node:fs";
-import * as path from "node:path";
+import { posix as path } from "node:path";
 import * as tm from "#util/terminal.js";
 const { tag, sub } = tm.tags.refresh;
 import secret from "../secret.json" with { type: "json" };
