@@ -4,21 +4,20 @@ import emoji from "#util/emoji.json" with { type: "json" };
 
 export default {
 	create: (data, query, sort) => {
-		if (sort.val === "random") sort = false;
-		else {
-			sort.name = {
-				"id": "ID",
-				"score": "Score",
-				"width": "Width",
-				"height": "Height"
-			}[sort.val];
-			sort.num = {
-				"id": data.id,
-				"score": data.score,
-				"width": data.image.main.width,
-				"height": data.image.main.height
-			}[sort.val];
-		}
+		sort = sort.val !== "random" && sort;
+
+		sort.name = {
+			"id": "ID",
+			"score": "Score",
+			"width": "Width",
+			"height": "Height"
+		}[sort.val];
+		sort.num = {
+			"id": data.id,
+			"score": data.score,
+			"width": data.image.main.width,
+			"height": data.image.main.height
+		}[sort.val];
 
 		const message = { flags: Discord.MessageFlags.IsComponentsV2, components: [
 			{ type: CT.Container, components: [
@@ -39,21 +38,25 @@ export default {
 					{ type: CT.Button,
 						style: Discord.ButtonStyle.Secondary,
 						label: "Save",
+						emoji: { name: "💼" }, // EMOJI: save
 						custom_id: `booru/sift:stock?save;${data.id}`
 					},
 					{ type: CT.Button,
 						style: Discord.ButtonStyle.Secondary,
 						label: "Pack",
+						emoji: { name: "📦" }, // EMOJI: pack
 						custom_id: `booru/sift:stock?pack;${data.id}`
 					},
 					{ type: CT.Button,
 						style: Discord.ButtonStyle.Secondary,
 						label: "Knit",
+						emoji: { name: "🪡" }, // EMOJI: knit
 						custom_id: `booru/sift:knit?${data.id}`
 					},
 					{ type: CT.Button,
 						style: Discord.ButtonStyle.Secondary,
 						label: "Inspect",
+						emoji: { name: "🧩" }, // EMOJI: inspect
 						custom_id: `booru/sift:info?${data.id}`
 					}
 				]}
@@ -62,13 +65,13 @@ export default {
 				sort && { type: CT.Button,
 					style: Discord.ButtonStyle.Secondary,
 					label: "Prev",
-					emoji: { name: "⬅️" },
+					emoji: { name: "⬅️" }, // EMOJI: left
 					custom_id: "booru/sift:nav?prev"
 				},
 				{ type: CT.Button,
 					style: Discord.ButtonStyle.Secondary,
 					label: "Next",
-					emoji: { name: "➡️" },
+					emoji: { name: "➡️" }, // EMOJI: right
 					custom_id: "booru/sift:nav?next"
 				}
 			].filter(e => e)}

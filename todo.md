@@ -18,8 +18,8 @@
 - [ ] periods continuously moving horizontally
 - [ ] suitcase (save)
 - [ ] package (pack)
-- [ ] magnifying goggles (hunt)
-- [ ] magnifying glass (inspect)
+- [ ] magnifying glass (hunt)
+- [ ] puzzle piece (inspect)
 - [ ] pickaxe (sift)
-- [ ] spool of thread (knit)
+- [ ] threaded needle (knit)
 - [ ] left and right arrows / chevrons
