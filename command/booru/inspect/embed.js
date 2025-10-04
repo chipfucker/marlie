@@ -80,7 +80,7 @@ export default {
 			for (const [name, tags] of Object.entries(data.tags.category)) {
 				if (tags.length) {
 					if (name === "General") message.components[0].components.push(
-						{ type: CT.TextDisplay, content: `### ${emoji.TC.h3[name]} ${name}` },
+						{ type: CT.TextDisplay, content: `### ${emoji.TC.h3[name]}` },
 						{ type: CT.ActionRow, components: [{
 							type: CT.Button,
 							style: Discord.ButtonStyle.Secondary,
@@ -91,7 +91,7 @@ export default {
 					
 					else message.components[0].components.push({
 						type: CT.TextDisplay,
-						content: `### ${emoji.TC.h3[name]} ${name}\n${ (() => {
+						content: `### ${emoji.TC.h3[name]}\n${ (() => {
 							if (name === "Other")
 								return tags.map(tag =>
 									`${tag.type}: \`${tag.name}\` (${tag.count})`
