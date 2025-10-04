@@ -1,12 +1,12 @@
 ## any time
 
+- commentate, especially in that god damned emoji refresh
 - convert some `if` statements using:
   - ternary operators `? :`
   - and operators `&&` and assignments `&&=`
   - or operators `||` and assignments `||=`
   - nullish opterators `??` and assignments `??=`
 - update ref/commands.js to match index.js
-- add support for multi-emoji cards 
 - work on pallete
 
 ## home
