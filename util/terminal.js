@@ -176,8 +176,8 @@ const tagsExport = {};
 
 for (const [name, value] of Object.entries(list))
 	tagsExport[name] = {
-		tag: escape(...value.style) + value.abbreviation + escape(),
-		sub: " ".repeat(value.abbreviation.length)
+		tag: escape(...value.style) + value.abbreviation                    + " \u250C" + escape(),
+		sub: escape(...value.style) + " ".repeat(value.abbreviation.length) + " \u2502" + escape()
 	};
 
 export const tags = tagsExport;

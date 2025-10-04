@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 import { rule34 } from "#util/api/index.js";
-import embed from "../../embed.js";
+import embed from "#command/booru/sift/embed.js";
 
 export async function ButtonInteraction(i, [nav]) {
 	await i.deferUpdate();

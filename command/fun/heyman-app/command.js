@@ -1,6 +1,7 @@
 import * as Discord from "discord.js";
 import * as fs from "node:fs";
 import { posix as path } from "node:path";
+import emoji from "#util/emoji.json" with { type: "json" };
 
 export const data = {
 	name: "heyman",

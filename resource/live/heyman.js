@@ -1,7 +1,9 @@
 ({
-	_flags: Discord.MessageFlags.IsComponentsV2,
-	content: "been doin nothin else lately",
+	flags: Discord.MessageFlags.IsComponentsV2,
+	content: "",
 	files: [],
 	embeds: [],
-	components: []
+	components: [{ type: Discord.ComponentType.Container, components: [
+		{ type: Discord.ComponentType.TextDisplay, content: "### " + emoji.TC.h3.ArtistTag }
+	]}]
 })
