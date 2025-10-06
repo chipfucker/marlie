@@ -1,5 +1,4 @@
 import * as Discord from "discord.js";
-import { rule34 } from "#util/api/index.js";
 import secret from "#root/secret.json" with { type: "json" };
 
 export async function ButtonInteraction(i, [stash, id]) {
