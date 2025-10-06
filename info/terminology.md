@@ -41,22 +41,40 @@ garden, such as [this repository's `basket` folder.](../basket/)
 A *farm* is a place that is universally used to throw and catch, such as a
 Discord channel.
 
-## Stock
+## Stash
 
-<!-- TODO: rename stock to something more unique
-https://www.wordhippo.com/what-is/another-word-for/storage.html -->
+The *Stash* is the place to find storage of everything saved and collected.
 
-*Stock* refers to activity revolving posts, such as [saving](#save) or
-[packing.](#pack)
-
-<!-- TODO: verify names of actions -->
+*Stashing* also refers to activity revolving posts and sources, such as
+[saving](#save) or [packing.](#pack)
 
 ### Save
 
+A *save* is a source or file to be saved to the stash.
+
+To *save* is to store a source as a save.
+
 ### Pack
+
+A *pack* is a source or file to be inspected for artists or other associable
+items.
+
+To *pack* is to store a source as a pack.
 
 ### Hunt
 
+A *hunt* is a file to be reverse-searched for an originating source or artist.
+
+To *hunt* is to store an image as a hunt.
+
 ### Hold
 
+A *hold* is a file saved to be viewed later because of some restriction, like
+embedding or networks.
+
 ### Tour
+
+A *tour* is a source or collection of sources to be browsed for possible saves
+or packs.
+
+To *tour* is to store a source or collection of sources as a tour.

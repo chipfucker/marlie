@@ -11,6 +11,7 @@
 
 ## home
 
+- update secret.json so that keys under secret.discord.user are labeled and not named
 - update refresh/commands.js to match index.js
 
 ### testing

@@ -8,7 +8,7 @@ export async function ButtonInteraction(i, [nav]) {
 	const sort = {
 		val: i.message.components[0].components[0].content.replace(/## `.+` \((?:(.+):.+|(.+))\)/, "$1$2"),
 		dir: i.message.components[0].components[0].content.replace(/## `.+` \((?:.+:(.+)|.+)\)/, "$1"),
-		num: i.message.components[0].components[1].content?.replace(/### .+: (.+)/, "$1")
+		num: i.message.components[0].components[2].content?.replace(/### .+: (.+)/, "$1")
 	};
 	
 	const dataQuery = sort.val === "random"

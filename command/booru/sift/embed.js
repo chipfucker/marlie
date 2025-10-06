@@ -4,16 +4,14 @@ import emoji from "#util/emoji.json" with { type: "json" };
 
 export default {
 	create: (data, query, sort) => {
-		sort = sort.val !== "random" && sort;
+		sort = sort.val !== "random" && sort.val !== "id" && sort;
 
 		sort.name = {
-			"id": "ID",
 			"score": "Score",
 			"width": "Width",
 			"height": "Height"
 		}[sort.val];
 		sort.num = {
-			"id": data.id,
 			"score": data.score,
 			"width": data.image.main.width,
 			"height": data.image.main.height
@@ -22,7 +20,8 @@ export default {
 		const message = { flags: Discord.MessageFlags.IsComponentsV2, components: [
 			{ type: CT.Container, components: [
 				{ type: CT.TextDisplay, content: `## \`${query}\` (${sort.val}:${sort.dir})` },
-				sort && { type: CT.TextDisplay, content: `### ${sort.name}: ${sort.num}`},
+				{ type: CT.TextDisplay, content: `### ${data.id}` },
+				sort && { type: CT.TextDisplay, content: `### ${sort.name}: ${sort.num}` },
 				{ type: CT.Separator,
 					spacing: Discord.SeparatorSpacingSize.Small,
 					divider: false
@@ -39,13 +38,13 @@ export default {
 						style: Discord.ButtonStyle.Secondary,
 						label: "Save",
 						emoji: { name: "💼" }, // EMOJI: save
-						custom_id: `booru/sift:stock?save;${data.id}`
+						custom_id: `booru/sift:stash?save;${data.id}`
 					},
 					{ type: CT.Button,
 						style: Discord.ButtonStyle.Secondary,
 						label: "Pack",
 						emoji: { name: "📦" }, // EMOJI: pack
-						custom_id: `booru/sift:stock?pack;${data.id}`
+						custom_id: `booru/sift:stash?pack;${data.id}`
 					},
 					{ type: CT.Button,
 						style: Discord.ButtonStyle.Secondary,
@@ -78,5 +77,14 @@ export default {
 		]};
 
 		return message;
-	}
+	},
+	getQuery: (message) =>
+		message.components[0].components[0].content.replace(),
+	getId: (message) =>
+		message.components[0].components[1].content?.replace(/### (\d+)/, "$1"),
+	getSort: (message) => ({
+		val: message.components[0].components[0].content.replace(),
+		dir: message.components[0].components[0].content.replace(),
+		num: message.components[0].components[2].content?.replace()
+	})
 };
