@@ -1,15 +1,17 @@
 ## any time
 
 - commentate, especially in that god damned emoji refresh
+- rename variables with a more fluid vocabulary
 - convert some `if` statements using:
   - ternary operators `? :`
   - and operators `&&` and assignments `&&=`
   - or operators `||` and assignments `||=`
   - nullish opterators `??` and assignments `??=`
-- update refresh/commands.js to match index.js
 - work on pallete
 
 ## home
+
+- update refresh/commands.js to match index.js
 
 ### testing
 

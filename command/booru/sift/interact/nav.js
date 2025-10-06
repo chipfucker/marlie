@@ -30,4 +30,4 @@ export async function ButtonInteraction(i, [nav]) {
 
 	const message = embed.create(data, query, sort);
 	await i.editReply(message);
-}
+};
