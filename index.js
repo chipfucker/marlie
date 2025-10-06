@@ -3,7 +3,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import secret from "./secret.json" with { type: "json" };
 
-const client = new Discord.Client({ intents: [ Discord.GatewayIntentBits.Guilds ] });
+const client = new Discord.Client({ intents: [ Discord.GatewayIntentBits.Guilds ]});
 
 client.commands = new Discord.Collection();
 const foldersPath = path.resolve("command");

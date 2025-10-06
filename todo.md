@@ -6,18 +6,15 @@
   - and operators `&&` and assignments `&&=`
   - or operators `||` and assignments `||=`
   - nullish opterators `??` and assignments `??=`
-- update ref/commands.js to match index.js
+- update refresh/commands.js to match index.js
 - work on pallete
 
 ## home
 
 ### testing
 
-- see if refreshing emoji cards works
-
 ## emoji
 
-- row of emojis that display stylized text for each tag type
 - periods continuously moving horizontally
 - suitcase (save)
 - package (pack)
