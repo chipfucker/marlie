@@ -6,7 +6,7 @@
   - ternary operators `? :`
   - and operators `&&` and assignments `&&=`
   - or operators `||` and assignments `||=`
-  - nullish opterators `??` and assignments `??=`
+  - nullish operators `??` and assignments `??=`
 - work on pallete
 
 ## home
