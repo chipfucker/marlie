@@ -32,33 +32,33 @@ import secret from "./secrets.json" with { type: "json" };
 		"clientId": snowflake,
 		"guildId": snowflake,
 		"channel": {
-		    "marlie_testing": { "id": snowflake },
-		    "marlie_announcements": { "id": snowflake },
-		    "marlie": { "id": snowflake },
-		    "marlie_nsfw": { "id": snowflake },
-		    "knit": {
-		        "id": snowflake,
-		        "tags": {
-		            "Artist": snowflake,
-		            "Character": snowflake,
-		            "General": snowflake,
-		            "Goated": snowflake,
-		            "Bad": snowflake,
-		            "Exhausting": snowflake,
-		            "Sampling": snowflake,
-		            "TEST": snoaflake
-		        }
-		    },
-		    "hunting": {
-		        "id": snowflake,
-		        "tags": {
-		            "Found": snowflake,
-		            "Hunting": snowflake,
-		            "Lost": snowflake,
-		            "Marlie": snowflake,
-		            "Lawliet": snowflake
-		        }
-		    },
+			"marlie_testing": { "id": snowflake },
+			"marlie_announcements": { "id": snowflake },
+			"marlie": { "id": snowflake },
+			"marlie_nsfw": { "id": snowflake },
+			"knit": {
+				"id": snowflake,
+				"tags": {
+					"Artist": snowflake,
+					"Character": snowflake,
+					"General": snowflake,
+					"Goated": snowflake,
+					"Bad": snowflake,
+					"Exhausting": snowflake,
+					"Sampling": snowflake,
+					"TEST": snoaflake
+				}
+			},
+			"hunting": {
+				"id": snowflake,
+				"tags": {
+					"Found": snowflake,
+					"Hunting": snowflake,
+					"Lost": snowflake,
+					"Marlie": snowflake,
+					"Lawliet": snowflake
+				}
+			},
 			"saves": { "id": snowflake },
 			"packs": { "id": snowflake },
 			"hunts": { "id": snowflake },
