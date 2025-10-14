@@ -1,34 +1,69 @@
 # Secret file structure
 
-`secret.json` is the root-level file used to store secure info such as account
+`secrets.json` is the root-level file used to store secure info such as account
 tokens, cookie values, API keys, or server/channel IDs.
 
 ## Importing
 
 ```js
-import secret from "#root/secret.json" with { type: "json" };
+import secret from "#root/secrets.json" with { type: "json" };
 ```
 
 It can also be imported with a relative or root path.
 
 ```js
-import secret from "./secret.json" with { type: "json" };
-// Assuming this file is adjacent to `secret.json`
+import secret from "./secrets.json" with { type: "json" };
+// Assuming this file is adjacent to `secrets.json`
 ```
 
 ## Structure
 
 ```json
 {
+	"user": {
+		"main": snowflake,
+		"nsfw": snowflake,
+		"roleplay": snowflake,
+		"old": snowflake
+	},
+    "UserAgent": string,
 	"discord": {
 		"token": string,
+		"clientId": snowflake,
 		"guildId": snowflake,
 		"channel": {
-			"save": { "id": snowflake },
-			"pack": { "id": snowflake }
-		},
-		"user": {
-			"main": snowflake
+		    "marlie_testing": { "id": snowflake },
+		    "marlie_announcements": { "id": snowflake },
+		    "marlie": { "id": snowflake },
+		    "marlie_nsfw": { "id": snowflake },
+		    "knit": {
+		        "id": snowflake,
+		        "tags": {
+		            "Artist": snowflake,
+		            "Character": snowflake,
+		            "General": snowflake,
+		            "Goated": snowflake,
+		            "Bad": snowflake,
+		            "Exhausting": snowflake,
+		            "Sampling": snowflake,
+		            "TEST": snoaflake
+		        }
+		    },
+		    "hunting": {
+		        "id": snowflake,
+		        "tags": {
+		            "Found": snowflake,
+		            "Hunting": snowflake,
+		            "Lost": snowflake,
+		            "Marlie": snowflake,
+		            "Lawliet": snowflake
+		        }
+		    },
+			"saves": { "id": snowflake },
+			"packs": { "id": snowflake },
+			"hunts": { "id": snowflake },
+			"holds": { "id": snowflake },
+			"tours": { "id": snowflake }
 		}
 	},
 	"rule34": {
