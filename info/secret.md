@@ -68,7 +68,8 @@ import secret from "./secrets.json" with { type: "json" };
 	},
 	"rule34": {
 		"api_key": string,
-		"user_id": string
+		"user_id": string,
+		"pass_hash": string
 	}
 }
 ```
