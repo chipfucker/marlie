@@ -1,0 +1,5 @@
+class GlobooruError {
+	constructor(param) {
+
+	}
+}
