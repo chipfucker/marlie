@@ -1,6 +1,48 @@
 import secret from "../../secret.json" with { type: "json" };
 import { DOMParser } from "xmldom";
 
+const Rule34 = {
+	async fetch(input, options) {
+		const id = Number(input);
+		if (id === NaN) {
+			throw new Error([
+				"Rule34.fetch: input could not be coerced into an ID number.",
+				"If you're attempting to fetch posts with a search query, try 'Rule34.search()':"
+			].join("\n"));
+		}
+
+		if (options.vanilla) {
+
+		}
+	},
+	async search(input, options) {
+
+	}
+};
+
+class Post {
+	constructor(input) {
+
+		Object.assign(this, {
+			property: "value"
+		});
+	}
+}
+
+class Rule34 {
+	constructor(input) {
+		
+	}
+
+	get children() {
+
+	}
+
+	static fetch(input) {
+		return new Rule34(input);
+	}
+}
+
 /**
  * @typedef {Object} AutocompleteSuggestion
  * @property {string} tag The full suggested tag.
