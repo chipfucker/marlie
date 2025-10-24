@@ -363,7 +363,7 @@ const formatData = {
 					hash: api.json[index].hash,
 					extension: api.json[index].image.split(".").pop()
 				},
-				id: api.json[0].id,
+				id: api.json[index].id,
 				created: dateObject(new Date(api.xml.post[index].getAttribute("created_at"))),
 				updated: dateObject(new Date(api.json[index].change * 1000)),
 				creator: {
