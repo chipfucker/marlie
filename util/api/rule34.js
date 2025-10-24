@@ -29,20 +29,6 @@ class Post {
 	}
 }
 
-class Rule34 {
-	constructor(input) {
-		
-	}
-
-	get children() {
-
-	}
-
-	static fetch(input) {
-		return new Rule34(input);
-	}
-}
-
 /**
  * @typedef {Object} AutocompleteSuggestion
  * @property {string} tag The full suggested tag.
