@@ -1,1 +1,0 @@
-export * as rule34 from "./rule34.js";
