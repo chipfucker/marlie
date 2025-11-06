@@ -1,0 +1,8 @@
+{
+    "type": "module",
+    "imports": {
+        "#/*": "./*",
+        "#util/": "./util/*",
+        "#cmd/*": "./cmd/*"
+    }
+}
