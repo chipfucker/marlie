@@ -28,9 +28,9 @@ intellectual.
 
     - **Should I credit? Who?**
 
-      Wherever you choose to credit, I'm @chiptumor on Discord, You can also link to
-      this repo, [chipfucker/marlie], or my GitHub profile, [github.com/chiptumor] (or
-      [github.com/chipfucker] if you'd prefer to link to my unsavory org).
+      Wherever you choose to credit, I'm @chiptumor on Discord. You can also link to
+      this repo, [chipfucker/marlie], my GitHub profile, [github.com/chiptumor], or
+      [github.com/chipfucker] if you'd prefer to link to my unsavory org.
 
       If you're running this bot simply using the source code, no credits are needed;
       if anyone asks, I'd prefer you not gatekeep and at least say 'oh, this
