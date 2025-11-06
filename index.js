@@ -46,3 +46,5 @@ async function getImport(dir, file) {
     // TODO: adjust url until as simple as possible
     return await import(url);
 }
+
+client.login(secret.discord.token)
