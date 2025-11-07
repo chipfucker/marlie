@@ -8,8 +8,9 @@ export async function execute(i) {
     try { switch (true) {
         case i.isChatInputCommand():
         case i.isMessageContextMenu(): {
-            const command = i.client.commands.get(i.commandName);
-            await command.interaction(i);
+            const name = i.client.aliases.get(i.commandName);
+            const command = i.client.commands.get(name);
+            await command[i.constructor.name](i);
         } break;
 
         case i.isAutocomplete(): {

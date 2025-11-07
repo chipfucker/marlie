@@ -7,6 +7,7 @@
         "secret.json": "key"
     },
     "material-icon-theme.folders.associations": {
-        "cmd": "plugin"
+        "cmd": "plugin",
+        "refresh": "generator"
     }
 }

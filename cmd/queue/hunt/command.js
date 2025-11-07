@@ -1,18 +1,17 @@
 import * as Discord from "discord.js";
-import { channel as secret } from "#/secret.js";
+import { channel as secret } from "#/secret.js"
 
 export const data = {
     ready: false,
-    name: "queue-hunt-m",
-    type: Discord.ApplicationCommandType.Message,
-    integration_types: [ Discord.ApplicationIntegrationType.UserInstall ],
-    contexts: [
-        Discord.InteractionContextType.Guild,
-        Discord.InteractionContextType.PrivateChannel
-    ]
+    name: "qhunt",
+    abbr: "qh",
+    alias: {
+        ChatInput: "queue-hunt",
+        Message: "Queue in #hunts"
+    }
 };
 
-export async function interaction(i) {
+export async function MessageContextMenuCommandInteraction(i) {
     const defer = i.deferReply({ flags: [
         Discord.MessageFlags.Ephemeral,
         Discord.MessageFlags.IsComponentsV2,

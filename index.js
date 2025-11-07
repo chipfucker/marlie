@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import * as fs from "node:fs";
 import * as nodePath from "node:path";
-import * as secret from "#/secret.js";
+import { bot as secret } from "#/secret.js";
 
 const client = new Discord.Client({ intents: [
     Discord.GatewayIntentBits.Guilds,
@@ -9,7 +9,7 @@ const client = new Discord.Client({ intents: [
 ]});
 
 client.commands = new Discord.Collection();
-client.commands.alias = new Discord.Collection();
+client.aliases = new Discord.Collection();
 
 const cmdPath = nodePath.resolve("cmd");
 const cmdFiles = fs.readdirSync(cmdPath, { recursive: true })
@@ -22,9 +22,11 @@ const cmdFiles = fs.readdirSync(cmdPath, { recursive: true })
 
         if (command.data?.ready) {
             client.commands.set(command.data.name, command);
-            if (command.data.alias) for (const alias of command.data.alias) {
-                client.commands.alias.set(alias, command.data.name);
+            for (const alias of Object.values(command.data.alias)) {
+                client.aliases.set(alias, command.data.name);
             }
+            if (command.data.abbr)
+                client.aliases.set(command.data.abbr, command.data.name);
         }
     }
 })();
@@ -50,4 +52,4 @@ async function getImport(dir, file) {
     return await import(url);
 }
 
-client.login(secret.bot.token);
+client.login(secret.token);
