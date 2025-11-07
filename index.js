@@ -9,7 +9,7 @@ const client = new Discord.Client({ intents: [
 ]});
 
 client.commands = new Discord.Collection();
-client.commands.abbr = new Discord.Collection();
+client.commands.alias = new Discord.Collection();
 
 const cmdPath = nodePath.resolve("cmd");
 const cmdFiles = fs.readdirSync(cmdPath, { recursive: true })
@@ -19,10 +19,10 @@ const cmdFiles = fs.readdirSync(cmdPath, { recursive: true })
 (async () => {
     for (const file of cmdFiles) {
         const command = await getImport(cmdPath, file);
-        if (command.data?.name) {
+        if (command.data?.ready) {
             client.commands.set(command.data.name, command);
-            if (command.data?.attr) {
-                client.commands.abbr.set(command.data.abbr, command.data.name);
+            for (const alias of command.data.alias) {
+                client.commands.alias.set(alias, command.data.name);
             }
         }
     }

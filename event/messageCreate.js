@@ -4,11 +4,11 @@ import * as com from "#util/com/error.js";
 export const name = Discord.Events.MessageCreate;
 export async function execute(m) {
     try {
-        const [_, abbr, args] = m.content.match(/^\$(\S+)\s*(.*)/);
-        if (!abbr) return;
+        const [_, cmd, args] = m.content.match(/^\$(\S+)\s*(.*)/);
+        if (!cmd) return;
 
-        const command = m.client.commands.get(abbr)
-            ?? m.client.commands.get(m.client.commands.abbr.get(abbr));
+        const command = m.client.commands.get(cmd)
+            ?? m.client.commands.get(m.client.commands.alias.get(cmd));
         if (!command) return;
         
         console.log(`${m.author.username} used ${command.data.name} (Message)`);
