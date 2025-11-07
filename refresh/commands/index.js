@@ -35,7 +35,7 @@ const rest = new Discord.REST().setToken(secret.token);
     await Promise.all([
         rest.put(Discord.Routes.applicationCommands(secret.clientId), { body: []})
             .then(() => console.log("Deleted app commands")).catch(console.error),
-        rest.put(Discord.Routes.applicationGuildCommands(secret.clientId), { body: []})
+        rest.put(Discord.Routes.applicationGuildCommands(secret.clientId, secret.guildId), { body: []})
             .then(() => console.log("Deleted guild commands")).catch(console.error)
     ]);
     await rest.put(Discord.Routes.applicationCommands(secret.clientId), { body: commands })

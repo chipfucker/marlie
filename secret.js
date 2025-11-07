@@ -1,4 +1,4 @@
-import secret from "#/secret.json" with { type: "json" };
+import secret from "#root/secret.json" with { type: "json" };
 
 export const userAgent = secret.UserAgent;
 
