@@ -22,12 +22,12 @@ export const channel = {
         tag: {
             test: String(secret.discord.channel.knit_tags.TEST),
             sampling: String(secret.discord.channel.knit_tags.Sampling),
-            goated: String(secret.discord.channel.knit_tags.Goated),
-            bad: String(secret.discord.channel.knit_tags.Bad),
+            tour: String(secret.discord.channel.knit_tags.Tour),
             exhausted: String(secret.discord.channel.knit_tags.Exhausted),
-            artist: String(secret.discord.channel.knit_tags.Artist),
-            character: String(secret.discord.channel.knit_tags.Character),
-            general: String(secret.discord.channel.knit_tags.General)
+            goated: String(secret.discord.channel.knit_tags.Goated),
+            mediocre: String(secret.discord.channel.knit_tags.Mediocre),
+            bad: String(secret.discord.channel.knit_tags.Bad),
+            withGoodTags: String(secret.discord.channel.knit_tags["...with good tags"]),
         }
     },
     hunting: {
@@ -35,8 +35,7 @@ export const channel = {
         tag: {
             found: String(secret.discord.channel.hunt_forum_tags.Found),
             hunting: String(secret.discord.channel.hunt_forum_tags.Hunting),
-            lost: String(secret.discord.channel.hunt_forum_tags.Lost),
-            marlie: String(secret.discord.channel.hunt_forum_tags.Marlie)
+            lost: String(secret.discord.channel.hunt_forum_tags.Lost)
         }
     },
     save: { id: String(secret.discord.channel.save) },
@@ -49,10 +48,5 @@ export const channel = {
 export const rule34 = {
     api_key: secret.rule34.api_key,
     user_id: String(secret.rule34.user_id),
-    // TODO: check if pass_hash has an underscore
     pass_hash: secret.rule34.pass_hash
 };
-
-const full = Object.assign({ user, channel }, bot);
-
-export default full;
