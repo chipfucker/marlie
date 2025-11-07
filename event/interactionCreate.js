@@ -22,7 +22,7 @@ export async function execute(i) {
         } break;
 
         case i.isButton():
-        case i.isModalSubmit: {
+        case i.isModalSubmit(): {
             const [_, id, param, args] = i.customId.match(/(.+?):([^\?]+)\??(.*)/);
             // command:function?params;params
             const command = i.client.commands.get(id);
