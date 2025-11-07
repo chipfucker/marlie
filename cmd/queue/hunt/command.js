@@ -21,7 +21,8 @@ export async function MessageContextMenuCommandInteraction(i) {
     const files = [];
 
     const urls = {
-        attachments: i.targetMessage.attachments.values().map(item => item.url),
+        attachments: i.targetMessage.attachments.values()
+            .map(item => item.url),
         stickers: i.targetMessage.stickers.values()
             .filter(item => item.format !== Discord.StickerFormatType.Lottie)
             .map(item => item.url)
