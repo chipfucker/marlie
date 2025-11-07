@@ -40,15 +40,19 @@ export async function MessageContextMenuCommandInteraction(i) {
     }
 
     const channel = await i.client.channels.fetch(secret.hunt.id);
-    const messages = [];
-    for (const index in Array(Math.ceil(files.length / 10))) {
-        messages.push(channel.send({ files: files.slice(index, index + 10) }));
-    }
+    await execute(channel, files);
 
-    await Promise.all(messages);
     await i.editReply({ components: [
         { type: Discord.ComponentType.TextDisplay,
             content: `Sent ${files.length} file${files.length === 1 ? "" : "s"} to ${channel.url}!`
         }
     ]});
+}
+
+async function execute(channel, files) {
+    const messages = [];
+    for (const index in Array(Math.ceil(files.length / 10))) {
+        messages.push(channel.send({ files: files.slice(index, index + 10) }));
+    }
+    await Promise.all(messages);
 }
