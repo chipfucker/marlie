@@ -47,4 +47,4 @@ async function getImport(dir, file) {
     return await import(url);
 }
 
-client.login(secret.discord.token)
+client.login(secret.bot.token);
