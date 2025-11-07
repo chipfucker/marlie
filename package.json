@@ -4,5 +4,8 @@
         "#/*": "./*",
         "#util/": "./util/*",
         "#cmd/*": "./cmd/*"
+    },
+    "dependencies": {
+        "discord.js": "^14.24.2"
     }
 }
