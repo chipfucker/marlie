@@ -19,6 +19,7 @@ const cmdFiles = fs.readdirSync(cmdPath, { recursive: true })
 (async () => {
     for (const file of cmdFiles) {
         const command = await getImport(cmdPath, file);
+
         if (command.data?.ready) {
             client.commands.set(command.data.name, command);
             if (command.data.alias) for (const alias of command.data.alias) {
