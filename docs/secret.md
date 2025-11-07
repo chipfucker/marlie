@@ -41,7 +41,7 @@ things.
 			"pack": <Snowflake>, // channel for queueing links to look into
 			"hunt": <Snowflake>, // channel for queueing images to find the source of
 			"tour": <Snowflake>, // channel to send links with many source possibilities
-			"hold": <Snowflake>  // channel to send items to watch later
+			"bide": <Snowflake>  // channel to send items to watch later
 		}
 	},
 	"rule34": {
