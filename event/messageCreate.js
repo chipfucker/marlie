@@ -7,9 +7,9 @@ export async function execute(m) {
         const [_, cmd, args] = m.content.match(/^\$(\S+)\s*(.*)/);
         if (!cmd) return;
 
-        const command = m.client.commands.get(cmd)
-            ?? m.client.commands.get(m.client.commands.alias.get(cmd));
-        if (!command) return;
+        const alias = m.client.aliases.get(cmd);
+        if (!alias) return;
+        const command = m.client.commands.get(alias);
         
         console.log(`${m.author.username} used ${command.data.name} (Message)`);
 

@@ -27,6 +27,8 @@ const cmdFiles = fs.readdirSync(cmdPath, { recursive: true })
     }
 })();
 
+console.debug(commands);
+
 const rest = new Discord.REST().setToken(secret.token);
 
 (async () => {

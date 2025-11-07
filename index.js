@@ -25,11 +25,14 @@ const cmdFiles = fs.readdirSync(cmdPath, { recursive: true })
             for (const alias of Object.values(command.data.alias)) {
                 client.aliases.set(alias, command.data.name);
             }
-            if (command.data.abbr)
+            if (command.data.abbr) {
                 client.aliases.set(command.data.abbr, command.data.name);
+            }
         }
     }
 })();
+
+console.debug(client.aliases);
 
 const eventPath = nodePath.resolve("event");
 const eventFiles = fs.readdirSync(eventPath, { recursive: true })
