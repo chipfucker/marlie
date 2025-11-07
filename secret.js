@@ -42,7 +42,7 @@ export const channel = {
     pack: { id: String(secret.discord.channel.pack) },
     hunt: { id: String(secret.discord.channel.hunt) },
     tour: { id: String(secret.discord.channel.tour) },
-    hold: { id: String(secret.discord.channel.hold) }
+    bide: { id: String(secret.discord.channel.bide) }
 };
 
 export const rule34 = {
