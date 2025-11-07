@@ -13,7 +13,8 @@ export async function execute(m) {
         
         console.log(`${m.author.username} used ${command.data.name} (Message)`);
 
-        await command.message(args);
+        const splitArgs = args.split(/\s+/);
+        await command.message(m, ...splitArgs);
     } catch (error) {
         console.error(error);
         await m.author.send(com.error(error));
