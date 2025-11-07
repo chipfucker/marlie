@@ -1,4 +1,5 @@
 import * as Discord from "discord.js";
+import * as com from "#util/com/error.js";
 
 export const name = Discord.Events.MessageCreate;
 export async function execute(m) {
@@ -15,21 +16,6 @@ export async function execute(m) {
         await command.message(args);
     } catch (error) {
         console.error(error);
-        await i.user.send({
-            flags: Discord.MessageFlags.IsComponentsV2,
-            components: [{ type: Discord.ComponentType.Container,
-                accentColor: 0xec1342,
-                components: [
-                    { type: Discord.ComponentType.TextDisplay,
-                        content: `# ${error.name}`
-                    },
-                    { type: Discord.ComponentType.TextDisplay,
-                        content: `\`\`\`\n${
-                            error.name}: ${error.message}\n\n${error.stack
-                        }\n\`\`\``
-                    }
-                ]
-            }]
-        });
+        await m.author.send(com.error(error));
     }
 }

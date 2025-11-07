@@ -1,4 +1,5 @@
 import * as Discord from "discord.js";
+import * as com from "#util/com/error.js";
 
 export const name = Discord.Events.InteractionCreate;
 export async function execute(i) {
@@ -31,21 +32,6 @@ export async function execute(i) {
         default: throw new Error(`This interaction type (${i.constructor.name}) is not supported yet.`);
     }} catch (error) {
         console.error(error);
-        await i.user.send({
-            flags: Discord.MessageFlags.IsComponentsV2,
-            components: [{ type: Discord.ComponentType.Container,
-                accentColor: 0xec1342,
-                components: [
-                    { type: Discord.ComponentType.TextDisplay,
-                        content: `# ${error.name}`
-                    },
-                    { type: Discord.ComponentType.TextDisplay,
-                        content: `\`\`\`\n${
-                            error.name}: ${error.message}\n\n${error.stack
-                        }\n\`\`\``
-                    }
-                ]
-            }]
-        });
+        await i.user.send(com.error(error));
     }
 }
