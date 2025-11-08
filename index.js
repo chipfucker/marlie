@@ -5,6 +5,7 @@ import { bot as secret } from "#root/secret.js";
 
 const client = new Discord.Client({ intents: [
     Discord.GatewayIntentBits.Guilds,
+    Discord.GatewayIntentBits.GuildMessages,
     Discord.GatewayIntentBits.MessageContent
 ]});
 
@@ -20,10 +21,10 @@ const cmdFiles = fs.readdirSync(cmdPath, { recursive: true })
     for (const file of cmdFiles) {
         const command = await getImport(cmdPath, file);
 
-        if (command.data?.ready) {
+        if (command.data) {
             client.commands.set(command.data.name, command);
-            for (const alias of Object.values(command.data.alias)) {
-                client.aliases.set(alias, command.data.name);
+            for (const alias of Object.values(command.data.types)) {
+                client.aliases.set(alias.name, command.data.name);
             }
             if (command.data.abbr) {
                 client.aliases.set(command.data.abbr, command.data.name);
@@ -31,8 +32,6 @@ const cmdFiles = fs.readdirSync(cmdPath, { recursive: true })
         }
     }
 })();
-
-console.debug(client.aliases);
 
 const eventPath = nodePath.resolve("event");
 const eventFiles = fs.readdirSync(eventPath, { recursive: true })

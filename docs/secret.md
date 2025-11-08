@@ -51,6 +51,3 @@ things.
 	}
 }
 ```
-
-Snowflake vales are automatically coerced into strings, so they can be written
-with or without quotes, i.e. as strings or numbers.

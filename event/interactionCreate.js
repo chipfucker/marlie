@@ -7,7 +7,7 @@ export async function execute(i) {
 
     try { switch (true) {
         case i.isChatInputCommand():
-        case i.isMessageContextMenu(): {
+        case i.isMessageContextMenuCommand(): {
             const name = i.client.aliases.get(i.commandName);
             const command = i.client.commands.get(name);
             await command[i.constructor.name](i);
@@ -27,7 +27,7 @@ export async function execute(i) {
             const [_, id, param, args] = i.customId.match(/(.+?):([^\?]+)\??(.*)/);
             // command:function?params;params
             const command = i.client.commands.get(id);
-            await command[param][i.constructor.name](i, args);
+            await command[i.constructor.name][param](i, args);
         } break;
 
         default: throw new Error(`This interaction type (${i.constructor.name}) is not supported yet.`);

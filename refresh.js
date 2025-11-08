@@ -13,29 +13,26 @@ const cmdFiles = fs.readdirSync(cmdPath, { recursive: true })
         const path = nodePath.join(cmdPath, file);
         const url = new URL(`file://${path}`).href;
         const command = await import(url);
-        for (const [type, alias] of Object.entries(command.data.alias)) {
-            commands.push({
-                name: alias,
-                type: Discord.ApplicationCommandType[type],
-                integration_types: [ Discord.ApplicationIntegrationType.UserInstall ],
-                contexts: [
-                    Discord.InteractionContextType.Guild,
-                    Discord.InteractionContextType.PrivateChannel
-                ]
-            });
+        for (const [type, data] of Object.entries(command.data.types)) {
+            data.type = Discord.ApplicationCommandType[type];
+            data.integration_types = [ Discord.ApplicationIntegrationType.UserInstall ];
+            data.contexts = [
+                Discord.InteractionContextType.Guild,
+                Discord.InteractionContextType.PrivateChannel
+            ];
+
+            commands.push(data);
         }
     }
 })();
-
-console.debug(commands);
 
 const rest = new Discord.REST().setToken(secret.token);
 
 (async () => {
     await Promise.all([
-        rest.put(Discord.Routes.applicationCommands(secret.clientId), { body: []})
+        rest.put(Discord.Routes.applicationCommands(secret.clientId), { body: [] })
             .then(() => console.log("Deleted app commands")).catch(console.error),
-        rest.put(Discord.Routes.applicationGuildCommands(secret.clientId, secret.guildId), { body: []})
+        rest.put(Discord.Routes.applicationGuildCommands(secret.clientId, secret.guildId), { body: [] })
             .then(() => console.log("Deleted guild commands")).catch(console.error)
     ]);
     await rest.put(Discord.Routes.applicationCommands(secret.clientId), { body: commands })
