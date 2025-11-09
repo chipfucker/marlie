@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import { channel as secret } from "#root/secret.js"
+import { channel as secret } from "#root/secret.js";
 
 export const data = {
     name: "qhunt",
@@ -7,7 +7,7 @@ export const data = {
     types: {
         ChatInput: {
             name: "queue-hunt",
-            description: "Send to #hunts",
+            description: `Send to #${secret.hunt.emoji}-hunts`,
             options: [{
                 name: "urls",
                 description: "Image URLs to send (separated by spaces)",
@@ -16,7 +16,7 @@ export const data = {
             }]
         },
         Message: {
-            name: "Queue in #hunts"
+            name: `${secret.hunt.emoji} Queue hunt`
         }
     }
 };
@@ -43,7 +43,7 @@ export async function ChatInputCommandInteraction(i) {
     await execute(channel, files);
 
     await defer.then(() => i.editReply({
-        content: `Sent ${files.length} file${files.length === 1 ? "" : "s"} to ${channel.url}!`
+        content: `Sent ${files.length} file${files.length===1?"":"s"} to ${channel.url}!`
     }));
 }
 

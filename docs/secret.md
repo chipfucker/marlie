@@ -16,32 +16,76 @@ things.
             "main": <Snowflake> // main user
         },
         "channel": {
-            "testing": <Snowflake>,       // channel for bot testing
-            "announcements": <Snowflake>, // channel to send marlie announcements in
-			"main": <Snowflake>,          // channel for main commands
-			"nsfw": <Snowflake>,          // channel for NSFW commands
-			"knit": <Snowflake>,          // forum channel for search threads
-			"knit_tags": {
-				"TEST": <Snowflake>,      // label forums for bot testing
-				"Sampling": <Snowflake>,  // label forums used to test a search's waters
-				"Tour": <Snowflake>,      // label searches used to find other tags or sources
-				"Exhausted": <Snowflake>, // label forums that have yielded all of their search results
-				"Goated": <Snowflake>,    // label goated searches
-				"Mediocre": <Snowflake>,  // label searches that only sometimes yield good results
-				"Bad": <Snowflake>,       // label searches that aren't worth continuing
-				"...with good tags": <Snowflake> // clarify a search is only as good with certain tags
+			// channel for bot testing
+			"testing": {
+				"id": <Snowflake>,
+				"emoji": <String>
 			},
-			"hunt_forum": <Snowflake>, // forum channel for hunting image sources
-			"hunt_forum_tags": {
-				"Hunting": <Snowflake>, // label hunts in progress
-				"Found": <Snowflake>,   // label successful hunts
-				"Lost": <Snowflake>     // label given-up hunts
+			// channel to send marlie announcements in
+			"announcements": {
+				"id": <Snowflake>,
+				"emoji": <String>
 			},
-			"save": <Snowflake>, // channel for queueing items to save
-			"pack": <Snowflake>, // channel for queueing links to look into
-			"hunt": <Snowflake>, // channel for queueing images to find the source of
-			"tour": <Snowflake>, // channel to send links with many source possibilities
-			"bide": <Snowflake>  // channel to send items to watch later
+			// channel for main commands
+			"main": {
+				"id": <Snowflake>,
+				"emoji": <String>
+			},
+			// channel for NSFW commands
+			"nsfw": {
+				"id": <Snowflake>,
+				"emoji": <String>
+			},
+			// forum channel for search threads
+			"knit": {
+				"id": <Snowflake>,
+				"emoji": <String>,
+				"tags": {
+					"TEST": <Snowflake>,      // label forums for bot testing
+					"Sampling": <Snowflake>,  // label forums used to test a search's waters
+					"Tour": <Snowflake>,      // label searches used to find other tags or sources
+					"Exhausted": <Snowflake>, // label forums that have yielded all of their search results
+					"Goated": <Snowflake>,    // label goated searches
+					"Mediocre": <Snowflake>,  // label searches that only sometimes yield good results
+					"Bad": <Snowflake>,       // label searches that aren't worth continuing
+					"...with good tags": <Snowflake> // clarify a search is only as good with certain tags
+				}
+			},
+			// forum channel for hunting image sources
+			"hunt_forum": {
+				"id": <Snowflake>,
+				"emoji": <String>,
+				"tags": {
+					"Hunting": <Snowflake>, // label hunts in progress
+					"Found": <Snowflake>,   // label successful hunts
+					"Lost": <Snowflake>     // label given-up hunts
+				}
+			},
+			// channel for queueing items to save
+			"save": {
+				"id": <Snowflake>,
+				"emoji": <String>
+			},
+			// channel for queueing links to look into
+			"pack": {
+				"id": <Snowflake>,
+				"emoji": <String>
+			},
+			// channel for queueing images to find the source of
+			"hunt": {
+				"id": <Snowflake>,
+				"emoji": <String>
+			},
+			// channel to send links with many source possibilities
+			"tour": {
+				"id": <Snowflake>,
+				"emoji": <String>
+			},
+			// channel to send items to watch later
+			"bide": {
+				"id": <Snowflake>,
+				"emoji": <String>
+			}
 		}
 	},
 	"rule34": {
