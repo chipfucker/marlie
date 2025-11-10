@@ -12,7 +12,7 @@ const client = new Discord.Client({ intents: [
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 
-const cmdPath = nodePath.resolve("cmd");
+const cmdPath = nodePath.resolve("src/cmd");
 const cmdFiles = fs.readdirSync(cmdPath, { recursive: true })
     .filter(file => file.match(/command\.js$/));
 
@@ -33,7 +33,7 @@ const cmdFiles = fs.readdirSync(cmdPath, { recursive: true })
     }
 })();
 
-const eventPath = nodePath.resolve("event");
+const eventPath = nodePath.resolve("src/event");
 const eventFiles = fs.readdirSync(eventPath, { recursive: true })
     .filter(file => file.match(/\.js$/));
 

@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import * as com from "#util/com/error.js";
+import * as com from "#lib/message/error.js";
 
 export const name = Discord.Events.MessageCreate;
 export async function execute(m) {

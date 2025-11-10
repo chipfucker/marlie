@@ -2,9 +2,9 @@
     "type": "module",
     "imports": {
         "#root/*": "./*",
-        "#secret": "./secret.js",
-        "#util/*": "./util/*",
-        "#cmd/*": "./cmd/*"
+        "#src/*": "./src/*",
+        "#lib/*": "./lib/*",
+        "#secret": "./lib/secret.js"
     },
     "dependencies": {
         "discord.js": "^14.24.2"
