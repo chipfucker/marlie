@@ -3,7 +3,7 @@ import { channel as secret } from "#secret";
 
 export const data = {
     name: "qhunt",
-    abbr: "qh",
+    abbr: "h",
     types: {
         ChatInput: {
             name: "queue-hunt",
