@@ -6,7 +6,7 @@ export const once = true;
 export async function execute(client) {
     console.log(`Logged into ${client.user.tag}`);
 
-    const status = fs.readFileSync("res/profile/status.txt", "utf8");
+    const status = fs.readFileSync("src/res/profile/status.txt", "utf8");
     client.user.setActivity(status, { type: Discord.ActivityType.Custom })
     console.log(`Set status: ${status}`);
 }
