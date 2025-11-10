@@ -9,9 +9,7 @@ export const error = (error) => ({
                 content: `# ${error.name}`
             },
             { type: Discord.ComponentType.TextDisplay,
-                content: `\`\`\`\n${
-                    error.name}: ${error.message}\n\n${error.stack
-                }\n\`\`\``
+                content: "```\n" + error.stack + "\n```"
             }
         ]
     }]
