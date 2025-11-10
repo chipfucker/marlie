@@ -1,3 +1,13 @@
 {
-	"json5.validate.enable": false,
+    "material-icon-theme.files.associations": {
+        "profile/avatar.png": "gitlab",
+        "profile/description.md": "document",
+        "profile/status.txt": "citation",
+        "secret.js": "lock",
+        "secret.json": "key"
+    },
+    "material-icon-theme.folders.associations": {
+        "cmd": "plugin",
+        "refresh": "generator"
+    }
 }
