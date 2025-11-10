@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import { channel as secret } from "#root/secret.js";
+import { channel as secret } from "#secret";
 
 export const data = {
     name: "qhunt",

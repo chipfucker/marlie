@@ -2,6 +2,7 @@
     "type": "module",
     "imports": {
         "#root/*": "./*",
+        "#secret": "./secret.js",
         "#util/*": "./util/*",
         "#cmd/*": "./cmd/*"
     },

@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import * as fs from "node:fs";
 import * as nodePath from "node:path";
-import { bot as secret } from "#root/secret.js";
+import { bot as secret } from "#secret";
 
 const commands = [];
 const cmdPath = nodePath.resolve("cmd");
