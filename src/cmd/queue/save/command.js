@@ -54,12 +54,15 @@ export async function MessageContextMenuCommandInteraction(i) {
     });
 
     const links = (() => {
-        // TODO: verify user tag property works here
-        if (i.targetMessage.author.tag === "Lawliet#5480")
-            return i.targetMessage.content.match(/\[Source\]\(<(.+?)>\)/g)
-                ?.map(item => item.match(/\[Source\]\(<(.+?)>\)/g)[1]);
-        else
-            return i.targetMessage.content.match(/(?:http|https|ftp):\/\/(?:\S*)/ig);
+        if (i.targetMessage.author.username === "Lawliet") {
+            const regex = /\[Source\]\(<(.+?)>\)/g;
+            const match = i.targetMessage.content.match(regex)
+                ?.map(item => item.replace(regex, "$1"));
+            return match;
+        } else {
+            const match = i.targetMessage.content.match(/(?:http|https|ftp):\/\/(?:\S*)/ig);
+            return match;
+        }
     })();
 
     if (!links) {
@@ -87,7 +90,7 @@ export async function messageCreate(m, args) {
 
     if (args) {
         await execute(channel, args);
-        await defer.then(() => m.editReply({
+        await defer.then(reply => reply.edit({
             allowedMentions: { repliedUser: false },
             content: `Sent content to ${channel.url}!`
         }));
@@ -97,23 +100,28 @@ export async function messageCreate(m, args) {
             .then(collection => collection.values().toArray()[0]);
         
         const links = (() => {
-
-            if (message.author.tag === "Lawliet#5480")
-                return message.content.match(/\[Source\]\(<(.+?)>\)/g)
-                    ?.map(item => item.match(/\[Source\]\(<(.+?)>\)/g)[1]);
-            else
-                return message.content.match(/(?:http|https|ftp):\/\/(?:\S*)/ig);
+            if (message.author.username === "Lawliet") {
+                const regex = /\[Source\]\(<(.+?)>\)/g;
+                const match = message.content.match(regex)
+                    ?.map(item => item.replace(regex, "$1"));
+                return match;
+            } else {
+                const match = message.content.match(/(?:http|https|ftp):\/\/(?:\S*)/ig);
+                return match;
+            }
         })();
 
         if (!links) {
-            await defer.then(() => m.editReply({
+            await defer.then(reply => reply.edit({
+                allowedMentions: { repliedUser: false },
                 content: "No URLs to send."
             }));
             return;
         }
         
         await execute(channel, links.join("\n"));
-        await defer.then(() => m.editReply({
+        await defer.then(reply => reply.edit({
+            allowedMentions: { repliedUser: false },
             content: `Sent ${links.length} link${links.length===1?"":"s"} to ${channel.url}!`
         }));
     }
