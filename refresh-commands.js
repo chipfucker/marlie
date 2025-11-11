@@ -4,7 +4,7 @@ import * as nodePath from "node:path";
 import { bot as secret } from "#secret";
 
 const commands = [];
-const cmdPath = nodePath.resolve("src/cmd");
+const cmdPath = nodePath.resolve("src/command");
 const cmdFiles = fs.readdirSync(cmdPath, { recursive: true })
     .filter(file => file.match(/command\.js$/));
 

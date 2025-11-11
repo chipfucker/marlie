@@ -12,7 +12,7 @@ const client = new Discord.Client({ intents: [
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 
-const cmdPath = nodePath.resolve("src/cmd");
+const cmdPath = nodePath.resolve("src/command");
 const cmdFiles = fs.readdirSync(cmdPath, { recursive: true })
     .filter(file => file.match(/command\.js$/));
 
