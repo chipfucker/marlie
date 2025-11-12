@@ -12,12 +12,11 @@ const client = new Discord.Client({ intents: [
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 
-const cmdPath = Path.resolve("src/command");
-
 // TODO: compare cmdFiles to written file and only proceed if different
-(async () => {
-    const cmdFiles = await FileSystem.readdir(cmdPath, { recursive: true })
-        .filter(file => file.match(/command\.js$/));
+const cmdPath = Path.resolve("src/command");
+FileSystem.readdir(cmdPath, { recursive: true })
+.then(async list => {
+    const cmdFiles = list.filter(file => file.match(/command\.js$/));
     for (const file of cmdFiles) {
         const command = await getImport(cmdPath, file);
 
@@ -31,13 +30,12 @@ const cmdPath = Path.resolve("src/command");
             }
         }
     }
-})();
+});
 
 const eventPath = Path.resolve("src/event");
-
-(async () => {
-    const eventFiles = await FileSystem.readdir(eventPath, { recursive: true })
-        .filter(file => file.match(/\.js$/));
+FileSystem.readdir(eventPath, { recursive: true })
+.then(async list => {
+    const eventFiles = list.filter(file => file.match(/\.js$/));
     for (const file of eventFiles) {
         const event = await getImport(eventPath, file);
         if (event.once)
@@ -45,7 +43,7 @@ const eventPath = Path.resolve("src/event");
         else
             client.on(event.name, event.execute);
     }
-})();
+});
 
 async function getImport(dir, file) {
     const path = Path.join(dir, file);

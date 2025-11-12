@@ -6,9 +6,9 @@ import { bot as secret } from "#secret";
 const commands = [];
 const cmdPath = Path.resolve("src/command");
 
-(async () => {
-    const cmdFiles = await FileSystem.readdir(cmdPath, { recursive: true })
-        .filter(file => file.match(/command\.js$/));
+FileSystem.readdir(cmdPath, { recursive: true })
+.then(async list => {
+    const cmdFiles = list.filter(file => file.match(/command\.js$/));
     for (const file of cmdFiles) {
         const path = Path.join(cmdPath, file);
         const url = new URL(`file://${path}`).href;
