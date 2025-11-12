@@ -1,16 +1,16 @@
 import * as Discord from "discord.js";
-import * as fs from "node:fs";
-import * as nodePath from "node:path";
+import * as FileSystem from "node:fs";
+import * as Path from "node:path";
 import { bot as secret } from "#secret";
 
 const commands = [];
-const cmdPath = nodePath.resolve("src/command");
-const cmdFiles = fs.readdirSync(cmdPath, { recursive: true })
+const cmdPath = Path.resolve("src/command");
+const cmdFiles = FileSystem.readdirSync(cmdPath, { recursive: true })
     .filter(file => file.match(/command\.js$/));
 
 (async () => {
     for (const file of cmdFiles) {
-        const path = nodePath.join(cmdPath, file);
+        const path = Path.join(cmdPath, file);
         const url = new URL(`file://${path}`).href;
         const command = await import(url);
         for (const [type, data] of Object.entries(command.data.types)) {

@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
-import * as fs from "node:fs";
-import * as nodePath from "node:path";
+import * as FileSystem from "node:fs";
+import * as Path from "node:path";
 import { bot as secret } from "#secret";
 
 const client = new Discord.Client({ intents: [
@@ -12,8 +12,8 @@ const client = new Discord.Client({ intents: [
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 
-const cmdPath = nodePath.resolve("src/command");
-const cmdFiles = fs.readdirSync(cmdPath, { recursive: true })
+const cmdPath = Path.resolve("src/command");
+const cmdFiles = FileSystem.readdirSync(cmdPath, { recursive: true })
     .filter(file => file.match(/command\.js$/));
 
 // TODO: compare cmdFiles to written file and only proceed if different
@@ -33,8 +33,8 @@ const cmdFiles = fs.readdirSync(cmdPath, { recursive: true })
     }
 })();
 
-const eventPath = nodePath.resolve("src/event");
-const eventFiles = fs.readdirSync(eventPath, { recursive: true })
+const eventPath = Path.resolve("src/event");
+const eventFiles = FileSystem.readdirSync(eventPath, { recursive: true })
     .filter(file => file.match(/\.js$/));
 
 (async () => {
@@ -48,7 +48,7 @@ const eventFiles = fs.readdirSync(eventPath, { recursive: true })
 })();
 
 async function getImport(dir, file) {
-    const path = nodePath.join(dir, file);
+    const path = Path.join(dir, file);
     const url = new URL(`file://${path}`).href;
     // TODO: adjust url until as simple as possible
     return await import(url);
