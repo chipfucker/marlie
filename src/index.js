@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import * as FileSystem from "node:fs";
+import * as FileSystem from "node:fs/promises";
 import * as Path from "node:path";
 import { bot as secret } from "#secret";
 
@@ -13,11 +13,11 @@ client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 
 const cmdPath = Path.resolve("src/command");
-const cmdFiles = FileSystem.readdirSync(cmdPath, { recursive: true })
-    .filter(file => file.match(/command\.js$/));
 
 // TODO: compare cmdFiles to written file and only proceed if different
 (async () => {
+    const cmdFiles = await FileSystem.readdir(cmdPath, { recursive: true })
+        .filter(file => file.match(/command\.js$/));
     for (const file of cmdFiles) {
         const command = await getImport(cmdPath, file);
 
@@ -34,10 +34,10 @@ const cmdFiles = FileSystem.readdirSync(cmdPath, { recursive: true })
 })();
 
 const eventPath = Path.resolve("src/event");
-const eventFiles = FileSystem.readdirSync(eventPath, { recursive: true })
-    .filter(file => file.match(/\.js$/));
 
 (async () => {
+    const eventFiles = await FileSystem.readdir(eventPath, { recursive: true })
+        .filter(file => file.match(/\.js$/));
     for (const file of eventFiles) {
         const event = await getImport(eventPath, file);
         if (event.once)

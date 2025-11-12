@@ -1,14 +1,14 @@
 import * as Discord from "discord.js";
-import * as FileSystem from "node:fs";
+import * as FileSystem from "node:fs/promises";
 import * as Path from "node:path";
 import { bot as secret } from "#secret";
 
 const commands = [];
 const cmdPath = Path.resolve("src/command");
-const cmdFiles = FileSystem.readdirSync(cmdPath, { recursive: true })
-    .filter(file => file.match(/command\.js$/));
 
 (async () => {
+    const cmdFiles = await FileSystem.readdir(cmdPath, { recursive: true })
+        .filter(file => file.match(/command\.js$/));
     for (const file of cmdFiles) {
         const path = Path.join(cmdPath, file);
         const url = new URL(`file://${path}`).href;
