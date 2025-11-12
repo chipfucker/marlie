@@ -3,13 +3,12 @@ import * as com from "#lib/message/error.js";
 
 export const name = Discord.Events.InteractionCreate;
 export async function execute(i) {
-    console.log(`${i.user.username} used ${i.commandName || i.message.interaction.commandName} (${i.constructor.name})`);
-
     try { switch (true) {
         case i.isChatInputCommand():
         case i.isMessageContextMenuCommand(): {
             const name = i.client.aliases.get(i.commandName);
             const command = i.client.commands.get(name);
+            console.log(`${i.user.username} used ${command.data.name} (${i.constructor.name} \u203a ${i.commandName})`);
             await command[i.constructor.name](i);
         } break;
 
@@ -24,10 +23,11 @@ export async function execute(i) {
 
         case i.isButton():
         case i.isModalSubmit(): {
-            const [_, id, param, args] = i.customId.match(/(.+?):([^\?]+)\??(.*)/);
+            const [_, id, func, args] = i.customId.match(/(.+?):([^\?]+)\??(.*)/);
             // command:function?params;params
             const command = i.client.commands.get(id);
-            await command[i.constructor.name][param](i, args);
+            console.log(`${i.user.username} used ${command.data.name} (${i.constructor.name} \u203a ${func})`);
+            await command[func][i.constructor.name](i, args);
         } break;
 
         default: throw new Error(`This interaction type (${i.constructor.name}) is not supported yet.`);

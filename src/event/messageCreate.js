@@ -12,10 +12,13 @@ export async function execute(m) {
         const [_, cmd, args] = match;
 
         const alias = m.client.aliases.get(cmd);
-        if (!alias) return;
+        if (!alias) {
+            await react.then(() => m.reactions.resolve(emoji).users.remove());
+            return;
+        }
         const command = m.client.commands.get(alias);
         
-        console.log(`${m.author.username} used ${command.data.name} (Message)`);
+        console.log(`${m.author.username} used ${command.data.name} (${Discord.Events.MessageCreate} \u203a ${cmd})`);
         await react.then(() => m.reactions.resolve(emoji).users.remove());
         await command.messageCreate(m, args);
     } catch (error) {
