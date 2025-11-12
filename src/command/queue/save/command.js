@@ -23,55 +23,11 @@ export const data = {
 };
 
 export async function ChatInputCommandInteraction(i) {
-    const defer = i.reply({
-        flags: [
-            Discord.MessageFlags.Ephemeral,
-            Discord.MessageFlags.SuppressNotifications
-        ],
-        content: "Getting URLs..."
-    });
-
-    const links = post.getFromParams(i.options.getString("urls"));
-
-    const channel = await i.client.channels.fetch(secret.save.id);
-    await execute(channel, links.join("\n"));
-
-    await defer.then(() => i.editReply({
-        content: `Sent ${links.length} link${links.length===1?"":"s"} to ${channel.url}!`
-    }));
+    Interaction(i, post.getFromParams(i.options.getString("urls")));
 }
 
 export async function MessageContextMenuCommandInteraction(i) {
-    const defer = i.reply({
-        flags: [ Discord.MessageFlags.Ephemeral ],
-        content: "Getting URLs..."
-    });
-
-    const links = (() => {
-        if (i.targetMessage.author.username === "Lawliet") {
-            const regex = /\[Source\]\(<(.+?)>\)/g;
-            const match = i.targetMessage.content.match(regex)
-                ?.map(item => item.replace(regex, "$1"));
-            return match;
-        } else {
-            const match = i.targetMessage.content.match(/(?:http|https|ftp):\/\/(?:\S*)/ig);
-            return match;
-        }
-    })();
-
-    if (!links) {
-        await defer.then(() => i.editReply({
-            content: "No URLs to send."
-        }));
-        return;
-    }
-
-    const channel = await i.client.channels.fetch(secret.save.id);
-    await execute(channel, links.join("\n"));
-
-    await defer.then(() => i.editReply({
-        content: `Sent ${links.length} link${links.length===1?"":"s"} to ${channel.url}!`
-    }));
+    Interaction(i, post.getFromContent(i.targetMessage));
 }
 
 export async function messageCreate(m, args) {
@@ -80,49 +36,52 @@ export async function messageCreate(m, args) {
         content: "Getting URLs..."
     });
 
-    const channel = await m.client.channels.fetch(secret.save.id);
+    const content = args
+        ? post.getFromParams(args)
+        : post.getFromContent(
+            await m.channel.messages.fetch({ before: m.id, limit: 1, cache: false })
+                .then(collection => collection.values().toArray()[0])
+        );
+        
 
-    if (args) {
-        await execute(channel, args);
+    if (!content) {
         await defer.then(reply => reply.edit({
             allowedMentions: { repliedUser: false },
-            content: `Sent content to ${channel.url}!`
+            content: "No URLs to send."
         }));
         return;
-    } else {
-        const message = await m.channel.messages.fetch({ before: m.id, limit: 1, cache: false })
-            .then(collection => collection.values().toArray()[0]);
-        
-        const links = (() => {
-            if (message.author.username === "Lawliet") {
-                const regex = /\[Source\]\(<(.+?)>\)/g;
-                const match = message.content.match(regex)
-                    ?.map(item => item.replace(regex, "$1"));
-                return match;
-            } else {
-                const match = message.content.match(/(?:http|https|ftp):\/\/(?:\S*)/ig);
-                return match;
-            }
-        })();
-
-        if (!links) {
-            await defer.then(reply => reply.edit({
-                allowedMentions: { repliedUser: false },
-                content: "No URLs to send."
-            }));
-            return;
-        }
-        
-        await execute(channel, links.join("\n"));
-        await defer.then(reply => reply.edit({
-            allowedMentions: { repliedUser: false },
-            content: `Sent ${links.length} link${links.length===1?"":"s"} to ${channel.url}!`
-        }));
     }
+
+    Promise.all([
+        post.send({
+            client: m.client,
+            id: secret.save.id,
+            content
+        }),
+        defer
+    ]).then(promise => promise[1].edit({
+        allowedMentions: { repliedUser: false },
+        content: promise[0]
+    }));
 }
 
-async function execute(channel, links) {
-    await channel.send({
-        content: links
+async function Interaction(i, content) {
+    const defer = i.reply({
+        flags: [ Discord.MessageFlags.Ephemeral ],
+        content: "Getting URLs..."
     });
+
+    if (!content) {
+        await defer.then(() => i.editReply({ content: "No URLs found." }));
+        return;
+    }
+    
+    Promise.all([
+        post.send({
+            client: i.client,
+            id: secret.save.id,
+            content
+        }),
+        defer
+    ]).then(promise => i.editReply({ content: promise[0] }));
 }
