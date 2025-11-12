@@ -1,5 +1,6 @@
 import * as Discord from "discord.js";
 import { channel as secret } from "#secret";
+import * as post from "#lib/message/queue/post.js";
 
 export const data = {
     name: "qsave",
@@ -30,14 +31,7 @@ export async function ChatInputCommandInteraction(i) {
         content: "Getting URLs..."
     });
 
-    const links = i.options.getString("urls").split(/\s+/);
-    
-    if (!links.every(url => URL.canParse(url))) {
-        await defer.then(() => i.editReply({
-            content: "One of the URLs was not parsable!"
-        }));
-        return;
-    }
+    const links = post.getFromParams(i.options.getString("urls"));
 
     const channel = await i.client.channels.fetch(secret.save.id);
     await execute(channel, links.join("\n"));
