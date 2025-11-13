@@ -7,7 +7,7 @@ things.
 
 ```ts
 {
-    "UserAgent": <String>, // user agent used with restrictive requests
+    "UserAgent": <String>, // user agent used with requests that require them
     "discord": {
         "token": <String>,           // bot token used to login
         "app_id": <Snowflake>,       // id of application; bot user
