@@ -32,6 +32,10 @@ client.once(Discord.Events.ClientReady, async client => {
                 name: name
             }).then(emoji => emoji.toString());
             json[name] = emoji;
+        } else {
+            const original = new Sharp(resize);
+            const { width, height } = await original.metadata();
+            const slices = Array(width / height).keys().map(num => num * height);
         }
     }))).then(promises => console.log(`Uploaded ${promises.length} emoji`));
 
