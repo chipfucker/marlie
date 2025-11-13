@@ -1,4 +1,5 @@
 import * as Discord from "discord.js";
+import { createCommand } from "#lib/command/queue/post.js";
 import { channel as secret } from "#secret";
 
 export const data = {
@@ -21,7 +22,7 @@ export const data = {
     }
 };
 
-const gen = createQueueCommand(secret.save.id);
+const gen = createCommand(secret.save.id);
 
 export let {
     ChatInputCommandInteraction,
