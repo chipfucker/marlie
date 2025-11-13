@@ -8,7 +8,8 @@ using the `message` property.
 
 ## Setup
 
-There is some optional setup involved if you intend on committing changes in any manner.
+There is some optional setup involved if you intend on committing changes in any
+manner.
 
 If you want to prevent changes to `content.js` from being tracked without
 removing the file from the repository, firstly make sure that the file is set to
