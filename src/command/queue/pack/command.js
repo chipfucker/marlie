@@ -1,13 +1,13 @@
-import * as Discord from "discord.js";
+import { createQueueCommand } from "#lib/command/queue.js";
 import { channel as secret } from "#secret";
 
 export const data = {
-    name: "qsave",
-    abbr: "s",
+    name: "qpack",
+    abbr: "p",
     types: {
         ChatInput: {
-            name: "queue-save",
-            description: `Send to #${secret.save.emoji}-saves`,
+            name: "queue-pack",
+            description: `Send to #${secret.pack.emoji}-packs`,
             options: [{
                 name: "urls",
                 description: "Image URLs to send (separated by spaces)",
@@ -16,12 +16,12 @@ export const data = {
             }]
         },
         Message: {
-            name: `${secret.save.emoji} Queue save`
+            name: `${secret.pack.emoji} Queue pack`
         }
     }
 };
 
-const gen = createQueueCommand(secret.save.id);
+const gen = createQueueCommand(secret.pack.id);
 
 export let {
     ChatInputCommandInteraction,
