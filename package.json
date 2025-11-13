@@ -7,6 +7,7 @@
         "#secret": "./lib/secret.js"
     },
     "dependencies": {
-        "discord.js": "^14.24.2"
+        "discord.js": "^14.24.2",
+        "sharp": "^0.34.5"
     }
 }
