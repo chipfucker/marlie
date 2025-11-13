@@ -36,6 +36,20 @@ client.once(Discord.Events.ClientReady, async client => {
             const original = new Sharp(resize);
             const { width, height } = await original.metadata();
             const slices = Array(width / height).keys().map(num => num * height);
+            json[name] = [];
+            for (const index in slices) {
+                const original = new Sharp(resize);
+                const attachment = await original.extract({
+                    top: 0,
+                    left: slices[index],
+                    width: height,
+                    height
+                }).toBuffer();
+                
+                manager.create({ attachment, name: name + index })
+                    .then(emoji => emoji.toString())
+                    .then(emoji => json[name].push(emoji));
+            }
         }
     }))).then(promises => console.log(`Uploaded ${promises.length} emoji`));
 
