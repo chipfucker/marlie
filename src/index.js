@@ -18,17 +18,17 @@ FileSystem.readdir(cmdPath, { recursive: true })
 .then(async list => {
     const cmdFiles = list.filter(file => file.match(/command\.js$/));
     for (const file of cmdFiles) {
-        const command = await getImport(cmdPath, file);
-
-        if (command.data) {
-            client.commands.set(command.data.name, command);
-            for (const alias of Object.values(command.data.types)) {
-                client.aliases.set(alias.name, command.data.name);
+        getImport(cmdPath, file).then(command => {
+            if (command.data) {
+                client.commands.set(command.data.name, command);
+                for (const alias of Object.values(command.data.types)) {
+                    client.aliases.set(alias.name, command.data.name);
+                }
+                if (command.data.abbr) {
+                    client.aliases.set(command.data.abbr, command.data.name);
+                }
             }
-            if (command.data.abbr) {
-                client.aliases.set(command.data.abbr, command.data.name);
-            }
-        }
+        });
     }
 });
 
