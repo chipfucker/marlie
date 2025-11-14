@@ -16,12 +16,11 @@ client.once(Discord.Events.ClientReady, async client => {
 
     await FileSystem.readdir(path, { recursive: true })
     .then(files => Promise.all(files.map(async file => {
-        const { name, ext } = Path.parse(file);
-        console.log()
+        const { name: filename, ext: extension } = Path.parse(file);
 
-        switch (ext) {
+        switch (extension) {
             case "":
-                return false;
+                break;
             case ".png": {
                 // TODO: see if Sharp instance methods modify the instance
                 const original = new Sharp(Path.join(path, file));
@@ -30,66 +29,57 @@ client.once(Discord.Events.ClientReady, async client => {
                     height: Math.ceil(128 / height) * height,
                     kernel: "nearest"
                 }).toBuffer();
-                if (!name.match(/\.spr$/)) {
-                    const emoji = await client.application.emojis.create({
-                        attachment: image,
-                        name: name
-                    }).then(emoji => emoji.toString());
-                    json[name] = emoji;
-                } else {
-                    const original = new Sharp(image);
-                    const { width, height } = await original.metadata();
-                    const slices = Array(width / height).keys().map(num => num * height);
-                    json[name] = [];
-                    for (const index in slices) {
-                        const original = new Sharp(image);
-                        const attachment = await original.extract({
-                            top: 0,
-                            left: slices[index],
-                            width: height,
-                            height
-                        }).toBuffer();
-                        
-                        client.application.emojis.create({ attachment, name: name + index })
-                            .then(emoji => emoji.toString())
-                            .then(emoji => json[name].push(emoji));
-                    }
-                }
-            } return true;
+
+                await handleBuffer(filename, image);
+            } break;
             case ".svg": {
                 const image = await new Sharp(Path.join(path, file)).toBuffer();
-                if (!name.match(/\.spr$/)) {
-                    const emoji = await client.application.emojis.create({
-                        attachment: image,
-                        name: name
-                    }).then(emoji => emoji.toString());
-                    json[name] = emoji;
-                } else {
+                
+                await handleBuffer(filename, image);
+            } break;
+        }
+
+        async function handleBuffer(filename, image) {
+            if (filename.match(/\.spr$/)) {
+                const name = filename.replace(/\.spr$/, "");
+                const original = new Sharp(image);
+                const { width, height } = await original.metadata();
+                const slices = Array(width / height).keys().map(num => num * height).toArray();
+                json[name] = [];
+                for (const index in slices) {
                     const original = new Sharp(image);
-                    const { width, height } = await original.metadata();
-                    const slices = Array(width / height).keys().map(num => num * height);
-                    json[name] = [];
-                    for (const index in slices) {
-                        const original = new Sharp(image);
-                        const attachment = await original.extract({
-                            top: 0,
-                            left: slices[index],
-                            width: height,
-                            height
-                        }).toBuffer();
-                        
-                        client.application.emojis.create({ attachment, name: name + index })
-                            .then(emoji => emoji.toString())
-                            .then(emoji => json[name].push(emoji));
-                    }
+                    const extract = await original.extract({
+                        top: 0,
+                        left: slices[index],
+                        width: height,
+                        height: height
+                    }).toBuffer();
+
+                    client.application.emojis.create({
+                        attachment: extract,
+                        name: name.replace(/\W/g, "") + index
+                    })
+                        .then(emoji => json[name].push(emoji.toString()));
                 }
-            } return true;
+            } else {
+                const name = filename;
+                const emoji = await client.application.emojis.create({
+                    attachment: image,
+                    name: name.replace(/\W/g, "")
+                }).then(emoji => emoji.toString());
+                json[filename] = emoji;
+            }
         }
     })))
-        .then(pro => console.log(`Uploaded ${pro.filter(p=>p).length} emoji`));
+    .then(async () => {
+        const size = await client.application.emojis.fetch().then(emojis => emojis.size);
+        console.log(`Uploaded ${size} emoji`);
+    });
 
-    FileSystem.writeFile("bin/emoji.json", JSON.stringify(json, null, "\t"))
-        .then(() => console.log("file://./bin/emoji.json updated"));
+    const jsonPath = Path.resolve("bin/emoji.json");
+
+    FileSystem.writeFile(jsonPath, JSON.stringify(json, null, "\t"))
+        .then(() => console.log("build/emoji.json updated"));
     client.destroy();
 });
 
