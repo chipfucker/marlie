@@ -12,7 +12,7 @@ const client = new Discord.Client({ intents: [
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 
-// TODO: compare cmdFiles to written file and only proceed if different
+// TODO: compare cmdFiles to application commands and refresh if necessary
 const cmdPath = Path.resolve("src/command");
 FileSystem.readdir(cmdPath, { recursive: true })
 .then(async list => {
@@ -35,7 +35,7 @@ FileSystem.readdir(cmdPath, { recursive: true })
 const eventPath = Path.resolve("src/event");
 FileSystem.readdir(eventPath, { recursive: true })
 .then(async list => {
-    const eventFiles = list.filter(file => file.match(/\.js$/));
+    const eventFiles = list.filter(async file => file.match(/\.js$/));
     for (const file of eventFiles) {
         const event = await getImport(eventPath, file);
         if (event.once)
