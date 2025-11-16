@@ -24,7 +24,7 @@ FileSystem.readdir(cmdPath, { recursive: true })
             commands.push(data);
         }
     }
-})();
+});
 
 const rest = new Discord.REST().setToken(secret.token);
 
