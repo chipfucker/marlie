@@ -10,7 +10,7 @@ things.
     "UserAgent": <String>, // user agent used with requests that require them
     "discord": {
         "token": <String>,           // bot token used to login
-        "app_id": <Snowflake>,       // id of application; bot user
+        "client_id": <Snowflake>,       // id of application; bot user
         "admin_server": <Snowflake>, // server with special administrative commands
         "user": {
             "main": <Snowflake> // main user
